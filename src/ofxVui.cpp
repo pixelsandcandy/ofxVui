@@ -289,6 +289,9 @@ namespace VUI {
 
 
 namespace VUI {
+    Rotate uiRotation = VUI_ROTATE_NONE;
+    Rotate viewRotation = VUI_ROTATE_NONE;
+    
 	ofPixels vuiGlobalPixels;
 	ofImage vuiGlobalImage;
     map<string, map<int, ofTrueTypeFont*>> fonts;
@@ -296,7 +299,7 @@ namespace VUI {
     
     bool useTouch = false;
     
-	void Setup(bool touchEvents) {
+	void Init(bool touchEvents) {
 
         if (touchEvents){
             EnableTouch();

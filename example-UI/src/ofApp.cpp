@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    VUI::Setup();
+    VUI::Init();
     
     string styles = R"(
         [.button>

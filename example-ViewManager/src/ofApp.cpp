@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    VUI::Setup();
+    VUI::Init();
     
     // usually a transparent background
     VUI::SetBackground( 20 );

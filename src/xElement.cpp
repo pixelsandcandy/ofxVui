@@ -72,6 +72,19 @@ namespace VUI {
         drawPosition.x = localMinPosition.x - anchorOffset.x - parentSumOffset.x;
         drawPosition.y = localMinPosition.y - anchorOffset.y - parentSumOffset.y;
         
+        if ( VUI::uiRotation == VUI_ROTATE_90_CCW ){
+            ofVec2f savedLocal(localMinPosition);
+            ofVec2f savedGlobalMin(globalMinPosition);
+            
+            localMinPosition.y = savedLocal.x;
+            localMinPosition.x = savedLocal.y;
+            
+            globalMinPosition.x = savedGlobalMin.y;
+            globalMinPosition.y = VUI::GetWindowHeight(false) - savedGlobalMin.x - (width*scale);
+            
+            globalMaxPosition.x = savedGlobalMin.y + (height*scale);
+            globalMaxPosition.y = VUI::GetWindowHeight(false) - savedGlobalMin.x;
+        }
             
 		
 	}
@@ -427,6 +440,7 @@ namespace VUI {
         
         //ofLog() << "Element::Render - [" << userUpdating << "] - " << ofRandomf();
         ofPushView();
+        VUI::_PrivateRotateUI();
         ofTranslate( drawPosition.x + parentSumOffset.x, drawPosition.y + parentSumOffset.y );
         ofRotate( rotation );
         

@@ -23,6 +23,13 @@ namespace VUI {
 		VUI_STATE_ALL
 	};
 
+    enum Rotate {
+        VUI_ROTATE_NONE,
+        VUI_ROTATE_90_CW,
+        VUI_ROTATE_90_CCW,
+        VUI_ROTATE_180
+    };
+    
 	enum Align {
 		VUI_ALIGN_LEFT_TOP,
 		VUI_ALIGN_LEFT_CENTER,
@@ -63,7 +70,8 @@ namespace VUI {
 	};
 
 	
-
+    extern Rotate uiRotation;
+    extern Rotate viewRotation;
 	extern ofPixels vuiGlobalPixels;
 	extern ofImage vuiGlobalImage;
     extern map<string, map<int, ofTrueTypeFont*>> fonts;
@@ -298,7 +306,9 @@ namespace VUI {
 		EventManager.overElement = nullptr;
 	}
 
-	void Setup(bool touchEvents = false);
+	void Init(bool touchEvents = false);
+    
+    
 
 }
 
@@ -510,6 +520,20 @@ namespace VUI {
 		if (scaled) return vw * vscale;
 		return vw;
 	}
+    
+    static int GetWindowWidth( bool scaled = true) {
+        float s = scaled == true ? vscale : 1.0;
+        
+        if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vh * s;
+        return vw*s;
+    }
+    
+    static int GetWindowHeight( bool scaled = true ){
+        float s = scaled == true ? vscale : 1.0;
+        
+        if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vw * s;
+        return vh*s;
+    }
 
 	static int GetHeight(bool scaled = true) {
 		if (scaled) return vh * vscale;
@@ -531,11 +555,34 @@ namespace VUI {
 	static int GetScaledHeight() {
 		return vh * vscale;
 	}
+    
+    static float GetScale(){
+        return vscale;
+    }
 
 	static bool GetTouchDown() {
 		if (touches.size() > 0) return true;
 		else return false;
 	}
+    
+    static void _PrivateRotateUI(){
+        return;
+        if ( VUI::uiRotation == VUI_ROTATE_90_CCW ) {
+            ofTranslate(0, GetHeight(false) );
+            ofRotate( -90 );
+        }
+    }
+    
+    /*static void RotateUI(Rotate rotation){
+        uiRotation = rotation;
+    }*/
+    
+    static void RotateView(Rotate rotation){
+        //SetResolution( GetHeight(false), GetWidth(false), GetScale() );
+        viewRotation = rotation;
+        uiRotation = rotation;
+        //RotateUI( rotation );
+    }
 
 	/*static void Update() {
 	if (currView.empty() || views[currView] == nullptr) return;
@@ -611,6 +658,12 @@ namespace VUI {
         }
         
         if ( drawingInsideFbo ) glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        
+        if ( viewRotation == VUI_ROTATE_90_CCW ){
+            ofTranslate(0, GetWidth() );
+            ofRotate( -90 );
+        }
+        
         fbo.draw(x, y, w, h);
         
         /*if ( drawingInsideFbo ) {
