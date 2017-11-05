@@ -1,0 +1,6 @@
+Project.xcconfig
+config.make
+*.app
+*.xcodeproj
+Makefile
+openFrameworks-Info.plist

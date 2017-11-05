@@ -1,0 +1,82 @@
+#include "ofApp.h"
+#include "ViewExample.h"
+
+//--------------------------------------------------------------
+void ofApp::setup(){
+    
+    VUI::Setup();
+    
+    // usually a transparent background
+    VUI::SetBackground( 20 );
+    
+    // name, viewPtr, set view
+    VUI::AddView( "my-view", new ViewExample(), true );
+    
+    // another way to set view
+    //VUI::SetView( "my-view" );
+}
+
+//--------------------------------------------------------------
+void ofApp::update(){
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+    VUI::Render();
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::keyReleased(int key){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseMoved(int x, int y ){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseDragged(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mousePressed(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseReleased(int x, int y, int button){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseEntered(int x, int y){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseExited(int x, int y){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::windowResized(int w, int h){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::gotMessage(ofMessage msg){
+
+}
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo dragInfo){ 
+
+}
