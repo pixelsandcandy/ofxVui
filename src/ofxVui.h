@@ -17,55 +17,55 @@ namespace VUI {
 	class Element;
 
 	enum State {
-		GUI_STATE_UP,
-		GUI_STATE_OVER,
-		GUI_STATE_DOWN,
-		GUI_STATE_ALL
+		VUI_STATE_UP,
+		VUI_STATE_OVER,
+		VUI_STATE_DOWN,
+		VUI_STATE_ALL
 	};
 
 	enum Align {
-		GUI_ALIGN_LEFT_TOP,
-		GUI_ALIGN_LEFT_CENTER,
-		GUI_ALIGN_LEFT_BOTTOM,
-		GUI_ALIGN_RIGHT_TOP,
-		GUI_ALIGN_RIGHT_CENTER,
-		GUI_ALIGN_RIGHT_BOTTOM,
-		GUI_ALIGN_CENTER_TOP,
-		GUI_ALIGN_CENTER_CENTER,
-		GUI_ALIGN_CENTER_BOTTOM
+		VUI_ALIGN_LEFT_TOP,
+		VUI_ALIGN_LEFT_CENTER,
+		VUI_ALIGN_LEFT_BOTTOM,
+		VUI_ALIGN_RIGHT_TOP,
+		VUI_ALIGN_RIGHT_CENTER,
+		VUI_ALIGN_RIGHT_BOTTOM,
+		VUI_ALIGN_CENTER_TOP,
+		VUI_ALIGN_CENTER_CENTER,
+		VUI_ALIGN_CENTER_BOTTOM
 	};
 
-	enum GuiEvent {
-        GUI_EVENT_MOUSE_OVER,
-        GUI_EVENT_MOUSE_OUT,
-        GUI_EVENT_MOUSE_PRESSED,
-        GUI_EVENT_MOUSE_MOVED,
-        GUI_EVENT_MOUSE_DRAGGED,
-        GUI_EVENT_MOUSE_RELEASED,
-		GUI_EVENT_MOUSE_CLICK,
-        GUI_EVENT_MOUSE_DOUBLE_CLICK,
+	enum vuiEvent {
+        VUI_EVENT_MOUSE_OVER,
+        VUI_EVENT_MOUSE_OUT,
+        VUI_EVENT_MOUSE_PRESSED,
+        VUI_EVENT_MOUSE_MOVED,
+        VUI_EVENT_MOUSE_DRAGGED,
+        VUI_EVENT_MOUSE_RELEASED,
+		VUI_EVENT_MOUSE_CLICK,
+        VUI_EVENT_MOUSE_DOUBLE_CLICK,
 		
 
-		GUI_EVENT_TOUCH_DOWN,
-		GUI_EVENT_TOUCH_UP,
-		GUI_EVENT_TOUCH_TAP,
-        GUI_EVENT_TOUCH_DOUBLE_TAP,
+		VUI_EVENT_TOUCH_DOWN,
+		VUI_EVENT_TOUCH_UP,
+		VUI_EVENT_TOUCH_TAP,
+        VUI_EVENT_TOUCH_DOUBLE_TAP,
         
-        GUI_EVENT_STATE_CHANGE,
-        GUI_EVENT_SELECT_CHANGE,
+        VUI_EVENT_STATE_CHANGE,
+        VUI_EVENT_SELECT_CHANGE,
         
-        GUI_EVENT_FOCUS,
-        GUI_EVENT_UNFOCUS,
+        VUI_EVENT_FOCUS,
+        VUI_EVENT_UNFOCUS,
         
-        GUI_EVENT_ANIMATE_COMPLETE,
-        GUI_EVENT_ANIMATE_STEP,
-        GUI_EVENT_ANIMATE_START
+        VUI_EVENT_ANIMATE_COMPLETE,
+        VUI_EVENT_ANIMATE_STEP,
+        VUI_EVENT_ANIMATE_START
 	};
 
 	
 
-	extern ofPixels GUIGlobalPixels;
-	extern ofImage GUIGlobalImage;
+	extern ofPixels vuiGlobalPixels;
+	extern ofImage vuiGlobalImage;
     extern map<string, map<int, ofTrueTypeFont*>> fonts;
     extern int fontSize;
     
@@ -100,7 +100,7 @@ namespace VUI {
         return useTouch;
     }
     
-    struct guiEventArgs;
+    struct vuiEventArgs;
     
     // Tweening
     
@@ -125,9 +125,9 @@ namespace VUI {
 			return id;
 		}
         
-        ofEvent<guiEventArgs> onComplete;
-        ofEvent<guiEventArgs> onStart;
-        ofEvent<guiEventArgs> onStep;
+        ofEvent<vuiEventArgs> onComplete;
+        ofEvent<vuiEventArgs> onStart;
+        ofEvent<vuiEventArgs> onStep;
         
         int UID = abs((int)ofRandom(7, 7777777777));
         
@@ -168,7 +168,7 @@ namespace VUI {
         
     };
     
-    struct guiEventArgs {
+    struct vuiEventArgs {
         Element* element;
         int eventType;
         ofVec2f localPos;
@@ -205,7 +205,7 @@ namespace VUI {
     
     // EventManager
     
-    extern map<GuiEvent, vector<Element*>> events;
+    extern map<vuiEvent, vector<Element*>> events;
     extern map<State, vector<Element*>> states;
     
     
@@ -236,11 +236,11 @@ namespace VUI {
     private:
         vector<Tween*> tweensToDestroy;
         
-        bool EventHasElement( GuiEvent eventType ){
+        bool EventHasElement( vuiEvent eventType ){
             return !VUI::events[eventType].empty();
         }
         
-        Element* GetLatestElement( GuiEvent eventType ){
+        Element* GetLatestElement( vuiEvent eventType ){
             return VUI::events[eventType].back();
         }
         
@@ -250,9 +250,9 @@ namespace VUI {
     
     //
     
-    static vector<GuiEvent> evtlist = {GUI_EVENT_MOUSE_PRESSED,GUI_EVENT_MOUSE_RELEASED,GUI_EVENT_MOUSE_CLICK};
-    //static vector<State> statelist = {GUI_STATE_UP,GUI_STATE_OVER,GUI_STATE_DOWN};
-    static vector<State> statelist = {GUI_STATE_UP,GUI_STATE_OVER,GUI_STATE_DOWN};
+    static vector<vuiEvent> evtlist = {VUI_EVENT_MOUSE_PRESSED,VUI_EVENT_MOUSE_RELEASED,VUI_EVENT_MOUSE_CLICK};
+    //static vector<State> statelist = {VUI_STATE_UP,VUI_STATE_OVER,VUI_STATE_DOWN};
+    static vector<State> statelist = {VUI_STATE_UP,VUI_STATE_OVER,VUI_STATE_DOWN};
     
     class EM {
     public:
@@ -269,7 +269,7 @@ namespace VUI {
         bool active = true;
         bool enableOnMouseUp = false;
         
-        void StoreEvent( Element *el, GuiEvent eventType );
+        void StoreEvent( Element *el, vuiEvent eventType );
         void StoreState( Element *el, State state );
         
 		void Disable();        int shouldEnable = 0;

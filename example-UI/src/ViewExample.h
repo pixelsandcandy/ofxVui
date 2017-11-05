@@ -36,6 +36,7 @@ public:
         ss = new StyleSheet( styles );
         
         element = new Element( 20, 20, ss, ".button" );
+        ofAddListener(element->onMouseClick, this, &ViewExample::vuiEventHandler );
 	}
 
 	void Exit() {
@@ -46,8 +47,12 @@ public:
 		
 	}
     
-    void guiEventHandler(guiEventArgs& evt) {
-		
+    void vuiEventHandler(vuiEventArgs& evt) {
+        if ( evt.element == element ){
+            if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ){
+                ofLog() << "yay!";
+            }
+        }
     }
     
 	void update() {

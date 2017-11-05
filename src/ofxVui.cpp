@@ -118,7 +118,7 @@ namespace VUI {
 		VUI::mouseY = mouse.y*multCoords.y;
 
 		if (!VUI::currView.empty()) {
-			/*#ifdef USING_ofxSuperGUI
+			/*#ifdef USING_ofxSupervui
              if ( !VUI::EventManager.active ) return;
 			#endif*/
 			ofMouseEventArgs args(ofMouseEventArgs::Moved, VUI::mouseX, VUI::mouseY);
@@ -212,7 +212,7 @@ namespace VUI {
 		VUI::mouseY = mouse.y*multCoords.y;
 
 		if (!VUI::currView.empty()) {
-			/*#ifdef USING_ofxSuperGUI
+			/*#ifdef USING_ofxSupervui
 			if ( !VUI::EventManager.active ) return;
 			#endif*/
 			ofMouseEventArgs args(ofMouseEventArgs::Entered, VUI::mouseX, VUI::mouseY);
@@ -227,7 +227,7 @@ namespace VUI {
 		VUI::mouseY = mouse.y*multCoords.y;
 
 		if (!VUI::currView.empty()) {
-			/*#ifdef USING_ofxSuperGUI
+			/*#ifdef USING_ofxSupervui
 			if ( !VUI::EventManager.active ) return;
 			#endif*/
 			ofMouseEventArgs args(ofMouseEventArgs::Exited, VUI::mouseX, VUI::mouseY);
@@ -289,8 +289,8 @@ namespace VUI {
 
 
 namespace VUI {
-	ofPixels GUIGlobalPixels;
-	ofImage GUIGlobalImage;
+	ofPixels vuiGlobalPixels;
+	ofImage vuiGlobalImage;
     map<string, map<int, ofTrueTypeFont*>> fonts;
     int fontSize = 16;
     
@@ -414,10 +414,10 @@ namespace VUI {
                 firstStep = false;
                 StoreStartValues();
                 
-                guiEventArgs args;
+                vuiEventArgs args;
                 args.element = el;
                 args.tween = this;
-                args.eventType = GUI_EVENT_ANIMATE_START;
+                args.eventType = VUI_EVENT_ANIMATE_START;
                 
                 ofNotifyEvent( onStart, args, this );
                 
@@ -427,10 +427,10 @@ namespace VUI {
             perc = (currTime - startTime) / duration;
             UpdateValues();
             
-            guiEventArgs args;
+            vuiEventArgs args;
             args.element = el;
             args.tween = this;
-            args.eventType = GUI_EVENT_ANIMATE_STEP;
+            args.eventType = VUI_EVENT_ANIMATE_STEP;
             
             ofNotifyEvent( onStep, args, this );
         } else if ( currTime >= endTime ) {
@@ -439,18 +439,18 @@ namespace VUI {
             perc = 1;
             UpdateValues();
             
-            guiEventArgs args2;
+            vuiEventArgs args2;
             args2.element = el;
             args2.tween = this;
-            args2.eventType = GUI_EVENT_ANIMATE_STEP;
+            args2.eventType = VUI_EVENT_ANIMATE_STEP;
             
             ofNotifyEvent( onStep, args2, this );
             
             
-            guiEventArgs args;
+            vuiEventArgs args;
 			args.element = el;
 			args.tween = this;
-            args.eventType = GUI_EVENT_ANIMATE_COMPLETE;
+            args.eventType = VUI_EVENT_ANIMATE_COMPLETE;
             
             ofNotifyEvent( onComplete, args, this );
             
@@ -495,12 +495,12 @@ namespace VUI {
     // EventManager
     EM EventManager;
     EMBridge PRIVATE_EM;
-    map<GuiEvent, vector<Element*>> events;
+    map<vuiEvent, vector<Element*>> events;
     map<State, vector<Element*>> states;
     
     vector<Tween*> tweens;
 
-    void EM::StoreEvent(Element* el, GuiEvent eventType ){
+    void EM::StoreEvent(Element* el, vuiEvent eventType ){
 		//ofLog() << "StoreEvent[" << eventType << "]  active:" << active;
         if ( !active ) return;
         
@@ -513,7 +513,7 @@ namespace VUI {
     }
     
     void EM::Purge(){
-        for( vector<GuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
+        for( vector<vuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
             events[ (*it) ].clear();
         }
         
@@ -521,7 +521,7 @@ namespace VUI {
             states[ (*it) ].clear();
         }
         
-        //if ( EventManager.overElement != nullptr ) ofLog() << EventManager.overElement->guiUID;
+        //if ( EventManager.overElement != nullptr ) ofLog() << EventManager.overElement->vuiUID;
     }
 
 	void EM::Disable() {
@@ -568,7 +568,7 @@ namespace VUI {
             return;
         }
         //ofLog() << "EMBridge::Update - " << ofRandomf();
-        for( vector<GuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
+        for( vector<vuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
             if ( EventHasElement((*it)) ) GetLatestElement((*it))->TriggerEvent((*it));
         }
         
@@ -582,7 +582,7 @@ namespace VUI {
             
         }
         
-        //if ( EventManager.overElement != nullptr ) EventManager.overElement->SetState( GUI_STATE_OVER );
+        //if ( EventManager.overElement != nullptr ) EventManager.overElement->SetState( VUI_STATE_OVER );
         
         EventManager.Purge();
         

@@ -21,8 +21,8 @@ namespace VUI {
         
     public:
         
-        ofEvent<guiEventArgs> onFocus;
-        ofEvent<guiEventArgs> onUnfocus;
+        ofEvent<vuiEventArgs> onFocus;
+        ofEvent<vuiEventArgs> onUnfocus;
         
         ~TextField(){};
         TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
@@ -49,7 +49,7 @@ namespace VUI {
                 ParsePropValue( (*it).first, (*it).second );
             }
             
-            ofAddListener(onStateChange, this, &TextField::_guiEventHandler );
+            ofAddListener(onStateChange, this, &TextField::_vuiEventHandler );
         
         };
         
@@ -57,15 +57,15 @@ namespace VUI {
             //ofLog() << prop << ":" << value;
             
             if ( prop == "text-align" || prop == "textAlign" ){
-                if (value == "left-top") SetTextAlignment(GUI_ALIGN_LEFT_TOP);
-                else if (value == "left-center") SetTextAlignment(GUI_ALIGN_LEFT_CENTER);
-                else if (value == "left-bottom") SetTextAlignment(GUI_ALIGN_LEFT_BOTTOM);
-                else if (value == "center-top") SetTextAlignment(GUI_ALIGN_CENTER_TOP);
-                else if (value == "center-center") SetTextAlignment(GUI_ALIGN_CENTER_CENTER);
-                else if (value == "center-bottom") SetTextAlignment(GUI_ALIGN_CENTER_BOTTOM);
-                else if (value == "right-top") SetTextAlignment(GUI_ALIGN_RIGHT_TOP);
-                else if (value == "right-center") SetTextAlignment(GUI_ALIGN_RIGHT_CENTER);
-                else if (value == "right-bottom") SetTextAlignment(GUI_ALIGN_RIGHT_BOTTOM);
+                if (value == "left-top") SetTextAlignment(VUI_ALIGN_LEFT_TOP);
+                else if (value == "left-center") SetTextAlignment(VUI_ALIGN_LEFT_CENTER);
+                else if (value == "left-bottom") SetTextAlignment(VUI_ALIGN_LEFT_BOTTOM);
+                else if (value == "center-top") SetTextAlignment(VUI_ALIGN_CENTER_TOP);
+                else if (value == "center-center") SetTextAlignment(VUI_ALIGN_CENTER_CENTER);
+                else if (value == "center-bottom") SetTextAlignment(VUI_ALIGN_CENTER_BOTTOM);
+                else if (value == "right-top") SetTextAlignment(VUI_ALIGN_RIGHT_TOP);
+                else if (value == "right-center") SetTextAlignment(VUI_ALIGN_RIGHT_CENTER);
+                else if (value == "right-bottom") SetTextAlignment(VUI_ALIGN_RIGHT_BOTTOM);
             } else if ( prop == "text-shadow" ){
                 vector<string> xy = ofSplitString( value, "," );
                 if ( xy.size() == 2 ) SetTextShadow( ofToFloat( xy[0] ), ofToFloat( xy[1] ) );
@@ -89,7 +89,7 @@ namespace VUI {
         
         
         string text = "";
-        Align textAlignment = GUI_ALIGN_LEFT_TOP;
+        Align textAlignment = VUI_ALIGN_LEFT_TOP;
         
         void SetText( string t ){
             text = t;
@@ -106,7 +106,7 @@ namespace VUI {
         }
         
         bool IsFocused(){
-            if ( state == GUI_STATE_DOWN ) return true;
+            if ( state == VUI_STATE_DOWN ) return true;
             return false;
         }
         
@@ -165,15 +165,15 @@ namespace VUI {
                 float y = 0;
                 
                 switch( textAlignment ){
-                    case GUI_ALIGN_LEFT_TOP:
+                    case VUI_ALIGN_LEFT_TOP:
                         x = 0;
                         y = 0;
                         break;
-                    case GUI_ALIGN_LEFT_CENTER:
+                    case VUI_ALIGN_LEFT_CENTER:
                         x = 0;
                         y = ((GetHeight() - rect.height)*0.5);
                         break;
-                    case GUI_ALIGN_CENTER_CENTER:
+                    case VUI_ALIGN_CENTER_CENTER:
                         x = ((GetWidth() - rect.width)*0.5);
                         y = ((GetHeight() - rect.height)*0.5);
                         break;
@@ -191,7 +191,7 @@ namespace VUI {
                 
                 ofSetColor(0,0,0,255);
 				//ofLog() << rect.height << " - " << font->getLineHeight() << " (" << font->getSize() << ")";
-                if ( state == GUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + x + rect.width + (font->getSize()*.18), parentOffsetY + y - (rect.height*.15), 2, (rect.height*1.3) );
+                if ( state == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + x + rect.width + (font->getSize()*.18), parentOffsetY + y - (rect.height*.15), 2, (rect.height*1.3) );
                 
             }
         }
@@ -199,8 +199,8 @@ namespace VUI {
     private:
         
         
-        void _guiEventHandler(guiEventArgs& evt){
-            if ( evt.eventType == GUI_EVENT_STATE_CHANGE ){
+        void _vuiEventHandler(vuiEventArgs& evt){
+            if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
                 //ofLog() << evt.element->GetState() << "  - " << ofRandomf();
             }
         }

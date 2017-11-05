@@ -23,10 +23,10 @@ namespace VUI {
 		map< string, ofImage* > images;
 		map< int, bool> hasState;
 
-		int anchorPoint = GUI_ALIGN_LEFT_TOP;
+		int anchorPoint = VUI_ALIGN_LEFT_TOP;
 
-		int state = GUI_STATE_UP;
-		int virtualState = GUI_STATE_UP;
+		int state = VUI_STATE_UP;
+		int virtualState = VUI_STATE_UP;
 		bool hasStyle = false;
 
         
@@ -44,21 +44,21 @@ namespace VUI {
 		virtual ~Element();
 		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string selector = "", string selectorB = "" );
 
-		ofEvent<guiEventArgs> onMouseClick;
-		ofEvent<guiEventArgs> onMousePressed;
-		ofEvent<guiEventArgs> onMouseReleased;
-        ofEvent<guiEventArgs> onMouseDrag;
+		ofEvent<vuiEventArgs> onMouseClick;
+		ofEvent<vuiEventArgs> onMousePressed;
+		ofEvent<vuiEventArgs> onMouseReleased;
+        ofEvent<vuiEventArgs> onMouseDrag;
 
-		ofEvent<guiEventArgs> onTouchDown;
-		ofEvent<guiEventArgs> onTouchUp;
-		ofEvent<guiEventArgs> onTouchTap;
+		ofEvent<vuiEventArgs> onTouchDown;
+		ofEvent<vuiEventArgs> onTouchUp;
+		ofEvent<vuiEventArgs> onTouchTap;
         
-        ofEvent<guiEventArgs> onStateChange;
+        ofEvent<vuiEventArgs> onStateChange;
 
 		ofFbo *fbo = nullptr;
 		ofTexture *maskTex = nullptr;
 
-		int guiUID = abs((int)ofRandom(7, 7777777777));
+		int vuiUID = abs((int)ofRandom(7, 7777777777));
 
 		void SetMask( ofTexture *maskTexture ) {
 			maskTex = maskTexture;
@@ -103,9 +103,9 @@ namespace VUI {
             state = _state;
             virtualState = _state;
             
-            guiEventArgs args;
+            vuiEventArgs args;
             args.element = this;
-            args.eventType = GUI_EVENT_STATE_CHANGE;
+            args.eventType = VUI_EVENT_STATE_CHANGE;
             
             ofNotifyEvent( onStateChange, args, this );
         }
@@ -120,11 +120,11 @@ namespace VUI {
 		Element* SetName(string _name) { name = _name; return this; }
         string GetName(){ return name; }
 
-		Element* SetStyle(string style, int state = GUI_STATE_UP, bool initState = true );
+		Element* SetStyle(string style, int state = VUI_STATE_UP, bool initState = true );
 
         void Render(float parentOffsetX = 0, float parentOffsetY = 0, float parentOpacity = 1.0, ofVec2f _anchorOffset = ofVec2f::zero() );
 		void Update(int mouseX = -1, int mouseY = -1, bool internalUpdate = false);
-		void ParseStyle(string property = "", int state = GUI_STATE_UP);
+		void ParseStyle(string property = "", int state = VUI_STATE_UP);
 		float GetProperty(string property);
 		void SetProperty(string property, string val);
 		void SetProperty(string property, float val);
@@ -221,7 +221,7 @@ namespace VUI {
 			anchorPoint = ap;
 		}
         
-        void TriggerEvent(GuiEvent eventType);
+        void TriggerEvent(vuiEvent eventType);
         
         map<string,string> propValue;
         

@@ -119,7 +119,7 @@ namespace VUI {
 
 	string StyleSheet::ExtractStyleByState(string style, int state) {
 		vector<string> split = ofSplitString(style, "&");
-		if (state == GUI_STATE_UP) return split.at(0);
+		if (state == VUI_STATE_UP) return split.at(0);
 
 		vector<string> tempSplit;
 		for (vector<string>::iterator it = split.begin()+1; it != split.end(); it++) {
@@ -131,8 +131,8 @@ namespace VUI {
 			//cout << "[0] => " << tempSplit.at(0) << endl;
 			//cout << "[1] => " << tempSplit.at(1) << endl;
 
-			if (state == GUI_STATE_OVER && tempSplit.at(0).find("over") != string::npos ||
-				state == GUI_STATE_DOWN && tempSplit.at(0).find("down") != string::npos) {
+			if (state == VUI_STATE_OVER && tempSplit.at(0).find("over") != string::npos ||
+				state == VUI_STATE_DOWN && tempSplit.at(0).find("down") != string::npos) {
 				return tempSplit.at(1);
 			}
 			
