@@ -35,7 +35,7 @@ public:
              background-color: transparent;
              font: Gotham-Medium.otf,{{font-size}};
              color: #ffffff;
-             padding: 6px;
+             padding: 6;
          ]
         
         [.btn-setView>
