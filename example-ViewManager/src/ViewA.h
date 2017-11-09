@@ -90,7 +90,7 @@ public:
         ofAddListener( btnViewB->onMouseClick, this, &ViewA::vuiEventHandler );
         ofAddListener( btnViewBTriggerExit->onMouseClick, this, &ViewA::vuiEventHandler );
         
-        // exit animation
+        // exit animation element
         box = new Element( 400, 400, ss, ".box" );
 	}
     
@@ -131,12 +131,14 @@ public:
      
      // NEW Stuff
      
+     // useful for animate in / out states for view
      virtual void OnEnterView() {};
      virtual void BeforeExitView() {
          ExitView();
      };
      
-     ExitView() - if making your own BeforeExitView() make sure to call this when your done
+     // IMPORTANT - if making your own BeforeExitView() make sure to call this when your done
+     ExitView();
      
      
      

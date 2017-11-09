@@ -41,7 +41,7 @@ public:
         ofAddListener( btnViewA->onMouseClick, this, &ViewB::vuiEventHandler );
         ofAddListener( btnViewATriggerExit->onMouseClick, this, &ViewB::vuiEventHandler );
         
-        // exit animation
+        // exit animation element
         box = new Element( 1200, 400, VUI::GetStyleSheet("ViewAStyles"), ".box", "#boxB" );
 	}
     
@@ -63,6 +63,7 @@ public:
     }
     
     void BeforeExitView(){
+        // a different way to find event using vuiEventArgs.tween
         boxTween = box->Animate( 1, "{rotation: 135, easing:Elastic.easeOut, scale: 2}", this, &ViewB::vuiEventHandler );
     }
 
@@ -80,12 +81,14 @@ public:
      
      // NEW Stuff
      
+     // useful for animate in / out states for view
      virtual void OnEnterView() {};
      virtual void BeforeExitView() {
          ExitView();
      };
      
-     ExitView() - if making your own BeforeExitView() make sure to call this when your done
+     // IMPORTANT - if making your own BeforeExitView() make sure to call this when your done
+     ExitView();
      
      
      
