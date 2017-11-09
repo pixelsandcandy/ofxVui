@@ -15,6 +15,7 @@ public:
     //
     
     TextBox* label;
+    TextBox* resolution;
     
     TextBox* btnViewA;
     TextBox* btnViewATriggerExit;
@@ -29,6 +30,10 @@ public:
         // view name - using StyleSheet made in ViewA
         label = new TextBox( 20, 20, VUI::GetStyleSheet("ViewAStyles"), ".view-label" );
         label->SetText( "View B" );
+        
+        // resolution (main.cpp)
+        resolution = new TextBox( VUI::GetResolutionX() - 20, VUI::GetResolutionY() - 20, VUI::GetStyleSheet("ViewAStyles"), ".resolution" );
+        resolution->SetText( ofToString(VUI::GetResolutionX()) + "x" + ofToString(VUI::GetResolutionY()) + "   scale=" + ofToString(VUI::GetScale()) );
         
         // buttonZ
         btnViewA = new TextBox( 300, 120, VUI::GetStyleSheet("ViewAStyles"), ".btn-setView" );
@@ -51,6 +56,7 @@ public:
             else if ( evt.element == btnViewATriggerExit ) VUI::SetView( "view-a", true );
         }
         
+        // must call ExitView() if overriding BeforeExitView()
         if ( evt.tween == boxTween && evt.eventType == VUI_EVENT_ANIMATE_COMPLETE ) ExitView();
     }
     
@@ -74,6 +80,7 @@ public:
         btnViewATriggerExit->Render();
         
         box->Render();
+        resolution->Render();
 	}
     
     
@@ -87,7 +94,7 @@ public:
          ExitView();
      };
      
-     // IMPORTANT - if making your own BeforeExitView() make sure to call this when your done
+     // IMPORTANT - if overriding BeforeExitView() make sure to call this when your done
      ExitView();
      
      

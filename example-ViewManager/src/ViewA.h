@@ -17,6 +17,7 @@ public:
     StyleSheet* ss;
     
     TextBox* label;
+    TextBox* resolution;
     
     TextBox* btnViewB;
     TextBox* btnViewBTriggerExit;
@@ -36,6 +37,16 @@ public:
              font: Gotham-Medium.otf,{{font-size}};
              color: #ffffff;
              padding: 6;
+         ]
+        
+        [.resolution>
+             width: 340;
+             height: 30;
+             font: Gotham-Medium.otf,{{font-size}};
+             color: #ffffff;
+             anchorPoint: right-bottom;
+             textAlign: right-bottom;
+             background-color: transparent;
          ]
         
         [.btn-setView>
@@ -79,6 +90,10 @@ public:
         label = new TextBox( 20, 20, ss, ".view-label" );
         label->SetText( "View A" );
         
+        // resolution (in main.cpp)
+        resolution = new TextBox( VUI::GetResolutionX() - 20, VUI::GetResolutionY() - 20, ss, ".resolution" );
+        resolution->SetText( ofToString(VUI::GetResolutionX()) + "x" + ofToString(VUI::GetResolutionY()) + "   scale=" + ofToString(VUI::GetScale()) );
+        
         // buttonZ
         btnViewB = new TextBox( 300, 120, ss, ".btn-setView" );
         btnViewB->SetText( "SetView(\"view-b\")" );
@@ -101,6 +116,7 @@ public:
         }
         
         if ( evt.element == box ){
+            // must call ExitView() if overriding BeforeExitView()
             if ( evt.eventType == VUI_EVENT_ANIMATE_COMPLETE ) ExitView();
         }
     }
@@ -124,6 +140,7 @@ public:
         btnViewBTriggerExit->Render();
         
         box->Render();
+        resolution->Render();
 	}
     
     
@@ -137,7 +154,7 @@ public:
          ExitView();
      };
      
-     // IMPORTANT - if making your own BeforeExitView() make sure to call this when your done
+     // IMPORTANT - if overriding BeforeExitView() make sure to call this when your done
      ExitView();
      
      

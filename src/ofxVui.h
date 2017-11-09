@@ -567,6 +567,14 @@ namespace VUI {
 		return vh * vscale;
 	}
     
+    static int GetResolutionX(){
+        return vw;
+    }
+    
+    static int GetResolutionY(){
+        return vh;
+    }
+    
     static float GetScale(bool inverse = false){
         if ( inverse ) return 1/vscale;
         return vscale;

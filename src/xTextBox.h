@@ -104,7 +104,7 @@ namespace VUI {
         
         bool isTextField = false;
         
-        void EnableTextField(){
+        void MakeTextField(){
             SetToggle();
             isTextField = true;
         }
@@ -198,9 +198,33 @@ namespace VUI {
                         x = 0;
                         y = ((GetHeight() - rect.height)*0.5);
                         break;
+                    case VUI_ALIGN_LEFT_BOTTOM:
+                        x = 0;
+                        y = (GetHeight() - rect.height);
+                        break;
+                    case VUI_ALIGN_CENTER_TOP:
+                        x = ((GetWidth() - rect.width)*0.5);
+                        y = 0;
+                        break;
                     case VUI_ALIGN_CENTER_CENTER:
                         x = ((GetWidth() - rect.width)*0.5);
                         y = ((GetHeight() - rect.height)*0.5);
+                        break;
+                    case VUI_ALIGN_CENTER_BOTTOM:
+                        x = ((GetWidth() - rect.width)*0.5);
+                        y = (GetHeight() - rect.height);
+                        break;
+                    case VUI_ALIGN_RIGHT_TOP:
+                        x = GetWidth() - rect.width;
+                        y = 0;
+                        break;
+                    case VUI_ALIGN_RIGHT_CENTER:
+                        x = GetWidth() - rect.width;
+                        y = ((GetHeight() - rect.height)*0.5);
+                        break;
+                    case VUI_ALIGN_RIGHT_BOTTOM:
+                        x = GetWidth() - rect.width;
+                        y = (GetHeight() - rect.height);
                         break;
                 }
                 
