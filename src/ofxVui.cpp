@@ -7,6 +7,7 @@ namespace VUI {
 	map< string, View*> views;
 
 	map< int, ofPoint> touches;
+    map<string, StyleSheet*> styleSheets;
 
 	string nextView;
 	string currView;
@@ -45,8 +46,10 @@ namespace VUI {
 
 		VUI::currView = VUI::nextView;
 
-		if (!VUI::currView.empty() && VUI::views[VUI::currView] != nullptr) VUI::views[VUI::currView]->Enter();
+        if (!VUI::currView.empty() && VUI::views[VUI::currView] != nullptr) {
             VUI::views[VUI::currView]->_Setup();
+            VUI::views[VUI::currView]->OnEnterView();
+        }
 
 
         if (VUI::TouchEnabled()) {
@@ -337,33 +340,34 @@ namespace VUI {
                 } else if ( propVal[0] == "delay" ){
                     delay = ofToFloat( propVal[1] );
                 } else if ( propVal[0] == "easing" || propVal[0] == "ease" ){
-                    string e = propVal[1];
+                    string e = ofToLower(propVal[1]);
                     
-                    if ( e == "back.easeIn" ) ease = ofxeasing::back::easeIn;
-                    else if ( e == "back.easeOut" ) ease = ofxeasing::back::easeOut;
-                    else if ( e == "back.easeInOut" ) ease = ofxeasing::back::easeInOut;
-                    else if ( e == "bounce.easeIn" ) ease = ofxeasing::bounce::easeIn;
-                    else if ( e == "bounce.easeOut" ) ease = ofxeasing::bounce::easeOut;
-                    else if ( e == "bounce.easeInOut" ) ease = ofxeasing::bounce::easeInOut;
-                    else if ( e == "circ.easeIn" ) ease = ofxeasing::circ::easeIn;
-                    else if ( e == "circ.easeOut" ) ease = ofxeasing::circ::easeOut;
-                    else if ( e == "circ.easeInOut" ) ease = ofxeasing::circ::easeInOut;
-                    else if ( e == "cubic.easeIn" ) ease = ofxeasing::cubic::easeIn;
-                    else if ( e == "cubic.easeOut" ) ease = ofxeasing::cubic::easeOut;
-                    else if ( e == "cubic.easeInOut" ) ease = ofxeasing::cubic::easeInOut;
-                    else if ( e == "elastic.easeIn" ) ease = ofxeasing::elastic::easeIn;
-                    else if ( e == "elastic.easeOut" ) ease = ofxeasing::elastic::easeOut;
-                    else if ( e == "elastic.easeInOut" ) ease = ofxeasing::elastic::easeInOut;
-                    else if ( e == "exp.easeIn" ) ease = ofxeasing::exp::easeIn;
-                    else if ( e == "exp.easeOut" ) ease = ofxeasing::exp::easeOut;
-                    else if ( e == "exp.easeInOut" ) ease = ofxeasing::exp::easeInOut;
-                    else if ( e == "linear.easeIn" ) ease = ofxeasing::linear::easeIn;
-                    else if ( e == "linear.easeOut" ) ease = ofxeasing::linear::easeOut;
-                    else if ( e == "linear.easeInOut" ) ease = ofxeasing::linear::easeInOut;
-                    else if ( e == "linear.easeNone" ) ease = ofxeasing::linear::easeNone;
-                    else if ( e == "quad.easeIn" ) ease = ofxeasing::quad::easeIn;
-                    else if ( e == "quad.easeOut" ) ease = ofxeasing::quad::easeOut;
-                    else if ( e == "quad.easeInOut" ) ease = ofxeasing::quad::easeInOut;
+                    if ( e == "back.easein" ) ease = ofxeasing::back::easeIn;
+                    else if ( e == "back.easeout" ) ease = ofxeasing::back::easeOut;
+                    else if ( e == "back.easeinout" ) ease = ofxeasing::back::easeInOut;
+                    else if ( e == "bounce.easein" ) ease = ofxeasing::bounce::easeIn;
+                    else if ( e == "bounce.easeout" ) ease = ofxeasing::bounce::easeOut;
+                    else if ( e == "bounce.easeinout" ) ease = ofxeasing::bounce::easeInOut;
+                    else if ( e == "circ.easein" ) ease = ofxeasing::circ::easeIn;
+                    else if ( e == "circ.easeout" ) ease = ofxeasing::circ::easeOut;
+                    else if ( e == "circ.easeinout" ) ease = ofxeasing::circ::easeInOut;
+                    else if ( e == "cubic.easein" ) ease = ofxeasing::cubic::easeIn;
+                    else if ( e == "cubic.easeout" ) ease = ofxeasing::cubic::easeOut;
+                    else if ( e == "cubic.easeinout" ) ease = ofxeasing::cubic::easeInOut;
+                    else if ( e == "elastic.easein" ) ease = ofxeasing::elastic::easeIn;
+                    else if ( e == "elastic.easeout" ) ease = ofxeasing::elastic::easeOut;
+                    else if ( e == "elastic.easeinout" ) ease = ofxeasing::elastic::easeInOut;
+                    else if ( e == "exp.easein" ) ease = ofxeasing::exp::easeIn;
+                    else if ( e == "exp.easeout" ) ease = ofxeasing::exp::easeOut;
+                    else if ( e == "exp.easeinout" ) ease = ofxeasing::exp::easeInOut;
+                    else if ( e == "linear.easein" ) ease = ofxeasing::linear::easeIn;
+                    else if ( e == "linear.easeout" ) ease = ofxeasing::linear::easeOut;
+                    else if ( e == "linear.easeinout" ) ease = ofxeasing::linear::easeInOut;
+                    else if ( e == "linear.easenone" ) ease = ofxeasing::linear::easeNone;
+                    else if ( e == "quad.easein" ) ease = ofxeasing::quad::easeIn;
+                    else if ( e == "quad.easeout" ) ease = ofxeasing::quad::easeOut;
+                    else if ( e == "quad.easeinout" ) ease = ofxeasing::quad::easeInOut;
+                    
 				}
 				else if (propVal[0] == "id") {
 					id = propVal[1];
@@ -424,7 +428,7 @@ namespace VUI {
                 
                 ofNotifyEvent( onStart, args, this );
                 
-                ofLog() << cmd;
+                //ofLog() << cmd;
             }
             
             perc = (currTime - startTime) / duration;

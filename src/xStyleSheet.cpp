@@ -8,8 +8,12 @@ namespace VUI {
 	StyleSheet::~StyleSheet() {
 	}
 	StyleSheet::StyleSheet( string ss ) {
-		if (ss != "") Process( ss );
+		Process( ss );
 	}
+    StyleSheet::StyleSheet( string ss, string name ){
+        Process( ss );
+        VUI::AddStyleSheet( name, this );
+    }
 
 	void StyleSheet::AddImage(string id, string fileName) {
 		ofImage *img = new ofImage();
@@ -131,8 +135,8 @@ namespace VUI {
 			//cout << "[0] => " << tempSplit.at(0) << endl;
 			//cout << "[1] => " << tempSplit.at(1) << endl;
 
-			if (state == VUI_STATE_OVER && tempSplit.at(0).find("over") != string::npos ||
-				state == VUI_STATE_DOWN && tempSplit.at(0).find("down") != string::npos) {
+			if ((state == VUI_STATE_OVER && tempSplit.at(0).find("over") != string::npos) ||
+				(state == VUI_STATE_DOWN && tempSplit.at(0).find("down") != string::npos)) {
 				return tempSplit.at(1);
 			}
 			

@@ -27,9 +27,10 @@ namespace VUI {
 
 		int state = VUI_STATE_UP;
 		int virtualState = VUI_STATE_UP;
+        int prevVirtualState = VUI_STATE_UP;
 		bool hasStyle = false;
 
-        
+        bool DEBUG_MODE = false;
 		
         
 		ofVec3f anchorOffset;
@@ -60,6 +61,10 @@ namespace VUI {
 
 		int vuiUID = abs((int)ofRandom(7, 7777777777));
 
+        void DEBUG(){
+            DEBUG_MODE = true;
+        }
+        
 		void SetMask( ofTexture *maskTexture ) {
 			maskTex = maskTexture;
 

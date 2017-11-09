@@ -5,7 +5,7 @@ namespace VUI {
 	View::~View() {};
 	View::View() {};
 
-	void View::Done() {
+	void View::ExitView() {
 		VUI::Next();
 	}
 }

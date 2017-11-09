@@ -1,5 +1,6 @@
 #include "ofApp.h"
-#include "ViewExample.h"
+#include "ViewA.h"
+#include "ViewB.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -10,7 +11,8 @@ void ofApp::setup(){
     VUI::SetBackground( 20 );
     
     // name, viewPtr, set view
-    VUI::AddView( "my-view", new ViewExample(), true );
+    VUI::AddView( "view-a", new ViewA(), true );
+    VUI::AddView( "view-b", new ViewB() );
     
     // another way to set view
     //VUI::SetView( "my-view" );

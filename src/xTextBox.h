@@ -1,5 +1,5 @@
 //
-//  xTextField.h
+//  xTextBox.h
 //
 //  Created by Christopher Miles on 9/27/17.
 //
@@ -7,15 +7,15 @@
 
 #pragma once
 
-#ifndef __ofxVui_TextField__
-#define __ofxVui_TextField__
+#ifndef __ofxVui_TextBox__
+#define __ofxVui_TextBox__
 
 #include "ofMain.h"
 
 namespace VUI {
     
     
-    class TextField : public Element
+    class TextBox : public Element
     {
         friend Element;
         
@@ -24,10 +24,8 @@ namespace VUI {
         ofEvent<vuiEventArgs> onFocus;
         ofEvent<vuiEventArgs> onUnfocus;
         
-        ~TextField(){};
-        TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
-            
-            SetToggle();
+        ~TextBox(){};
+        TextBox( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
             
             textColor.setHex(stoul("0xff00ff", nullptr, 16), 255.0 );
         
@@ -49,7 +47,8 @@ namespace VUI {
                 ParsePropValue( (*it).first, (*it).second );
             }
             
-            ofAddListener(onStateChange, this, &TextField::_vuiEventHandler );
+            //ofAddListener(onStateChange, this, &TextBox::_vuiEventHandler );
+            //ofAddListener(onMouseClick, this, &TextBox::_vuiEventHandler );
         
         };
         
@@ -68,8 +67,8 @@ namespace VUI {
                 else if (value == "right-bottom") SetTextAlignment(VUI_ALIGN_RIGHT_BOTTOM);
             } else if ( prop == "text-shadow" ){
                 vector<string> xy = ofSplitString( value, "," );
-                if ( xy.size() == 2 ) SetTextShadow( ofToFloat( xy[0] ), ofToFloat( xy[1] ) );
-                else if ( xy.size() == 3 ) SetTextShadow( ofToFloat( xy[0] ), ofToFloat( xy[1] ), ofToFloat(xy[2]) );
+                if ( xy.size() == 2 ) SetTextShadow( ofToInt( xy[0] ), ofToInt( xy[1] ) );
+                else if ( xy.size() == 3 ) SetTextShadow( ofToInt( xy[0] ), ofToInt( xy[1] ), ofToInt(xy[2]) );
             } else if ( prop == "color" ) {
                 string colorStr(value);
                 
@@ -84,6 +83,10 @@ namespace VUI {
                 }
                 
                 textColor.setHex(floatColor, 255.0);
+            } else if ( prop == "padding" ){
+                vector<string> xy = ofSplitString( value, "," );
+                if ( xy.size() == 1 ) SetPadding( ofToInt(xy[0]) );
+                else if ( xy.size() == 2 ) SetPadding( ofToInt(xy[0]), ofToInt(xy[1]) );
             }
         }
         
@@ -97,6 +100,13 @@ namespace VUI {
         
         string GetText(){
             return text;
+        }
+        
+        bool isTextField = false;
+        
+        void EnableTextField(){
+            SetToggle();
+            isTextField = true;
         }
         
         int textLimit = -1;
@@ -140,9 +150,19 @@ namespace VUI {
             textAlignment = align;
         }
         
+        void SetPadding( int x, int y ){
+            padding.set( x, y );
+        }
+        
+        void SetPadding( int xy ){
+            SetPadding( xy, xy );
+        }
+        
         ofVec2f textOffset;
         ofVec3f shadowPos = ofVec3f(0,0,210);
-        ofColor textColor = ofColor::black;
+        ofColor textColor = ofColor::gray;
+        
+        ofVec2f padding;
         
         int spaceOffsetX = 0;
         
@@ -153,11 +173,16 @@ namespace VUI {
         }
         
         
+        
+        
         void RenderAfter(float parentOffsetX = 0, float parentOffsetY = 0){
             
             //ofLog() << parentOffsetX << "," << parentOffsetY;
             
+            
             if ( font != nullptr ) {
+                _Calibrate();
+                
                 //ofSetColor(255,0,255,255);
                 ofRectangle rect;
                 rect = font->getStringBoundingBox(text, 0,0);
@@ -182,28 +207,40 @@ namespace VUI {
                 
                 if ( hasTextShadow ) {
                     ofSetColor(0,0,0, shadowPos.z );
-                    font->drawString( text, shadowPos.x + parentOffsetX + x, shadowPos.y + parentOffsetY + y + (font->getSize()*0.7) );
+                    font->drawString( text, shadowPos.x + parentOffsetX + padding.x + x, shadowPos.y + parentOffsetY + padding.y + y + textOffset.y );
                 }
                 
                 ofSetColor(255,255,255,255);
                 ofSetColor(textColor);
-                font->drawString( text, parentOffsetX + x, parentOffsetY + y + (font->getSize()*0.7));
+                font->drawString( text, parentOffsetX + padding.x + x, parentOffsetY + padding.y + y + textOffset.y );
                 
                 ofSetColor(0,0,0,255);
 				//ofLog() << rect.height << " - " << font->getLineHeight() << " (" << font->getSize() << ")";
-                if ( state == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + x + rect.width + (font->getSize()*.18), parentOffsetY + y - (rect.height*.15), 2, (rect.height*1.3) );
                 
+                // typing cursor
+                if ( isTextField && state == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.x + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.y + y - (rect.height*.15), 2, (rect.height*1.3) );
             }
         }
         
     private:
+        bool _isCalibrated = false;
         
+        void _Calibrate(){
+            if ( _isCalibrated ) return;
+            _isCalibrated = true;
+            
+            ofRectangle rect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+][}{:?><", 0,0);
+            
+            textOffset.set(0,rect.height - font->getSize()*.3333 );
+        }
         
-        void _vuiEventHandler(vuiEventArgs& evt){
-            if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
+        /*void _vuiEventHandler(vuiEventArgs& evt){
+            if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ){
+                ofLog() << "MOUSE_CLICK";
+            } else if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
                 //ofLog() << evt.element->GetState() << "  - " << ofRandomf();
             }
-        }
+        }*/
     };
     
 }

@@ -243,6 +243,11 @@ namespace VUI {
             if (!ofGetMousePressed()) lastTimeMouseDown = 0;
         }
         
+        if ( DEBUG_MODE ) {
+            ofLog() << "virtal:" << prevVirtualState << "(" << virtualState << ") > real:" << _state << "(" << state << ")";
+            ofLog() << "update: " << update;
+        }
+        
         /*if ( name == "nameField" ){
             ofLog() << lastTimeMouseDown;
             ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  _state: " << _state << "   update:" << update << "  - " << ofRandomf();
@@ -258,13 +263,18 @@ namespace VUI {
                 if ( ofGetElapsedTimeMillis() < lastTimeMouseDown ){
                     lastTimeMouseDown = ofGetElapsedTimeMillis() + 500;
                     //ofLog() << "return" << endl;
+                    //if ( name == ".textfield" ) ofLog() << virtualState << " > " << _state << "     RETURN - " << ofRandomf();
                     return;
+                } else {
+                    
                 }
             } else if (!update){
+                
                 return;
             }
         }
         
+        //if ( name == ".textfield" ) ofLog() << virtualState << " > " << _state << "     " << ofRandomf();
         
         /*if ( _state == VUI_STATE_DOWN && ofGetElapsedTimeMillis() < lastTimeMouseDown ){
             lastTimeMouseDown = ofGetElapsedTimeMillis() + 500;
@@ -278,8 +288,16 @@ namespace VUI {
         
 
 		if (virtualState == VUI_STATE_DOWN && (_state == VUI_STATE_UP || _state == VUI_STATE_OVER)) {
+            //ofLog() << ofRandomf();
             VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
 		}
+        
+        if ( isToggle ){
+            if ( prevVirtualState == VUI_STATE_OVER && virtualState == VUI_STATE_UP && _state == VUI_STATE_OVER ) {
+                //ofLog() << prevVirtualState;
+                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+            }
+        }
 		
         /*else if (!isToggle && _state == VUI_STATE_OVER && !hasState[_state] && update ) {
             state = VUI_STATE_UP;
@@ -302,20 +320,32 @@ namespace VUI {
                 }
             }
         } else {
-            if (hasState[_state] && update) {
+            if ( _state == VUI_STATE_UP ) {
+                state = _state;
+            } else if (hasState[_state] && update) {
+                VUI::EventManager.StoreState( this, (VUI::State)_state );
+            } else {
+                state = VUI_STATE_UP;
+            }
+            /*if (hasState[_state] && update) {
                 if ( _state == VUI_STATE_UP ) state = _state;
                 if ( _state != VUI_STATE_UP ) VUI::EventManager.StoreState( this, (VUI::State)_state );
             }
             if (_state == VUI_STATE_OVER && !hasState[_state] && update ) {
                 state = VUI_STATE_UP;
-            }
+            }*/
         }
         
 		if ((virtualState == VUI_STATE_UP || virtualState == VUI_STATE_OVER ) && _state == VUI_STATE_DOWN) {
             VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
 		}
         
+        
+        prevVirtualState = int(virtualState);
+        
         virtualState = _state;
+        
+        
         
         if ( _state == VUI_STATE_DOWN ){
             lastTimeMouseDown = ofGetElapsedTimeMillis() + 500;
@@ -347,6 +377,8 @@ namespace VUI {
                 
                 argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
                 ofNotifyEvent(onTouchTap, argsTouch, this );
+                
+                //ofLog() << "click  - " << ofRandomf();
                 break;
             case VUI_EVENT_MOUSE_PRESSED:
 				args.eventType = VUI_EVENT_MOUSE_PRESSED;

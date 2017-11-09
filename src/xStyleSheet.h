@@ -12,7 +12,8 @@ namespace VUI {
 	
 	public:
 		virtual ~StyleSheet();
-		StyleSheet( string ss = "");
+		StyleSheet( string ss);
+        StyleSheet( string ss, string name );
 
 		map<string, ofImage> assets;
 

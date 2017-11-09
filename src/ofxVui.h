@@ -315,7 +315,7 @@ namespace VUI {
 
 #include "xStyleSheet.h"
 #include "xElement.h"
-#include "xTextField.h"
+#include "xTextBox.h"
 
 
 // ViewManager
@@ -344,6 +344,17 @@ namespace VUI {
 	extern ofFbo fbo;
 
 	extern map< int, ofPoint> touches;
+    
+    // UI
+    
+    extern map<string, StyleSheet*> styleSheets;
+    static void AddStyleSheet(string name, StyleSheet* styleSheet ){
+        styleSheets[name] = styleSheet;
+    }
+    
+    static StyleSheet* GetStyleSheet(string name){
+        return styleSheets[name];
+    }
 
 	//
 
@@ -556,7 +567,8 @@ namespace VUI {
 		return vh * vscale;
 	}
     
-    static float GetScale(){
+    static float GetScale(bool inverse = false){
+        if ( inverse ) return 1/vscale;
         return vscale;
     }
 
@@ -617,32 +629,35 @@ namespace VUI {
         backgroundColor.set( gray, gray, gray );
         SetBackgroundOpacity( opacity );
     }
-
-	static void Render(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
-		//ofLog() << "Render - " << ofRandomf();
-
-		PRIVATE.Init();
+    
+    static void RenderBegin(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
+        if (currView.empty() || views[currView] == nullptr) return;
+        PRIVATE.Init();
         ofEnableAlphaBlending();
-		ofSetColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 255.0*backgroundOpacity);
-		ofDrawRectangle(0, 0, vw, vh);
+        ofSetColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 255.0*backgroundOpacity);
+        ofDrawRectangle(0, 0, vw, vh);
         ofSetColor(255, 255, 255, 255);
-
-		if (currView.empty() || views[currView] == nullptr) return;
-
+        
+        if (currView.empty() || views[currView] == nullptr) return;
+        
         fbo.begin();
         ofClear(0);
-
+        
         ofEnableAlphaBlending();
-		ofSetColor(255, 255, 255, 255);
-		views[currView]->Render();
-
-		ofSetColor(255, 255, 255, 255);
-		//ofLog() << visibleViews.size();
-
-		for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
-			if ((*it) != nullptr) (*it)->Render();
-		}
-
+        ofSetColor(255, 255, 255, 255);
+        views[currView]->Render();
+        
+        ofSetColor(255, 255, 255, 255);
+        //ofLog() << visibleViews.size();
+        
+        for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
+            if ((*it) != nullptr) (*it)->Render();
+        }
+    }
+    
+    static void RenderEnd(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
+        if (currView.empty() || views[currView] == nullptr) return;
+        
         fbo.end();
         ofSetColor(255, 255, 255, 255);
         ofEnableAlphaBlending();
@@ -665,15 +680,11 @@ namespace VUI {
         }
         
         fbo.draw(x, y, w, h);
-        
-        /*if ( drawingInsideFbo ) {
-            
-            
-        } else {
-            if ( vscale != 1.0 ) fbo.draw(x, y+h, vw*vscale, -vh*vscale);
-            else fbo.draw(x, y+h, w, -h);
-        }*/
-        
+    }
+
+	static void Render(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
+        RenderBegin( drawingInsideFbo, x, y, width, height );
+        RenderEnd( drawingInsideFbo, x, y, width, height );
 	}
 
 
@@ -727,16 +738,16 @@ namespace VUI {
 
 		VUI::EventManager.Disable();
 
-		if (!currView.empty()) views[currView]->Exit();
+		//if (!currView.empty()) views[currView]->OnExitView();
 
 		PRIVATE.StartView(nextView);
 	}
 
 	
-
+    
 	
 
-	static void SetView(string name, bool doTransition = true) {
+	static void SetView(string name, bool triggerBeforeExitView = false ) {
 		if (currView == name) return;
 
 		if (!isListening) PRIVATE.Listen();
@@ -744,8 +755,8 @@ namespace VUI {
 		if (views[name] == nullptr) return;
 		nextView = name;
 
-		if (doTransition && !currView.empty()) views[currView]->TransitionOut();
-		else Next();
+        if ( !currView.empty() && triggerBeforeExitView ) views[currView]->BeforeExitView();
+        else Next();
 	}
     
     static void AddView(string name, View *view, bool setView = false ) {

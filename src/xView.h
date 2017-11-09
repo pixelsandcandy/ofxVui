@@ -14,34 +14,13 @@ namespace VUI {
 		int mouseX = 0;
 		int mouseY = 0;
 
-		void Update() {};
-		void Render() {
-			draw();
-		};
-
-		virtual void TransitionOut() {
-			Done();
-		};
-
-		virtual void TansitionIn() {};
-
-		virtual void Enter() {};
-		virtual void Exit() {};
-
-		void UpdateMousePos(int x, int y) {
-			mouseX = x;
-			mouseY = y;
-		}
-
-		//
-        bool _didSetup = false;
-        void _Setup(){
-            if (_didSetup) return;
-            else {
-                _didSetup = true;
-                setup();
-            }
-        }
+		virtual void OnEnterView() {};
+		virtual void BeforeExitView() {
+            ExitView();
+        };
+        
+        // -------------------------------------------------------- the usual suspects
+		
 		virtual void setup() {};
 		virtual void draw() {}
 		virtual void update() {};
@@ -68,9 +47,35 @@ namespace VUI {
 
 		virtual void touchDoubleTap(int x, int y, int id) {};
 		virtual void touchCancelled(int x, int y, int id) {};
-
+        
+        // --------------------------------------------------------
+        
+        void Render() {
+            draw();
+        };
+        
+        //
+        
+        void UpdateMousePos(int x, int y) {
+            mouseX = x;
+            mouseY = y;
+        }
+        
+        //
+        bool _didSetup = false;
+        void _Setup(){
+            if (_didSetup) return;
+            else {
+                _didSetup = true;
+                setup();
+            }
+        }
+        
+        void _TriggerExitView(){
+            ExitView();
+        }
 	protected:
-		void Done();
+		void ExitView();
 	};
 }
 
