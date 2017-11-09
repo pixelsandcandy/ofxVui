@@ -1,2 +1,2 @@
 # ofxVui
-ViewManager + UI = VUI :)
+ViewManager + GUI System for openFrameworks
