@@ -93,7 +93,7 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
             s += "VUI_EVENT_MOUSE_MOVED";
             break;
         case VUI_EVENT_MOUSE_DRAGGED:
-            s += "VUI_EVENT_MOUSE_DRAGGED";
+            s += "VUI_EVENT_MOUSE_DRAGGED  dragStart:" + ofToString(evt.localDragStart.x) + "," + ofToString(evt.localDragStart.y) + "  dragDelta:" + ofToString(evt.localDragDelta.x) + "," + ofToString(evt.localDragDelta.y);
             break;
         case VUI_EVENT_MOUSE_RELEASED:
             s += "VUI_EVENT_MOUSE_RELEASED";

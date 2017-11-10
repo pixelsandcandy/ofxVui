@@ -172,8 +172,10 @@ namespace VUI {
         int eventType;
         
         ofVec2f localMousePos;
+        ofVec2f localDragDelta;
+        ofVec2f localDragStart;
+        
         ofVec2f globalMousePos;
-        ofVec2f deltaDrag;
         
         Tween* tween;
     };

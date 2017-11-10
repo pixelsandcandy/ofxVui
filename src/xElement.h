@@ -284,6 +284,9 @@ namespace VUI {
         
         float opacity = 1.0;
         float parentSumOpacity = 1.0;
+        
+        ofVec2f mouseDownPos;
+        bool isMouseDown = false;
     private:
 		void SetDefaultStyles(int x, int y);
 		void UpdateAnchorOffset();

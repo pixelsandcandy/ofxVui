@@ -217,12 +217,26 @@ namespace VUI {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
                     
                     if ( VUI::GetPrevOverElement() == this ){
-                        if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
-                        else UpdateState(VUI_STATE_OVER);
+                        if ( isMouseDown && mouseDownPos.x != VUI::mouseX && mouseDownPos.y != VUI::mouseY ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
+                        else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
                         
-                        TriggerEvent( VUI_EVENT_MOUSE_MOVED );
+                        if (ofGetMousePressed()) {
+                            if ( !isMouseDown ) {
+                                isMouseDown = true;
+                                mouseDownPos.set( VUI::mouseX, VUI::mouseY );
+                                //ofLog() << VUI::mouseX << "," << VUI::mouseY;
+                            }
+                            
+                            UpdateState(VUI_STATE_DOWN);
+                        } else {
+                            UpdateState(VUI_STATE_OVER);
+                            isMouseDown = false;
+                        }
+                        
+                        
                     } else {
                         UpdateState(VUI_STATE_UP);
+                        isMouseDown = false;
                     }
                     
                     if ( VUI::GetOverElement() != this ) VUI::EventManager.StoreOverElement(this);
@@ -232,7 +246,7 @@ namespace VUI {
         }
 
 		UpdateState(VUI_STATE_UP);
-
+        isMouseDown = false;
 		
 		
 	}
@@ -411,6 +425,8 @@ namespace VUI {
                 prevMousePos.set( VUI::mouseX, VUI::mouseY );
                 break;
             case VUI_EVENT_MOUSE_DRAGGED:
+                args.localDragStart.set( mouseDownPos.x - globalMinPosition.x, mouseDownPos.y - globalMinPosition.y );
+                args.localDragDelta.set( VUI::mouseX - mouseDownPos.x, VUI::mouseY - mouseDownPos.y );
                 ofNotifyEvent(onMouseDragged, args, this);
                 break;
             case VUI_EVENT_MOUSE_RELEASED:
