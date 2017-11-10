@@ -287,6 +287,7 @@ namespace VUI {
         
         ofVec2f mouseDownPos;
         bool isMouseDown = false;
+        int lastClickTimeMS;
     private:
 		void SetDefaultStyles(int x, int y);
 		void UpdateAnchorOffset();

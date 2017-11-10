@@ -102,7 +102,7 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
             s += "VUI_EVENT_MOUSE_CLICK";
             break;
         case VUI_EVENT_MOUSE_DOUBLE_CLICK:
-            s += "VUI_EVENT_MOUSE_CLICK";
+            s += "VUI_EVENT_MOUSE_DOUBLE_CLICK";
             break;
     }
     

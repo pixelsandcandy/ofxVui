@@ -788,9 +788,11 @@ namespace VUI {
 		PRIVATE.StartView(nextView);
 	}
 
-	
+    extern int doubleClickThreshold;
     
-	
+    static void SetDoubleClickThreshold( int milliseconds = 400 ){
+        doubleClickThreshold = milliseconds;
+    }
 
 	static void SetView(string name, bool triggerBeforeExitView = false ) {
 		if (currView == name) return;

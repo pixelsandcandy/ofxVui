@@ -217,7 +217,7 @@ namespace VUI {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
                     
                     if ( VUI::GetPrevOverElement() == this ){
-                        if ( isMouseDown && mouseDownPos.x != VUI::mouseX && mouseDownPos.y != VUI::mouseY ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
+                        if ( isMouseDown && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
                         else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
                         
                         if (ofGetMousePressed()) {
@@ -406,6 +406,8 @@ namespace VUI {
         vuiEventArgs argsTouch;
         argsTouch.element = this;
         
+        int t;
+        
         switch ( eventType ){
             case VUI_EVENT_MOUSE_OVER:
                 ofNotifyEvent(onMouseOver, args, this);
@@ -436,12 +438,22 @@ namespace VUI {
                 ofNotifyEvent(onTouchUp, argsTouch, this );
                 break;
             case VUI_EVENT_MOUSE_CLICK:
-                ofNotifyEvent(onMouseClick, args, this);
+                t = ofGetElapsedTimeMillis();
                 
-                argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
-                ofNotifyEvent(onTouchTap, argsTouch, this );
+                if ( t - lastClickTimeMS < VUI::doubleClickThreshold ){
+                    args.eventType = VUI_EVENT_MOUSE_DOUBLE_CLICK;
+                    ofNotifyEvent(onMouseDoubleClick, args, this);
+                    
+                    argsTouch.eventType = VUI_EVENT_TOUCH_DOUBLE_TAP;
+                    ofNotifyEvent(onTouchDoubleTap, argsTouch, this );
+                } else {
+                    ofNotifyEvent(onMouseClick, args, this);
+                    
+                    argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
+                    ofNotifyEvent(onTouchTap, argsTouch, this );
+                }
                 
-                //ofLog() << "click  - " << ofRandomf();
+                lastClickTimeMS = t;
                 break;
             case VUI_EVENT_MOUSE_DOUBLE_CLICK:
                 ofNotifyEvent(onMouseDoubleClick, args, this);

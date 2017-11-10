@@ -303,6 +303,8 @@ namespace VUI {
     bool useTouch = false;
     bool _didInit = false;
     
+    int doubleClickThreshold = 400;
+    
     // Tween
     
     void Tween::Start( Element* el, float timeSeconds, string params ){
