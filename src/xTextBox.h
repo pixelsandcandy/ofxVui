@@ -27,6 +27,8 @@ namespace VUI {
         ~TextBox(){};
         TextBox( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
             
+            VUI::Init();
+            
             textColor.setHex(stoul("0xff00ff", nullptr, 16), 255.0 );
         
             //textOffset.y = VUI::fontSize;

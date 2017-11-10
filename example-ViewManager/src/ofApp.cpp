@@ -5,8 +5,6 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    VUI::Init();
-    
     // usually a transparent background
     VUI::SetBackground( 20 );
     

@@ -6,11 +6,17 @@
 namespace VUI {
 
 	StyleSheet::~StyleSheet() {
+        VUI::Init();
+        
 	}
 	StyleSheet::StyleSheet( string ss ) {
+        VUI::Init();
+        
 		Process( ss );
 	}
     StyleSheet::StyleSheet( string ss, string name ){
+        VUI::Init();
+        
         Process( ss );
         VUI::AddStyleSheet( name, this );
     }

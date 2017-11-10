@@ -98,15 +98,6 @@ namespace VUI {
         return fonts[filename][fontSize];
     }
 
-    extern bool useTouch;
-    
-    static void EnableTouch() {
-        useTouch = true;
-    }
-    
-    static bool TouchEnabled() {
-        return useTouch;
-    }
     
     struct vuiEventArgs;
     
@@ -179,9 +170,11 @@ namespace VUI {
     struct vuiEventArgs {
         Element* element;
         int eventType;
-        ofVec2f localPos;
-        ofVec2f globalPos;
+        
+        ofVec2f localMousePos;
+        ofVec2f globalMousePos;
         ofVec2f deltaDrag;
+        
         Tween* tween;
     };
     
@@ -258,7 +251,17 @@ namespace VUI {
     
     //
     
-    static vector<vuiEvent> evtlist = {VUI_EVENT_MOUSE_PRESSED,VUI_EVENT_MOUSE_RELEASED,VUI_EVENT_MOUSE_CLICK};
+    static vector<vuiEvent> evtlist = {
+        VUI_EVENT_MOUSE_OVER,
+        VUI_EVENT_MOUSE_OUT,
+        VUI_EVENT_MOUSE_PRESSED,
+        VUI_EVENT_MOUSE_MOVED,
+        VUI_EVENT_MOUSE_DRAGGED,
+        VUI_EVENT_MOUSE_RELEASED,
+        VUI_EVENT_MOUSE_CLICK,
+        VUI_EVENT_MOUSE_DOUBLE_CLICK
+    };
+    
     //static vector<State> statelist = {VUI_STATE_UP,VUI_STATE_OVER,VUI_STATE_DOWN};
     static vector<State> statelist = {VUI_STATE_UP,VUI_STATE_OVER,VUI_STATE_DOWN};
     
@@ -268,11 +271,13 @@ namespace VUI {
         EM(){};
         
         Element* overElement = nullptr;
+        Element* prevOverElement = nullptr;
         
-        void StoreOverElement( Element *el){
-            overElement = el;
-        }
+        void StoreOverElement( Element *el);
 		
+        Element* GetOverElement(){
+            return overElement;
+        }
         
         bool active = true;
         bool enableOnMouseUp = false;
@@ -301,12 +306,23 @@ namespace VUI {
 	static Element* GetOverElement() {
 		return EventManager.overElement;
 	}
+    
+    static Element* GetPrevOverElement() {
+        return EventManager.prevOverElement;
+    }
 
 	static void ClearOverElement() {
+        EventManager.prevOverElement = EventManager.overElement;
 		EventManager.overElement = nullptr;
 	}
-
-	void Init(bool touchEvents = false);
+    
+    extern bool _didInit;
+    static void Init(){
+        if ( _didInit ) return;
+        _didInit = true;
+        
+        PRIVATE_EM.Init();
+    };
     
     
 
@@ -431,6 +447,8 @@ namespace VUI {
 		ofEvent<ofTouchEventArgs> onTouchDown;
 		ofEvent<ofTouchEventArgs> onTouchMoved;
 		ofEvent<ofTouchEventArgs> onTouchUp;
+        
+        bool isTouchListening = false;
 
 		void DisableMouseEvents() {
 			ofRemoveListener(ofEvents().mouseMoved, this, &ViewManagerBridge::mouseMoved);
@@ -471,19 +489,24 @@ namespace VUI {
 
 			ofAddListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
 
+		}
+        
+        void EnableTouchEvents(){
+            if ( isTouchListening ) return;
+            isTouchListening = true;
+            
 #ifdef USING_ofxWinTouchHook
-			ofxWinTouchHook::EnableTouch();
-
-			ofAddListener(ofxWinTouchHook::touchDown, this, &ViewManagerBridge::touchDown);
-			ofAddListener(ofxWinTouchHook::touchMoved, this, &ViewManagerBridge::touchMoved);
-			ofAddListener(ofxWinTouchHook::touchUp, this, &ViewManagerBridge::touchUp);
+            ofxWinTouchHook::EnableTouch();
+            
+            ofAddListener(ofxWinTouchHook::touchDown, this, &ViewManagerBridge::touchDown);
+            ofAddListener(ofxWinTouchHook::touchMoved, this, &ViewManagerBridge::touchMoved);
+            ofAddListener(ofxWinTouchHook::touchUp, this, &ViewManagerBridge::touchUp);
 #else
             ofAddListener(ofEvents().touchDown, this, &ViewManagerBridge::touchDown);
             ofAddListener(ofEvents().touchMoved, this, &ViewManagerBridge::touchMoved);
             ofAddListener(ofEvents().touchUp, this, &ViewManagerBridge::touchUp);
 #endif
-
-		}
+        }
 
 
 	private:
@@ -511,6 +534,18 @@ namespace VUI {
 	};
 
 	extern ViewManagerBridge PRIVATE;
+    
+    extern bool useTouch;
+    
+    
+    static void EnableTouch() {
+        useTouch = true;
+        VUI::PRIVATE.EnableTouchEvents();
+    }
+    
+    static bool IsTouchEnabled() {
+        return useTouch;
+    }
 
 	template<class ListenerClass>
 	static void RegisterMouseEvents(ListenerClass * listener, int prio = OF_EVENT_ORDER_AFTER_APP) {
@@ -768,6 +803,8 @@ namespace VUI {
 	}
     
     static void AddView(string name, View *view, bool setView = false ) {
+        VUI::Init();
+        
         views[name] = view;
         if ( setView ) SetView( name );
     };
@@ -783,5 +820,5 @@ namespace VUI {
 
 }
 
-
 #endif
+

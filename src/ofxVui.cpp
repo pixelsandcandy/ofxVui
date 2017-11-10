@@ -52,7 +52,7 @@ namespace VUI {
         }
 
 
-        if (VUI::TouchEnabled()) {
+        if (VUI::IsTouchEnabled()) {
             if (!VUI::GetTouchDown()) VUI::EventManager.Enable();
         }
         else {
@@ -301,16 +301,7 @@ namespace VUI {
     int fontSize = 16;
     
     bool useTouch = false;
-    
-	void Init(bool touchEvents) {
-
-        if (touchEvents){
-            EnableTouch();
-            VUI::DisableMouseEvents();
-        }
-
-		PRIVATE_EM.Init();
-	}
+    bool _didInit = false;
     
     // Tween
     
@@ -514,6 +505,10 @@ namespace VUI {
         events[ eventType ].push_back( el );
     }
     
+    void EM::StoreOverElement( Element *el){
+        overElement = el;
+    }
+    
     void EM::StoreState( Element *el, State state ){
         if ( !active ) return;
         states[ state ].push_back( el );
@@ -527,6 +522,8 @@ namespace VUI {
         for( vector<State>::iterator it = statelist.begin(); it != statelist.end(); it++ ){
             states[ (*it) ].clear();
         }
+        
+        VUI::ClearOverElement();
         
         //if ( EventManager.overElement != nullptr ) ofLog() << EventManager.overElement->vuiUID;
     }
@@ -570,10 +567,12 @@ namespace VUI {
         if ( EventManager.shouldEnable != -1 ) {
             if ( ofGetElapsedTimeMillis() > EventManager.shouldEnable ) EventManager.Enable();
         }
+        
         if ( !EventManager.active ) {
             EventManager.Purge();
             return;
         }
+        
         //ofLog() << "EMBridge::Update - " << ofRandomf();
         for( vector<vuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
             if ( EventHasElement((*it)) ) GetLatestElement((*it))->TriggerEvent((*it));

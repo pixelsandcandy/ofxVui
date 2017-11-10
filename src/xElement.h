@@ -11,7 +11,10 @@ namespace VUI {
 
 	class Element : public ofNode
 	{
-
+    public:
+        
+        friend class VUI::EM;
+        
 	protected:
 
 		string name;
@@ -45,16 +48,24 @@ namespace VUI {
 		virtual ~Element();
 		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string selector = "", string selectorB = "" );
 
-		ofEvent<vuiEventArgs> onMouseClick;
+		ofEvent<vuiEventArgs> onMouseOver;
+        ofEvent<vuiEventArgs> onMouseOut;
 		ofEvent<vuiEventArgs> onMousePressed;
+        ofEvent<vuiEventArgs> onMouseMoved;
+        ofEvent<vuiEventArgs> onMouseDragged;
 		ofEvent<vuiEventArgs> onMouseReleased;
-        ofEvent<vuiEventArgs> onMouseDrag;
+        ofEvent<vuiEventArgs> onMouseClick;
+        ofEvent<vuiEventArgs> onMouseDoubleClick;
 
 		ofEvent<vuiEventArgs> onTouchDown;
 		ofEvent<vuiEventArgs> onTouchUp;
 		ofEvent<vuiEventArgs> onTouchTap;
+        ofEvent<vuiEventArgs> onTouchDoubleTap;
         
         ofEvent<vuiEventArgs> onStateChange;
+        
+        ofEvent<vuiEventArgs> onFocus;
+        ofEvent<vuiEventArgs> onUnfocus;
 
 		ofFbo *fbo = nullptr;
 		ofTexture *maskTex = nullptr;
