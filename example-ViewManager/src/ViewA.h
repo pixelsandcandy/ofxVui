@@ -16,11 +16,11 @@ public:
     
     StyleSheet* ss;
     
-    TextBox* label;
-    TextBox* resolution;
+    Text* label;
+    Text* resolution;
     
-    TextBox* btnViewB;
-    TextBox* btnViewBTriggerExit;
+    Text* btnViewB;
+    Text* btnViewBTriggerExit;
     
     Element* box;
     
@@ -87,18 +87,21 @@ public:
         ss = new StyleSheet( styles, "ViewAStyles" );
         
         // view name
-        label = new TextBox( 20, 20, ss, ".view-label" );
+        label = new Text( 20, 20, ss, ".view-label" );
         label->SetText( "View A" );
         
         // resolution (in main.cpp)
-        resolution = new TextBox( VUI::GetResolutionX() - 20, VUI::GetResolutionY() - 20, ss, ".resolution" );
+        resolution = new Text( VUI::GetResolutionX() - 20, VUI::GetResolutionY() - 20, ss, ".resolution" );
         resolution->SetText( ofToString(VUI::GetResolutionX()) + "x" + ofToString(VUI::GetResolutionY()) + "   scale=" + ofToString(VUI::GetScale()) );
         
         // buttonZ
-        btnViewB = new TextBox( 300, 120, ss, ".btn-setView" );
+        btnViewB = new Text( 300, 120, ss, ".btn-setView" );
         btnViewB->SetText( "SetView(\"view-b\")" );
         
-        btnViewBTriggerExit = new TextBox( 300, 120 + 60 + 10, ss, ".btn-setView" );
+        // debugging
+        btnViewB->SetName( "btnViewB" );
+        
+        btnViewBTriggerExit = new Text( 300, 120 + 60 + 10, ss, ".btn-setView" );
         btnViewBTriggerExit->SetText( "SetView(\"view-b\", true)" );
         
         // events

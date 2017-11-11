@@ -338,7 +338,8 @@ namespace VUI {
 
 #include "xStyleSheet.h"
 #include "xElement.h"
-#include "xTextBox.h"
+#include "xText.h"
+#include "xTextField.h"
 
 
 // ViewManager

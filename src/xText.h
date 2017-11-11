@@ -1,5 +1,5 @@
 //
-//  xTextBox.h
+//  xText.h
 //
 //  Created by Christopher Miles on 9/27/17.
 //
@@ -7,22 +7,22 @@
 
 #pragma once
 
-#ifndef __ofxVui_TextBox__
-#define __ofxVui_TextBox__
+#ifndef __ofxVui_Text__
+#define __ofxVui_Text__
 
 #include "ofMain.h"
 
 namespace VUI {
     
     
-    class TextBox : public Element
+    class Text : public Element
     {
         friend Element;
         
     public:
         
-        ~TextBox(){};
-        TextBox( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
+        ~Text(){};
+        Text( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
             
             VUI::Init();
             
@@ -50,8 +50,6 @@ namespace VUI {
             //ofAddListener(onMouseClick, this, &TextBox::_vuiEventHandler );
         
         };
-        
-        ofEvent<vuiEventArgs> onSubmit;
         
         void ParsePropValue( string prop, string value ){
             //ofLog() << prop << ":" << value;
@@ -107,91 +105,6 @@ namespace VUI {
             return text;
         }
         
-        bool isTextField = false;
-        
-        void MakeTextField( bool useKeyboardEvents = true ){
-            MakeToggle();
-            isTextField = true;
-            
-            if ( useKeyboardEvents ) {
-                ofAddListener( ofEvents().keyPressed, this, &TextBox::keyPressed );
-                ofAddListener(onStateChange, this, &TextBox::_vuiEventHandler );
-            }
-        }
-        
-        void TriggerSubmit(){
-            SetState(VUI_STATE_UP);
-            
-            vuiEventArgs args;
-            args.element = this;
-            args.eventType = VUI_EVENT_SUBMIT;
-            args.text = text;
-            
-            ofNotifyEvent(onSubmit, args, this);
-        }
-        
-        void keyPressed(ofKeyEventArgs &key ){
-            if ( GetVirtualState() != VUI_STATE_DOWN ) return;
-            //ofLog() << key.key;
-            
-            switch(key.key){
-                case OF_KEY_BACKSPACE:
-                case OF_KEY_DEL:
-                    Backspace();
-                    return;
-                    break;
-                case OF_KEY_RETURN:
-                    TriggerSubmit();
-                    return;
-                    break;
-                case OF_KEY_ESC:
-                case OF_KEY_TAB:
-                case OF_KEY_COMMAND:
-                case OF_KEY_F1:
-                case OF_KEY_F2:
-                case OF_KEY_F3:
-                case OF_KEY_F4:
-                case OF_KEY_F5:
-                case OF_KEY_F6:
-                case OF_KEY_F7:
-                case OF_KEY_F8:
-                case OF_KEY_F9:
-                case OF_KEY_F10:
-                case OF_KEY_F11:
-                case OF_KEY_F12:
-                case OF_KEY_LEFT:
-                case OF_KEY_UP:
-                case OF_KEY_RIGHT:
-                case OF_KEY_DOWN:
-                case OF_KEY_PAGE_UP:
-                case OF_KEY_PAGE_DOWN:
-                case OF_KEY_HOME:
-                case OF_KEY_END:
-                case OF_KEY_INSERT:
-                case OF_KEY_CONTROL:
-                case OF_KEY_ALT:
-                case OF_KEY_SHIFT:
-                case OF_KEY_LEFT_SHIFT:
-                case OF_KEY_RIGHT_SHIFT:
-                case OF_KEY_LEFT_CONTROL:
-                case OF_KEY_RIGHT_CONTROL:
-                case OF_KEY_LEFT_ALT:
-                case OF_KEY_RIGHT_ALT:
-                case OF_KEY_LEFT_SUPER:
-                case OF_KEY_RIGHT_SUPER:
-                    return;
-                    break;
-            }
-            
-            AddText((char)key.key);
-        }
-        
-        int textLimit = -1;
-        
-        void SetLimit( int limit ){
-            textLimit = limit;
-        }
-        
         bool IsFocused(){
             if ( GetVirtualState() == VUI_STATE_DOWN ) return true;
             return false;
@@ -199,28 +112,6 @@ namespace VUI {
         
         ofTrueTypeFont* GetFont(){
             return font;
-        }
-        
-        void AddText( string t){
-            if ( textLimit != -1 ) {
-                if ( text.size() >= textLimit ) return;
-            }
-            
-            text = text + t;
-            if ( t == " " ) spaceOffsetX = font->getSize() * .5;
-            else spaceOffsetX = 0;
-        }
-        
-        void Backspace(){
-            text = text.substr(0, text.size()-1);
-            //if ( text.substr(text.size()-2, 1
-            //ofLog() << "lastChar: " << text.substr(text.size()-1,1);
-            if ( text.size() > 0 && text.substr(text.size()-1,1) == " " ) spaceOffsetX = font->getSize() * .5;
-            else spaceOffsetX = 0;
-        }
-        
-        void AddText( char c ){
-            text = text + ofToString(c);
         }
         
         void SetTextAlignment( Align align ){
@@ -257,7 +148,7 @@ namespace VUI {
             hasTextShadow = true;
         }
         
-        
+        bool isTextField = false;
         
         
         void RenderAfter(float parentOffsetX = 0, float parentOffsetY = 0){
@@ -342,18 +233,6 @@ namespace VUI {
             
             textOffset.set(0,rect.height - font->getSize()*.3333 );
             _typingIndicatorOffset = font->getSize()*.3333;
-        }
-        
-        void _vuiEventHandler(vuiEventArgs& evt){
-            if ( isTextField ){
-                if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
-                    if ( evt.virtualState == VUI_STATE_DOWN ) {
-                        TriggerEvent( VUI_EVENT_FOCUS );
-                    } else if ( evt.virtualState == VUI_STATE_UP ){
-                        TriggerEvent( VUI_EVENT_UNFOCUS );
-                    }
-                }
-            }
         }
     };
     

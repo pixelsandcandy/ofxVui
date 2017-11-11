@@ -14,11 +14,11 @@ public:
 
     //
     
-    TextBox* label;
-    TextBox* resolution;
+    Text* label;
+    Text* resolution;
     
-    TextBox* btnViewA;
-    TextBox* btnViewATriggerExit;
+    Text* btnViewA;
+    Text* btnViewATriggerExit;
     
     Element* box;
     Tween* boxTween;
@@ -28,18 +28,21 @@ public:
     void setup() {
         
         // view name - using StyleSheet made in ViewA
-        label = new TextBox( 20, 20, VUI::GetStyleSheet("ViewAStyles"), ".view-label" );
+        label = new Text( 20, 20, VUI::GetStyleSheet("ViewAStyles"), ".view-label" );
         label->SetText( "View B" );
         
         // resolution (main.cpp)
-        resolution = new TextBox( VUI::GetResolutionX() - 20, VUI::GetResolutionY() - 20, VUI::GetStyleSheet("ViewAStyles"), ".resolution" );
+        resolution = new Text( VUI::GetResolutionX() - 20, VUI::GetResolutionY() - 20, VUI::GetStyleSheet("ViewAStyles"), ".resolution" );
         resolution->SetText( ofToString(VUI::GetResolutionX()) + "x" + ofToString(VUI::GetResolutionY()) + "   scale=" + ofToString(VUI::GetScale()) );
         
         // buttonZ
-        btnViewA = new TextBox( 300, 120, VUI::GetStyleSheet("ViewAStyles"), ".btn-setView" );
+        btnViewA = new Text( 300, 120, VUI::GetStyleSheet("ViewAStyles"), ".btn-setView" );
         btnViewA->SetText( "SetView(\"view-a\")" );
         
-        btnViewATriggerExit = new TextBox( 300, 120 + 60 + 10, VUI::GetStyleSheet("ViewAStyles"), ".btn-setView" );
+        // debugging
+        btnViewA->SetName( "btnViewA" );
+        
+        btnViewATriggerExit = new Text( 300, 120 + 60 + 10, VUI::GetStyleSheet("ViewAStyles"), ".btn-setView" );
         btnViewATriggerExit->SetText( "SetView(\"view-a\", true)" );
         
         // events

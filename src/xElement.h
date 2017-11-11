@@ -130,6 +130,10 @@ namespace VUI {
             
             if ( s != renderState ) renderState = s;
             
+            UpdateVirtualState( toState );
+        }
+        
+        void UpdateVirtualState( VUI::State toState, bool force = false ){
             if ( virtualState != toState ){
                 prevVirtualState = int(virtualState);
                 virtualState = toState;
@@ -143,8 +147,10 @@ namespace VUI {
                 ofNotifyEvent( onStateChange, args, this );
             }
             
-            
-            
+            if ( force ) {
+                prevVirtualState = int(virtualState);
+                virtualState = toState;
+            }
         }
         
 		int timeLastToggle = -1;
@@ -295,7 +301,7 @@ namespace VUI {
     protected:
         ofTrueTypeFont* font = nullptr;
         vector<string> SplitStyles(string s);
-        virtual void UpdateState(int renderState);
+        virtual void UpdateState(int renderState, bool isInside = false, bool isMouseDown = false);
         void UpdatePosition();
         
         ofVec3f localMinPosition;
@@ -312,6 +318,7 @@ namespace VUI {
         
         ofVec2f mouseDownPos;
         bool isMouseDown = false;
+        bool isMouseInside = false;
         int lastClickTimeMS;
     private:
 		void SetDefaultStyles(int x, int y);

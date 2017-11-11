@@ -36,34 +36,46 @@ void ofApp::setup(){
              }
          ]
     
-    [#textField>
-     width: 180;
-     height: 36;
-     background-color: #aeaeae;
-     font: Gotham-Medium.otf,13;
-     text-align: left-center;
-     color: #000000;
-     padding-left: 10;
-     ]
+        [#textField>
+             width: 240;
+             height: 36;
+             background-color: #aeaeae;
+             font: Gotham-Medium.otf,13;
+             text-align: left-center;
+             color: #000000;
+             padding-left: 10;
+         
+             &:over{
+                 background-color: #7cf9ae;
+             }
+         
+             &:down{
+                 background-color: #00ff00;
+             }
+         ]
+    
+    
     )";
     
     ss = new StyleSheet( styles );
     
-    textField = new TextBox( 50, 50, ss, "#textField" );
-    textField->MakeTextField();
+    textField = new TextField( 50, 50, ss, "#textField" );
     textField->SetText("omg textfield");
     
     square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
     rectangle = new Element( 760, ofGetHeight()*.5, ss, "#rectangle" );
     
     
-    // ------------------------------------------------------------------- MOUSE EVENTS
+    // ------------------------------------------------------------------- TextField / Toggle EVENTS
     ofAddListener( textField->onFocus, this, &ofApp::vuiEventHandler );
     ofAddListener( textField->onUnfocus, this, &ofApp::vuiEventHandler );
+    
+    
+    // ------------------------------------------------------------------- TextField EVENTS
     ofAddListener( textField->onSubmit, this, &ofApp::vuiEventHandler );
     
     
-    // ------------------------------------------------------------------- MOUSE EVENTS
+    // ------------------------------------------------------------------- Mouse EVENTS
     /*
          VUI_EVENT_MOUSE_OVER,
          VUI_EVENT_MOUSE_OUT,
@@ -93,6 +105,18 @@ void ofApp::setup(){
     ofAddListener( rectangle->onMouseReleased, this, &ofApp::vuiEventHandler );
     ofAddListener( rectangle->onMouseClick, this, &ofApp::vuiEventHandler );
     ofAddListener( rectangle->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
+    
+    /*
+        ofAddListener( textField->onMouseOver, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMouseOut, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMousePressed, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMouseMoved, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMouseDragged, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMouseReleased, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMouseClick, this, &ofApp::vuiEventHandler );
+        ofAddListener( textField->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
+     
+     */
     
 }
 
