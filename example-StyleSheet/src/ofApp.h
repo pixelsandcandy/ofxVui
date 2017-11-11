@@ -24,7 +24,16 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    Element* element;
+    Element* leftTop;
+    Element* leftCenter;
+    Element* leftBottom;
+    Element* centerTop;
+    Element* centerCenter;
+    Element* centerBottom;
+    Element* rightTop;
+    Element* rightCenter;
+    Element* rightBottom;
+    
     StyleSheet* ss;
 		
 };

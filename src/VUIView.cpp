@@ -1,5 +1,5 @@
 #include "ofxVui.h"
-#include "xView.h"
+#include "VUIView.h"
 
 namespace VUI {
 	View::~View() {};

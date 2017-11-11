@@ -223,6 +223,7 @@ namespace VUI {
         void SetPositionY( float y );
 		void UseStyleClass(string name);
 		void UseStyleID(string name);
+        void UseStyle(string style);
         
         float scale = 1.0;
         

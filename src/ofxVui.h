@@ -7,7 +7,7 @@
 
 #include "ofMain.h"
 #include "ofxEasing.h"
-#include "xView.h"
+#include "VUIView.h"
 
 #ifdef USING_ofxWinTouchHook
 #include "ofxWinTouchHook.h"
@@ -338,10 +338,10 @@ namespace VUI {
 }
 
 
-#include "xStyleSheet.h"
-#include "xElement.h"
-#include "xText.h"
-#include "xTextField.h"
+#include "VUIStyleSheet.h"
+#include "VUIElement.h"
+#include "VUIText.h"
+#include "VUITextField.h"
 
 
 // ViewManager

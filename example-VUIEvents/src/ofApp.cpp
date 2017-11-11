@@ -85,6 +85,8 @@ void ofApp::setup(){
     square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
     rectangle = new Element( 760, ofGetHeight()*.5, ss, "#rectangle" );
     
+    
+    
     preToggle = new Element( 50, 160, ss, ".toggle" );
     
     postToggle = new Element( 50, 200, ss, ".toggle" );
@@ -104,13 +106,13 @@ void ofApp::setup(){
     
     // ------------------------------------------------------------------- Mouse EVENTS
     /*
-         VUI_EVENT_MOUSE_OVER,
-         VUI_EVENT_MOUSE_OUT,
-         VUI_EVENT_MOUSE_PRESSED,
-         VUI_EVENT_MOUSE_MOVED,
-         VUI_EVENT_MOUSE_DRAGGED,
-         VUI_EVENT_MOUSE_RELEASED,
-         VUI_EVENT_MOUSE_CLICK,
+         VUI_EVENT_MOUSE_OVER
+         VUI_EVENT_MOUSE_OUT
+         VUI_EVENT_MOUSE_PRESSED
+         VUI_EVENT_MOUSE_MOVED
+         VUI_EVENT_MOUSE_DRAGGED
+         VUI_EVENT_MOUSE_RELEASED
+         VUI_EVENT_MOUSE_CLICK
          VUI_EVENT_MOUSE_DOUBLE_CLICK
      
      */

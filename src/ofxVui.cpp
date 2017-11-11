@@ -1,6 +1,6 @@
 #include "ofxVui.h"
-#include "xElement.h"
-#include "xView.h"
+#include "VUIElement.h"
+#include "VUIView.h"
 
 namespace VUI {
 

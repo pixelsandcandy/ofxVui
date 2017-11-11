@@ -1,6 +1,6 @@
 #include "ofxVui.h"
-#include "xElement.h"
-#include "xStyleSheet.h"
+#include "VUIElement.h"
+#include "VUIStyleSheet.h"
 
 namespace VUI {
 	Element::~Element() {
@@ -745,16 +745,36 @@ namespace VUI {
 	void Element::UseStyleClass(string name) {
 		if (styleSheet == nullptr)return;
         SetName( "." + name );
-		hasStyle = false;
-		SetStyle(styleSheet->GetStyleByClass(name), VUI_STATE_ALL, false);
+		//hasStyle = false;
+        string style = styleSheet->GetStyleByClass(name);
+        
+        if ( !hasStyle ) SetStyle(style, VUI_STATE_ALL, false);
+        else UseStyle( style );
+		
 	}
+    
+    void Element::UseStyle(string style){
+        string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
+        SetStyle(mainStyle, VUI_STATE_UP);
+        
+        if (style.find(":over") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER);
+        
+        if (style.find(":down") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN);
+    }
 
 	void Element::UseStyleID(string name) {
 		if (styleSheet == nullptr) return;
         SetName( "#" + name );
-		hasStyle = false;
-		SetStyle(styleSheet->GetStyleByID(name), VUI_STATE_ALL, false);
+		//hasStyle = false;
+        
+        string style = styleSheet->GetStyleByID(name);
+        
+        if ( !hasStyle ) SetStyle(style, VUI_STATE_ALL, false);
+        else UseStyle( style );
+		
 	}
+    
+    
     
     vector<string> Element::SplitStyles(string style){
         string s(style);
@@ -775,11 +795,14 @@ namespace VUI {
 		}
 		
 		if (!hasStyle ) {
+            //ofLog() << " ";
+            //ofLog() << "[" << name << "] hasStyle:" << ofToString(hasStyle);
 			
-
-			string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
 			//cout << "[" << toState << "] " << "mainStyle => " << mainStyle << endl;
-
+            //ofLog() << "mainStyle:" << mainStyle;
+            
+            string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
+            
 			if (mainStyle == "") {
 				//cout << "ERROR - SetStyle - style is empty" << endl;
 				if (style.find(":over") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER);
@@ -814,7 +837,7 @@ namespace VUI {
 			SetStyle(mainStyle, VUI_STATE_UP);
 			SetStyle(mainStyle, VUI_STATE_OVER, initState);
 			SetStyle(mainStyle, VUI_STATE_DOWN, initState);
-		}
+        }
         
         if ( toState == VUI_STATE_UP ) unparsedStyle = style;
 		
@@ -847,8 +870,11 @@ namespace VUI {
 				}
 				else if (tempSplit[0] == "video") {
 
-				}
-				else if (tempSplit[0] == "anchorPoint" || tempSplit[0] == "anchor-point" ) {
+                } else if (tempSplit[0] == "rotation"){
+                    SetRotation( ofToFloat(tempSplit[1]) );
+                } else if (tempSplit[0] == "scale"){
+                    SetScale( ofToFloat(tempSplit[1]) );
+                } else if (tempSplit[0] == "anchorPoint" || tempSplit[0] == "anchor-point" ) {
 					if (tempSplit[1] == "left-top") SetAnchorPoint(VUI_ALIGN_LEFT_TOP);
 					else if (tempSplit[1] == "left-center") SetAnchorPoint(VUI_ALIGN_LEFT_CENTER);
 					else if (tempSplit[1] == "left-bottom") SetAnchorPoint(VUI_ALIGN_LEFT_BOTTOM);
@@ -873,7 +899,7 @@ namespace VUI {
                 }
 				else {
 					this->style[toState][tempSplit[0]] = tempSplit[1];
-
+                    
 					if (toState == VUI_STATE_UP) {
 						if (tempSplit[0] == "width" || tempSplit[0] == "height" ) {
 							/*for (int i = 0; i < 3; i++) {
