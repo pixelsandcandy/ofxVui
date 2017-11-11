@@ -11,33 +11,34 @@ namespace VUI {
 		VUI::Init();
         
 		SetDefaultStyles(x, y);
-
-		if (ss != nullptr) {
-			SetStyleSheet(ss);
-			if (selector != "") {
-				if (selector.find(".") != string::npos) {
-					UseStyleClass(selector.substr(1));
-				}
-				else if (selector.find("#") != string::npos) {
-					UseStyleID(selector.substr(1));
-				}
-			}
-
-			if (selectorB != "") {
-				if (selectorB.find(".") != string::npos) {
-					UseStyleClass(selectorB.substr(1));
-				}
-				else if (selectorB.find("#") != string::npos) {
-					UseStyleID(selectorB.substr(1));
-				}
-			}
-		}
+        ParseStyleSheet(ss, selector, selectorB );
 	}
+    
+    void Element::ParseStyleSheet(StyleSheet *ss, string selector, string selectorB){
+        if (ss != nullptr) {
+            SetStyleSheet(ss);
+            if (selector != "") {
+                if (selector.find(".") != string::npos) {
+                    UseStyleClass(selector.substr(1));
+                }
+                else if (selector.find("#") != string::npos) {
+                    UseStyleID(selector.substr(1));
+                }
+            }
+            
+            if (selectorB != "") {
+                if (selectorB.find(".") != string::npos) {
+                    UseStyleClass(selectorB.substr(1));
+                }
+                else if (selectorB.find("#") != string::npos) {
+                    UseStyleID(selectorB.substr(1));
+                }
+            }
+        }
+    }
 
 	void Element::SetDefaultStyles(int x, int y) {
 		for (int i = 0; i < 3; i++) {
-			//style[i]["width"] = "100";
-			//style[i]["height"] = "100";
 			style[i]["opacity"] = "1";
 			style[i]["background-color"] = "#FF00FF";
 		}

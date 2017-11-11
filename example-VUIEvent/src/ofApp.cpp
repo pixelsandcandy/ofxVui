@@ -54,12 +54,18 @@ void ofApp::setup(){
              }
          ]
     
+    [#text>
+         font: Gotham-Medium.otf,13;
+     ]
+    
     
     )";
     
     ss = new StyleSheet( styles );
+    text = new Text( 50, 50, ss, "#text" );
+    text->SetText("text");
     
-    textField = new TextField( 50, 50, ss, "#textField" );
+    textField = new TextField( 50, 100, ss, "#textField" );
     textField->SetText("omg textfield");
     
     square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
@@ -176,6 +182,7 @@ void ofApp::draw(){
     square->Render();
     rectangle->Render();
     textField->Render();
+    text->Render();
 }
 
 //--------------------------------------------------------------

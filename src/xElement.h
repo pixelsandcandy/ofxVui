@@ -93,8 +93,8 @@ namespace VUI {
 			fbo->end();
 		}
         
-        float width = 100;
-        float height = 100;
+        float width = 60;
+        float height = 60;
         float rotation = 0.0;
         
         float GetWidth(){
@@ -172,6 +172,7 @@ namespace VUI {
         void Render(float parentOffsetX = 0, float parentOffsetY = 0, float parentOpacity = 1.0, ofVec2f _anchorOffset = ofVec2f::zero() );
 		void Update(int mouseX = -1, int mouseY = -1, bool internalUpdate = false);
 		void ParseStyle(string property = "", int renderState = VUI_STATE_UP);
+        void ParseStyleSheet(StyleSheet *ss = nullptr, string selector = "", string selectorB = "");
 		float GetProperty(string property);
 		void SetProperty(string property, string val);
 		void SetProperty(string property, float val);

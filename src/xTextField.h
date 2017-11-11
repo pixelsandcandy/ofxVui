@@ -55,6 +55,12 @@ namespace VUI {
                 if ( text.size() >= textLimit ) return;
             }
             
+            ofRectangle rect = font->getStringBoundingBox(text + t , 0,0);
+            rect.width += 2;
+            
+            if ( t == " " ) rect.width += font->getSize() * .85;
+            if ( rect.width > width - padding.x*2 ) return;
+            
             text = text + t;
             if ( t == " " ) spaceOffsetX = font->getSize() * .5;
             else spaceOffsetX = 0;
@@ -67,7 +73,7 @@ namespace VUI {
         }
         
         void AddText( char c ){
-            text = text + ofToString(c);
+            AddText( ofToString(c) );
         }
         
         void keyPressed(ofKeyEventArgs &key ){

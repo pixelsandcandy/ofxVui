@@ -26,8 +26,20 @@ namespace VUI {
             
             VUI::Init();
             
-            textColor.setHex(stoul("0xff00ff", nullptr, 16), 255.0 );
-        
+            textColor.setHex(stoul("0x000000", nullptr, 16), 255.0 );
+            
+            for (int i = 0; i < 3; i++) {
+                style[i]["opacity"] = "1";
+                style[i]["background-color"] = "transparent";
+            }
+            
+            this->setPosition(x, y, 0);
+            
+            ParseStyle();
+            
+            ParseStyleSheet(ss, selector, selectorB );
+            
+            
             //textOffset.y = VUI::fontSize;
             //if ( font != nullptr ) textOffset.y = font->getSize();
             
