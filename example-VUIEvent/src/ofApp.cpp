@@ -54,9 +54,23 @@ void ofApp::setup(){
              }
          ]
     
-    [#text>
-         font: Gotham-Medium.otf,13;
-     ]
+        [#text>
+             font: Gotham-Medium.otf,13;
+         ]
+    
+        [.toggle>
+             width: 80;
+             height: 32;
+             background-color: #a2e3f3;
+         
+             &:over {
+                 background-color: #f879fd;
+             }
+         
+             &:down {
+                 background-color: #43df6c;
+             }
+         ]
     
     
     )";
@@ -70,6 +84,11 @@ void ofApp::setup(){
     
     square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
     rectangle = new Element( 760, ofGetHeight()*.5, ss, "#rectangle" );
+    
+    preToggle = new Element( 50, 160, ss, ".toggle" );
+    
+    postToggle = new Element( 50, 200, ss, ".toggle" );
+    postToggle->MakeToggle();
     
     
     // ------------------------------------------------------------------- TextField / Toggle EVENTS
@@ -183,6 +202,9 @@ void ofApp::draw(){
     rectangle->Render();
     textField->Render();
     text->Render();
+    
+    preToggle->Render();
+    postToggle->Render();
 }
 
 //--------------------------------------------------------------

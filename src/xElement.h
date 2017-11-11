@@ -67,6 +67,7 @@ namespace VUI {
         ofEvent<vuiEventArgs> onTouchDoubleTap;
         
         ofEvent<vuiEventArgs> onStateChange;
+        ofEvent<vuiEventArgs> onToggleChange;
         
         ofEvent<vuiEventArgs> onFocus;
         ofEvent<vuiEventArgs> onUnfocus;
@@ -135,6 +136,12 @@ namespace VUI {
         
         void UpdateVirtualState( VUI::State toState, bool force = false ){
             if ( virtualState != toState ){
+                if ( toState == VUI_STATE_DOWN ) {
+                    TriggerEvent( VUI_EVENT_FOCUS );
+                } else if ( virtualState == VUI_STATE_DOWN && (toState == VUI_STATE_OVER || toState == VUI_STATE_UP) ){
+                    TriggerEvent( VUI_EVENT_UNFOCUS );
+                }
+                
                 prevVirtualState = int(virtualState);
                 virtualState = toState;
                 
@@ -145,6 +152,8 @@ namespace VUI {
                 args.virtualState = int(virtualState);
                 
                 ofNotifyEvent( onStateChange, args, this );
+                
+                
             }
             
             if ( force ) {

@@ -30,6 +30,10 @@ class ofApp : public ofBaseApp{
     
     Element* square;
     Element* rectangle;
+    
+    Element* preToggle;
+    Element* postToggle;
+    
     TextField* textField;
     Text* text;
     StyleSheet* ss;

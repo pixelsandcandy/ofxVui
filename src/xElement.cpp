@@ -463,6 +463,12 @@ namespace VUI {
             case VUI_EVENT_UNFOCUS:
                 ofNotifyEvent(onUnfocus, args, this);
                 break;
+            case VUI_EVENT_TOGGLE_CHANGE:
+                if ( virtualState == VUI_STATE_DOWN ) args.isSelected = true;
+                else args.isSelected = false;
+                
+                ofNotifyEvent(onToggleChange, args, this);
+                break;
             case VUI_EVENT_MOUSE_OVER:
                 ofNotifyEvent(onMouseOver, args, this);
                 firstMove = true;

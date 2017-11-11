@@ -28,7 +28,7 @@ namespace VUI {
             isTextField = true;
             
             ofAddListener( ofEvents().keyPressed, this, &TextField::keyPressed );
-            ofAddListener( onStateChange, this, &TextField::_vuiEventHandler );
+            ofAddListener( onToggleChange, this, &TextField::_vuiEventHandler );
         };
         
         ofEvent<vuiEventArgs> onSubmit;
@@ -140,13 +140,9 @@ namespace VUI {
         
     private:
         void _vuiEventHandler(vuiEventArgs& evt){
-            if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
-                //ofLog() << evt.virtualState << " - " << evt.element->GetVirtualState();
-                if ( evt.virtualState == VUI_STATE_DOWN ) {
-                    TriggerEvent( VUI_EVENT_FOCUS );
-                } else if ( evt.virtualState == VUI_STATE_OVER || evt.virtualState == VUI_STATE_UP ){
-                    TriggerEvent( VUI_EVENT_UNFOCUS );
-                }
+            if ( evt.eventType == VUI_EVENT_TOGGLE_CHANGE ){
+                if ( evt.isSelected ) TriggerEvent( VUI_EVENT_FOCUS );
+                else TriggerEvent( VUI_EVENT_UNFOCUS );
             }
         }
     };
