@@ -30,6 +30,7 @@ class ofApp : public ofBaseApp{
     
     Element* square;
     Element* rectangle;
+    TextBox* textField;
     StyleSheet* ss;
 		
 };

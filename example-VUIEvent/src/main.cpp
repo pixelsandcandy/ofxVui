@@ -4,7 +4,7 @@
 
 //========================================================================
 int main( ){
-    VUI::SetResolution(1920,1080,.5,false);
+    VUI::SetResolution(1280,720);
     
     ofSetupOpenGL(VUI::GetWindowWidth(),VUI::GetWindowHeight(),OF_WINDOW);			// <-------- setup the GL context
 

@@ -56,11 +56,11 @@ namespace VUI {
 		localMaxPosition.x = getPosition().x + (width*scale);
 		localMaxPosition.y = getPosition().y + (height*scale);
 
-		localMaxPosition.x += styleFloat[state]["offset-x"];
-		localMinPosition.x += styleFloat[state]["offset-x"];
+		localMaxPosition.x += styleFloat[renderState]["offset-x"];
+		localMinPosition.x += styleFloat[renderState]["offset-x"];
 
-		localMaxPosition.y += styleFloat[state]["offset-y"];
-		localMinPosition.y += styleFloat[state]["offset-y"];
+		localMaxPosition.y += styleFloat[renderState]["offset-y"];
+		localMinPosition.y += styleFloat[renderState]["offset-y"];
 
 		localMaxPosition.x += anchorOffset.x;
 		localMinPosition.x += anchorOffset.x;
@@ -217,7 +217,11 @@ namespace VUI {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
                     
                     if ( VUI::GetPrevOverElement() == this ){
-                        if ( isMouseDown && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
+                        //bool dragged = false;
+                        
+                        //if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) dragged = true;
+                        
+                        if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
                         else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
                         
                         if (ofGetMousePressed()) {
@@ -229,11 +233,12 @@ namespace VUI {
                             
                             UpdateState(VUI_STATE_DOWN);
                         } else {
-                            UpdateState(VUI_STATE_OVER);
+                            if ( !isToggle ) UpdateState(VUI_STATE_OVER);
                             isMouseDown = false;
                         }
                         
-                        
+                        //if ( dragged ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
+                        //else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
                     } else {
                         UpdateState(VUI_STATE_UP);
                         isMouseDown = false;
@@ -252,14 +257,15 @@ namespace VUI {
 	}
 
 	void Element::UpdateState(int toState) {
-        //ofLog() << "UpdateState => " << _state;
+        //ofLog() << "UpdateState => " << toState;
         
         if ( !VUI::EventManager.IsActive() ) return;
         if ( !isInteractive ) return;
         
-        int oldState(state);
+        int oldState(renderState);
         
-		bool update = state != toState ? true : false;
+		bool update = renderState != toState ? true : false;
+        if ( isToggle ) update = virtualState != toState ? true : false;
         
         if (IsTouchEnabled()) {
             if ( !VUI::GetTouchDown() && !ofGetMousePressed() ) lastTimeMouseDown = 0;
@@ -269,13 +275,13 @@ namespace VUI {
         }
         
         if ( DEBUG_MODE ) {
-            ofLog() << "virtal:" << prevVirtualState << "(" << virtualState << ") > real:" << toState << "(" << state << ")";
+            ofLog() << "virtal:" << prevVirtualState << "(" << virtualState << ") > real:" << toState << "(" << renderState << ")";
             ofLog() << "update: " << update;
         }
         
         /*if ( name == "nameField" ){
             ofLog() << lastTimeMouseDown;
-            ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  _state: " << _state << "   update:" << update << "  - " << ofRandomf();
+            ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  toState: " << toState << "   update:" << update << "  - " << ofRandomf();
         }*/
         
         
@@ -288,7 +294,7 @@ namespace VUI {
                 if ( ofGetElapsedTimeMillis() < lastTimeMouseDown ){
                     lastTimeMouseDown = ofGetElapsedTimeMillis() + 500;
                     //ofLog() << "return" << endl;
-                    //if ( name == ".textfield" ) ofLog() << virtualState << " > " << _state << "     RETURN - " << ofRandomf();
+                    //if ( name == ".textfield" ) ofLog() << virtualState << " > " << toState << "     RETURN - " << ofRandomf();
                     return;
                 } else {
                     
@@ -299,17 +305,17 @@ namespace VUI {
             }
         }
         
-        //if ( name == ".textfield" ) ofLog() << virtualState << " > " << _state << "     " << ofRandomf();
+        //if ( name == ".textfield" ) ofLog() << virtualState << " > " << toState << "     " << ofRandomf();
         
-        /*if ( _state == VUI_STATE_DOWN && ofGetElapsedTimeMillis() < lastTimeMouseDown ){
+        /*if ( toState == VUI_STATE_DOWN && ofGetElapsedTimeMillis() < lastTimeMouseDown ){
             lastTimeMouseDown = ofGetElapsedTimeMillis() + 500;
             return;
         }*/
         
         
         
-        //ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  _state: " << _state << "   update:" << update;
-        //if ( state == VUI_STATE_DOWN ) ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  _state: " << _state << "   update:" << update;
+        //ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  toState: " << toState << "   update:" << update;
+        //if ( state == VUI_STATE_DOWN ) ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  toState: " << toState << "   update:" << update;
         
 
 		if (virtualState == VUI_STATE_DOWN && (toState == VUI_STATE_UP || toState == VUI_STATE_OVER)) {
@@ -324,44 +330,44 @@ namespace VUI {
             }
         }
 		
-        /*else if (!isToggle && _state == VUI_STATE_OVER && !hasState[_state] && update ) {
-            state = VUI_STATE_UP;
+        /*else if (!isToggle && toState == VUI_STATE_OVER && !hasState[toState] && update ) {
+            renderState = VUI_STATE_UP;
         }*/
         
         
         
         if ( isToggle ){
-            if ( state == VUI_STATE_DOWN && toState == VUI_STATE_DOWN ){
-               // state = VUI_STATE_UP;
+            if ( virtualState == VUI_STATE_DOWN && toState == VUI_STATE_DOWN ){
+               // renderState = VUI_STATE_UP;
                 VUI::EventManager.StoreState( this, VUI_STATE_UP );
             } if ( toState == VUI_STATE_UP ){
-                //state = VUI_STATE_DOWN;
+                //renderState = VUI_STATE_DOWN;
                 //VUI::EventManager.StoreState( this, VUI_STATE_DOWN );
                 //update = true;
             } else {
-                if (hasState[toState] && update) {
+                if (update) {
                     VUI::EventManager.StoreState( this, (VUI::State)toState );
                     //VUI::EventManager.StoreEvent( this, VUI:state );
                 }
             }
         } else {
-            if ( virtualState == VUI_STATE_UP && toState == VUI_STATE_OVER ){
+            if ( renderState == VUI_STATE_UP && toState == VUI_STATE_OVER ){
                 VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OVER );
             }
             
             if ( toState == VUI_STATE_UP ) {
-                state = toState;
+                renderState = toState;
                 VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OUT );
-            } else if (hasState[toState] && update) {
+            } else if (update) {
                 VUI::EventManager.StoreState( this, (VUI::State)toState );
             } else {
-                state = VUI_STATE_UP;
+                renderState = VUI_STATE_UP;
             }
-            /*if (hasState[_state] && update) {
-                if ( _state == VUI_STATE_UP ) state = _state;
-                if ( _state != VUI_STATE_UP ) VUI::EventManager.StoreState( this, (VUI::State)_state );
+            /*if (hasState[toState] && update) {
+                if ( toState == VUI_STATE_UP ) state = toState;
+                if ( toState != VUI_STATE_UP ) VUI::EventManager.StoreState( this, (VUI::State)toState );
             }
-            if (_state == VUI_STATE_OVER && !hasState[_state] && update ) {
+            if (toState == VUI_STATE_OVER && !hasState[toState] && update ) {
                 state = VUI_STATE_UP;
             }*/
         }
@@ -371,11 +377,6 @@ namespace VUI {
         } else if (virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ){
             VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
         }
-        
-        
-        prevVirtualState = int(virtualState);
-        
-        virtualState = toState;
         
         
         
@@ -393,6 +394,8 @@ namespace VUI {
 	}
     
     ofVec2f prevMousePos;
+    bool firstMove = true;
+    bool canDrag = false;
     
     void Element::TriggerEvent(vuiEvent eventType){
         //ofLog() << "TriggerEvent[" << eventType << "]";
@@ -409,24 +412,39 @@ namespace VUI {
         int t;
         
         switch ( eventType ){
+            case VUI_EVENT_FOCUS:
+                ofNotifyEvent(onFocus, args, this);
+                break;
+            case VUI_EVENT_UNFOCUS:
+                ofNotifyEvent(onUnfocus, args, this);
+                break;
             case VUI_EVENT_MOUSE_OVER:
                 ofNotifyEvent(onMouseOver, args, this);
+                firstMove = true;
                 break;
             case VUI_EVENT_MOUSE_OUT:
                 ofNotifyEvent(onMouseOut, args, this);
+                canDrag = false;
+                firstMove = true;
                 break;
             case VUI_EVENT_MOUSE_PRESSED:
                 ofNotifyEvent(onMousePressed, args, this);
                 
                 argsTouch.eventType = VUI_EVENT_TOUCH_DOWN;
                 ofNotifyEvent(onTouchDown, argsTouch, this );
+                canDrag = true;
                 break;
             case VUI_EVENT_MOUSE_MOVED:
+                if ( firstMove ) {
+                    firstMove = false;
+                    return;
+                }
                 if ( prevMousePos.x == VUI::mouseX && prevMousePos.y == VUI::mouseY ) return;
                 ofNotifyEvent(onMouseMoved, args, this);
                 prevMousePos.set( VUI::mouseX, VUI::mouseY );
                 break;
             case VUI_EVENT_MOUSE_DRAGGED:
+                if ( !canDrag ) return;
                 args.localDragStart.set( mouseDownPos.x - globalMinPosition.x, mouseDownPos.y - globalMinPosition.y );
                 args.localDragDelta.set( VUI::mouseX - mouseDownPos.x, VUI::mouseY - mouseDownPos.y );
                 ofNotifyEvent(onMouseDragged, args, this);
@@ -436,6 +454,7 @@ namespace VUI {
                 
                 argsTouch.eventType = VUI_EVENT_TOUCH_UP;
                 ofNotifyEvent(onTouchUp, argsTouch, this );
+                canDrag = false;
                 break;
             case VUI_EVENT_MOUSE_CLICK:
                 t = ofGetElapsedTimeMillis();
@@ -547,22 +566,22 @@ namespace VUI {
 
 		if (maskTex != nullptr && fbo != nullptr) fbo->begin();
 
-		if (style[state]["background-color"] != "transparent") {
+		if (style[renderState]["background-color"] != "transparent") {
 			//ofSetHexColor(styleFloat[state]["background-color"]);
-			color.setHex(styleFloat[state]["background-color"], styleFloat[state]["opacity"]*parentSumOpacity);
+			color.setHex(styleFloat[renderState]["background-color"], styleFloat[renderState]["opacity"]*parentSumOpacity);
 			ofSetColor(color);
 			//cout << state << endl;
 			//ofSetColor( )
             
-            //if ( name == "comfortBar" ) ofLog() << style[state]["background-color"] << " -> " << styleFloat[state]["background-color"];
+            //if ( name == "comfortBar" ) ofLog() << style[renderState]["background-color"] << " -> " << styleFloat[renderState]["background-color"];
 			ofDrawRectangle(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, width*scale, height*scale);
 		}
 		
 		//ofSetColor(ofColor::white);
-		color.setHex(0xffffff, styleFloat[state]["opacity"]*parentSumOpacity);
+		color.setHex(0xffffff, styleFloat[renderState]["opacity"]*parentSumOpacity);
 		ofSetColor(color);
 
-		for (vector<string>::iterator it = imageIDs[state].begin(); it != imageIDs[state].end(); it++) {
+		for (vector<string>::iterator it = imageIDs[renderState].begin(); it != imageIDs[renderState].end(); it++) {
 			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, 0, 0, width, height);
 		}
         
@@ -590,52 +609,52 @@ namespace VUI {
         ofPopView();
 	}
 
-	void Element::ParseStyle( string property, int _state ) {
+	void Element::ParseStyle( string property, int toState ) {
 		//if (this->style["left"] != "") return;
-		/*cout << "x:" << style[_state]["x"] << endl;
-		cout << "y:" << style[_state]["y"] << endl;
-		cout << "width:" << style[_state]["width"] << endl;
-		cout << "height:" << style[_state]["height"] << endl;*/
+		/*cout << "x:" << style[toState]["x"] << endl;
+		cout << "y:" << style[toState]["y"] << endl;
+		cout << "width:" << style[toState]["width"] << endl;
+		cout << "height:" << style[toState]["height"] << endl;*/
 		
-		if (style[_state]["background-color"] != "transparent" ) {
-            if ( style[_state]["background-color"].find( "#" ) != string::npos ){
-                string str(style[_state]["background-color"]);
+		if (style[toState]["background-color"] != "transparent" ) {
+            if ( style[toState]["background-color"].find( "#" ) != string::npos ){
+                string str(style[toState]["background-color"]);
                 ofStringReplace(str, "#", "");
-                styleFloat[_state]["background-color"] = stoul(str, nullptr, 16);
+                styleFloat[toState]["background-color"] = stoul(str, nullptr, 16);
             } else {
-                styleFloat[_state]["background-color"] = ofToFloat(style[_state]["background-color"]);
+                styleFloat[toState]["background-color"] = ofToFloat(style[toState]["background-color"]);
             }
             if ( property == "background-color" ) return;
 		}
 		
-		//styleFloat[_state]["width"] = ofToFloat(style[_state]["width"]);
-		//styleFloat[_state]["height"] = ofToFloat(style[_state]["height"]);
-		styleFloat[_state]["offset-x"] = ofToFloat(style[_state]["offset-x"]);
-		styleFloat[_state]["offset-y"] = ofToFloat(style[_state]["offset-y"]);
-		styleFloat[_state]["opacity"] = ofToFloat(style[_state]["opacity"]) * 255.0;
+		//styleFloat[toState]["width"] = ofToFloat(style[toState]["width"]);
+		//styleFloat[toState]["height"] = ofToFloat(style[toState]["height"]);
+		styleFloat[toState]["offset-x"] = ofToFloat(style[toState]["offset-x"]);
+		styleFloat[toState]["offset-y"] = ofToFloat(style[toState]["offset-y"]);
+		styleFloat[toState]["opacity"] = ofToFloat(style[toState]["opacity"]) * 255.0;
 		//cout << "x => " << ofToFloat(style["x"]) << endl;
 
-		//SetPosition(ofToFloat(style[_state]["x"]), ofToFloat(style[_state]["y"]), ofToFloat(style[state]["z"]), _state, false);
-		//SetSize(ofToFloat(style[_state]["width"]), ofToFloat(style[_state]["height"]), _state, false);
+		//SetPosition(ofToFloat(style[toState]["x"]), ofToFloat(style[toState]["y"]), ofToFloat(style[state]["z"]), toState, false);
+		//SetSize(ofToFloat(style[toState]["width"]), ofToFloat(style[toState]["height"]), toState, false);
 
 	}
 
 	float Element::GetProperty(string property) {
-		return styleFloat[state][property];
+		return styleFloat[renderState][property];
 	}
 
 	void Element::SetProperty(string property, string val) {
-		style[state][property] = val;
+		style[renderState][property] = val;
 		ParseStyle(property);
 	}
 
 	void Element::SetProperty(string property, float val) {
-		style[state][property] = ofToString(val);
+		style[renderState][property] = ofToString(val);
 		ParseStyle(property);
 	}
     
     void Element::SetProperty(string property, int val) {
-        style[state][property] = ofToString(val);
+        style[renderState][property] = ofToString(val);
         ParseStyle(property);
     }
 
@@ -696,11 +715,11 @@ namespace VUI {
         return split;
     }
 
-	Element* Element::SetStyle(string style, int _state, bool initState) 
+	Element* Element::SetStyle(string style, int toState, bool initState) 
 	{
 		if (style == "") {
 			//cout << "ERROR - SetStyle - style is empty" << endl;
-			//cout << "[" << _state << "] " << "style => " << style << endl;
+			//cout << "[" << toState << "] " << "style => " << style << endl;
 			return this;
 		}
 		
@@ -708,7 +727,7 @@ namespace VUI {
 			
 
 			string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
-			//cout << "[" << _state << "] " << "mainStyle => " << mainStyle << endl;
+			//cout << "[" << toState << "] " << "mainStyle => " << mainStyle << endl;
 
 			if (mainStyle == "") {
 				//cout << "ERROR - SetStyle - style is empty" << endl;
@@ -728,9 +747,9 @@ namespace VUI {
 			
 			return this;
 		}
-		else if (_state == VUI_STATE_ALL) {
+		else if (toState == VUI_STATE_ALL) {
 			string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
-			//cout << "[" << _state << "] " << "mainStyle => " << mainStyle << endl;
+			//cout << "[" << toState << "] " << "mainStyle => " << mainStyle << endl;
 
 			if (mainStyle == "") {
 				//cout << "ERROR - SetStyle - style is empty" << endl;
@@ -746,7 +765,7 @@ namespace VUI {
 			SetStyle(mainStyle, VUI_STATE_DOWN, initState);
 		}
         
-        if ( _state == VUI_STATE_UP ) unparsedStyle = style;
+        if ( toState == VUI_STATE_UP ) unparsedStyle = style;
 		
         
         vector<string> split = SplitStyles( style );
@@ -758,17 +777,17 @@ namespace VUI {
 			if (tempSplit.size() == 2) {
                 if (tempSplit[0] == "image" || tempSplit[0] == "img" ) {
 					if (styleSheet != nullptr) {
-						//images[_state][tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
-						//this->style[_state][tempSplit[1]] = "image";
+						//images[toState][tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
+						//this->style[toState][tempSplit[1]] = "image";
 						
                         // TODO: multiple images per state
-                        //imageIDs[_state].push_back(tempSplit[1]);
+                        //imageIDs[toState].push_back(tempSplit[1]);
 						//images[tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
                         
                         if ( styleSheet->HasImage(tempSplit[1]) ){
-                            imageIDs[_state].clear();
+                            imageIDs[toState].clear();
                             
-                            imageIDs[_state].push_back(tempSplit[1]);
+                            imageIDs[toState].push_back(tempSplit[1]);
                             images[tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
                         } else {
                             ofLog( OF_LOG_WARNING ) << "[" << GetName() << "] image id(" << tempSplit[1] << ") doesn't exist";
@@ -802,9 +821,9 @@ namespace VUI {
                     }
                 }
 				else {
-					this->style[_state][tempSplit[0]] = tempSplit[1];
+					this->style[toState][tempSplit[0]] = tempSplit[1];
 
-					if (_state == VUI_STATE_UP) {
+					if (toState == VUI_STATE_UP) {
 						if (tempSplit[0] == "width" || tempSplit[0] == "height" ) {
 							/*for (int i = 0; i < 3; i++) {
 								this->style[i][tempSplit[0]] = tempSplit[1];
@@ -819,9 +838,9 @@ namespace VUI {
 			}
 		}
 
-		if ( initState ) hasState[_state] = true;
+		if ( initState ) hasState[toState] = true;
 
-		ParseStyle( "", _state );
+		ParseStyle( "", toState );
 		Update( -1, -1, true );
 		Render();
 

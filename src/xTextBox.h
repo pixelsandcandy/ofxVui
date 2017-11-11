@@ -21,9 +21,6 @@ namespace VUI {
         
     public:
         
-        ofEvent<vuiEventArgs> onFocus;
-        ofEvent<vuiEventArgs> onUnfocus;
-        
         ~TextBox(){};
         TextBox( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
             
@@ -49,10 +46,12 @@ namespace VUI {
                 ParsePropValue( (*it).first, (*it).second );
             }
             
-            //ofAddListener(onStateChange, this, &TextBox::_vuiEventHandler );
+            
             //ofAddListener(onMouseClick, this, &TextBox::_vuiEventHandler );
         
         };
+        
+        ofEvent<vuiEventArgs> onSubmit;
         
         void ParsePropValue( string prop, string value ){
             //ofLog() << prop << ":" << value;
@@ -89,6 +88,10 @@ namespace VUI {
                 vector<string> xy = ofSplitString( value, "," );
                 if ( xy.size() == 1 ) SetPadding( ofToInt(xy[0]) );
                 else if ( xy.size() == 2 ) SetPadding( ofToInt(xy[0]), ofToInt(xy[1]) );
+            } else if ( prop == "padding-left" ){
+                SetPaddingX( ofToInt(value) );
+            } else if ( prop == "padding-top" ){
+                SetPaddingY( ofToInt(value) );
             }
         }
         
@@ -106,9 +109,81 @@ namespace VUI {
         
         bool isTextField = false;
         
-        void MakeTextField(){
-            SetToggle();
+        void MakeTextField( bool useKeyboardEvents = true ){
+            MakeToggle();
             isTextField = true;
+            
+            if ( useKeyboardEvents ) {
+                ofAddListener( ofEvents().keyPressed, this, &TextBox::keyPressed );
+                ofAddListener(onStateChange, this, &TextBox::_vuiEventHandler );
+            }
+        }
+        
+        void TriggerSubmit(){
+            SetState(VUI_STATE_UP);
+            
+            vuiEventArgs args;
+            args.element = this;
+            args.eventType = VUI_EVENT_SUBMIT;
+            args.text = text;
+            
+            ofNotifyEvent(onSubmit, args, this);
+        }
+        
+        void keyPressed(ofKeyEventArgs &key ){
+            if ( GetVirtualState() != VUI_STATE_DOWN ) return;
+            //ofLog() << key.key;
+            
+            switch(key.key){
+                case OF_KEY_BACKSPACE:
+                case OF_KEY_DEL:
+                    Backspace();
+                    return;
+                    break;
+                case OF_KEY_RETURN:
+                    TriggerSubmit();
+                    return;
+                    break;
+                case OF_KEY_ESC:
+                case OF_KEY_TAB:
+                case OF_KEY_COMMAND:
+                case OF_KEY_F1:
+                case OF_KEY_F2:
+                case OF_KEY_F3:
+                case OF_KEY_F4:
+                case OF_KEY_F5:
+                case OF_KEY_F6:
+                case OF_KEY_F7:
+                case OF_KEY_F8:
+                case OF_KEY_F9:
+                case OF_KEY_F10:
+                case OF_KEY_F11:
+                case OF_KEY_F12:
+                case OF_KEY_LEFT:
+                case OF_KEY_UP:
+                case OF_KEY_RIGHT:
+                case OF_KEY_DOWN:
+                case OF_KEY_PAGE_UP:
+                case OF_KEY_PAGE_DOWN:
+                case OF_KEY_HOME:
+                case OF_KEY_END:
+                case OF_KEY_INSERT:
+                case OF_KEY_CONTROL:
+                case OF_KEY_ALT:
+                case OF_KEY_SHIFT:
+                case OF_KEY_LEFT_SHIFT:
+                case OF_KEY_RIGHT_SHIFT:
+                case OF_KEY_LEFT_CONTROL:
+                case OF_KEY_RIGHT_CONTROL:
+                case OF_KEY_LEFT_ALT:
+                case OF_KEY_RIGHT_ALT:
+                case OF_KEY_LEFT_SUPER:
+                case OF_KEY_RIGHT_SUPER:
+                    return;
+                    break;
+            }
+            
+            AddText((char)key.key);
         }
         
         int textLimit = -1;
@@ -118,7 +193,7 @@ namespace VUI {
         }
         
         bool IsFocused(){
-            if ( state == VUI_STATE_DOWN ) return true;
+            if ( GetVirtualState() == VUI_STATE_DOWN ) return true;
             return false;
         }
         
@@ -160,6 +235,14 @@ namespace VUI {
             SetPadding( xy, xy );
         }
         
+        void SetPaddingX( int x ){
+            padding.x = x;
+        }
+        
+        void SetPaddingY( int y ){
+            padding.y = y;
+        }
+        
         ofVec2f textOffset;
         ofVec3f shadowPos = ofVec3f(0,0,210);
         ofColor textColor = ofColor::gray;
@@ -198,11 +281,11 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_LEFT_CENTER:
                         x = 0;
-                        y = ((GetHeight() - rect.height)*0.5);
+                        y = ((GetHeight() - textOffset.y)*0.5);
                         break;
                     case VUI_ALIGN_LEFT_BOTTOM:
                         x = 0;
-                        y = (GetHeight() - rect.height);
+                        y = (GetHeight() - textOffset.y);
                         break;
                     case VUI_ALIGN_CENTER_TOP:
                         x = ((GetWidth() - rect.width)*0.5);
@@ -210,11 +293,11 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_CENTER_CENTER:
                         x = ((GetWidth() - rect.width)*0.5);
-                        y = ((GetHeight() - rect.height)*0.5);
+                        y = ((GetHeight() - textOffset.y)*0.5);
                         break;
                     case VUI_ALIGN_CENTER_BOTTOM:
                         x = ((GetWidth() - rect.width)*0.5);
-                        y = (GetHeight() - rect.height);
+                        y = (GetHeight() - textOffset.y);
                         break;
                     case VUI_ALIGN_RIGHT_TOP:
                         x = GetWidth() - rect.width;
@@ -222,11 +305,11 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_RIGHT_CENTER:
                         x = GetWidth() - rect.width;
-                        y = ((GetHeight() - rect.height)*0.5);
+                        y = ((GetHeight() - textOffset.y)*0.5);
                         break;
                     case VUI_ALIGN_RIGHT_BOTTOM:
                         x = GetWidth() - rect.width;
-                        y = (GetHeight() - rect.height);
+                        y = (GetHeight() - textOffset.y);
                         break;
                 }
                 
@@ -244,13 +327,13 @@ namespace VUI {
 				//ofLog() << rect.height << " - " << font->getLineHeight() << " (" << font->getSize() << ")";
                 
                 // typing cursor
-                if ( isTextField && state == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.x + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.y + y - (rect.height*.15), 2, (rect.height*1.3) );
+                if ( isTextField && GetVirtualState() == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.x + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.y + y - 1 - 2, 1, textOffset.y+4);
             }
         }
         
     private:
         bool _isCalibrated = false;
-        
+        float _typingIndicatorOffset;
         void _Calibrate(){
             if ( _isCalibrated ) return;
             _isCalibrated = true;
@@ -258,15 +341,20 @@ namespace VUI {
             ofRectangle rect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+][}{:?><", 0,0);
             
             textOffset.set(0,rect.height - font->getSize()*.3333 );
+            _typingIndicatorOffset = font->getSize()*.3333;
         }
         
-        /*void _vuiEventHandler(vuiEventArgs& evt){
-            if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ){
-                ofLog() << "MOUSE_CLICK";
-            } else if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
-                //ofLog() << evt.element->GetState() << "  - " << ofRandomf();
+        void _vuiEventHandler(vuiEventArgs& evt){
+            if ( isTextField ){
+                if ( evt.eventType == VUI_EVENT_STATE_CHANGE ){
+                    if ( evt.virtualState == VUI_STATE_DOWN ) {
+                        TriggerEvent( VUI_EVENT_FOCUS );
+                    } else if ( evt.virtualState == VUI_STATE_UP ){
+                        TriggerEvent( VUI_EVENT_UNFOCUS );
+                    }
+                }
             }
-        }*/
+        }
     };
     
 }

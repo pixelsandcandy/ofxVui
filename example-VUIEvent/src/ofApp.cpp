@@ -35,12 +35,32 @@ void ofApp::setup(){
                  background-color: #0000ff;
              }
          ]
+    
+    [#textField>
+     width: 180;
+     height: 36;
+     background-color: #aeaeae;
+     font: Gotham-Medium.otf,13;
+     text-align: left-center;
+     color: #000000;
+     padding-left: 10;
+     ]
     )";
     
     ss = new StyleSheet( styles );
     
-    square = new Element( ofGetWidth()*.5, ofGetHeight()*.5, ss, "#square" );
-    rectangle = new Element( ofGetWidth()*.5, ofGetHeight()*.5, ss, "#rectangle" );
+    textField = new TextBox( 50, 50, ss, "#textField" );
+    textField->MakeTextField();
+    textField->SetText("omg textfield");
+    
+    square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
+    rectangle = new Element( 760, ofGetHeight()*.5, ss, "#rectangle" );
+    
+    
+    // ------------------------------------------------------------------- MOUSE EVENTS
+    ofAddListener( textField->onFocus, this, &ofApp::vuiEventHandler );
+    ofAddListener( textField->onUnfocus, this, &ofApp::vuiEventHandler );
+    ofAddListener( textField->onSubmit, this, &ofApp::vuiEventHandler );
     
     
     // ------------------------------------------------------------------- MOUSE EVENTS
@@ -77,9 +97,22 @@ void ofApp::setup(){
 }
 
 void ofApp::vuiEventHandler(vuiEventArgs& evt){
+    
     string s = "[" + evt.element->GetName() + "] ";
     
+    
     switch( evt.eventType ){
+        case VUI_EVENT_FOCUS:
+            s += "VUI_EVENT_FOCUS";
+            break;
+        case VUI_EVENT_UNFOCUS:
+            s += "VUI_EVENT_UNFOCUS";
+            break;
+        case VUI_EVENT_SUBMIT:
+            s += "VUI_EVENT_SUBMIT   text:" + evt.text;
+            ofLog() << s;
+            return;
+            break;
         case VUI_EVENT_MOUSE_OVER:
             s += "VUI_EVENT_MOUSE_OVER";
             break;
@@ -118,6 +151,7 @@ void ofApp::update(){
 void ofApp::draw(){
     square->Render();
     rectangle->Render();
+    textField->Render();
 }
 
 //--------------------------------------------------------------

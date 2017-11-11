@@ -60,6 +60,7 @@ namespace VUI {
         
         VUI_EVENT_STATE_CHANGE,
         VUI_EVENT_SELECT_CHANGE,
+        VUI_EVENT_SUBMIT,
         
         VUI_EVENT_FOCUS,
         VUI_EVENT_UNFOCUS,
@@ -170,6 +171,10 @@ namespace VUI {
     struct vuiEventArgs {
         Element* element;
         int eventType;
+        int renderState;
+        int virtualState;
+        
+        string text;
         
         ofVec2f localMousePos;
         ofVec2f localDragDelta;

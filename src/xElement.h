@@ -28,10 +28,14 @@ namespace VUI {
 
 		int anchorPoint = VUI_ALIGN_LEFT_TOP;
 
-		int state = VUI_STATE_UP;
+		int renderState = VUI_STATE_UP;
 		int virtualState = VUI_STATE_UP;
         int prevVirtualState = VUI_STATE_UP;
 		bool hasStyle = false;
+        
+        int GetVirtualState(){
+            return virtualState;
+        }
 
         bool DEBUG_MODE = false;
 		
@@ -104,7 +108,7 @@ namespace VUI {
         }
         
         int GetState(){
-            return state;
+            return renderState;
         }
         
         float GetRotation(){
@@ -115,20 +119,41 @@ namespace VUI {
             rotation = r;
         }
         
-        void SetState( VUI::State _state ){
-            state = _state;
-            virtualState = _state;
+        void SetState( VUI::State toState ){
             
-            vuiEventArgs args;
-            args.element = this;
-            args.eventType = VUI_EVENT_STATE_CHANGE;
+            VUI::State s = toState;
             
-            ofNotifyEvent( onStateChange, args, this );
+            if ( s == VUI_STATE_DOWN && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_OVER;
+            if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
+            
+            bool updated = false;
+            
+            if ( s != renderState ) renderState = s;
+            
+            if ( virtualState != toState ){
+                prevVirtualState = int(virtualState);
+                virtualState = toState;
+                
+                vuiEventArgs args;
+                args.element = this;
+                args.eventType = VUI_EVENT_STATE_CHANGE;
+                args.renderState = int(toState);
+                args.virtualState = int(virtualState);
+                
+                ofNotifyEvent( onStateChange, args, this );
+            }
+            
+            
+            
         }
         
 		int timeLastToggle = -1;
         void SetToggle( bool doToggle = true){
             isToggle = doToggle;
+        }
+        
+        void MakeToggle(){
+            SetToggle();
         }
 
 		//
@@ -136,11 +161,11 @@ namespace VUI {
 		Element* SetName(string _name) { name = _name; return this; }
         string GetName(){ return name; }
 
-		Element* SetStyle(string style, int state = VUI_STATE_UP, bool initState = true );
+		Element* SetStyle(string style, int renderState = VUI_STATE_UP, bool initState = true );
 
         void Render(float parentOffsetX = 0, float parentOffsetY = 0, float parentOpacity = 1.0, ofVec2f _anchorOffset = ofVec2f::zero() );
 		void Update(int mouseX = -1, int mouseY = -1, bool internalUpdate = false);
-		void ParseStyle(string property = "", int state = VUI_STATE_UP);
+		void ParseStyle(string property = "", int renderState = VUI_STATE_UP);
 		float GetProperty(string property);
 		void SetProperty(string property, string val);
 		void SetProperty(string property, float val);
@@ -270,7 +295,7 @@ namespace VUI {
     protected:
         ofTrueTypeFont* font = nullptr;
         vector<string> SplitStyles(string s);
-        virtual void UpdateState(int state);
+        virtual void UpdateState(int renderState);
         void UpdatePosition();
         
         ofVec3f localMinPosition;
