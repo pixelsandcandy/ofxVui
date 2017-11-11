@@ -28,7 +28,7 @@ namespace VUI {
             isTextField = true;
             
             ofAddListener( ofEvents().keyPressed, this, &TextField::keyPressed );
-            ofAddListener( onToggleChange, this, &TextField::_vuiEventHandler );
+            ofAddListener( onValueChange, this, &TextField::_vuiEventHandler );
         };
         
         ofEvent<vuiEventArgs> onSubmit;
@@ -64,16 +64,31 @@ namespace VUI {
             text = text + t;
             if ( t == " " ) spaceOffsetX = font->getSize() * .5;
             else spaceOffsetX = 0;
+            
+            TriggerValueChangeEvent();
         }
         
         void Backspace(){
+            if ( text.size() < 1 ) return;
+            
             text = text.substr(0, text.size()-1);
             if ( text.size() > 0 && text.substr(text.size()-1,1) == " " ) spaceOffsetX = font->getSize() * .5;
             else spaceOffsetX = 0;
+            
+            TriggerValueChangeEvent();
         }
         
         void AddText( char c ){
             AddText( ofToString(c) );
+        }
+        
+        void TriggerValueChangeEvent(){
+            vuiEventArgs args;
+            args.element = this;
+            args.eventType = VUI_EVENT_TEXT_CHANGE;
+            args.text = text;
+            
+            ofNotifyEvent(onTextChange, args, this);
         }
         
         void keyPressed(ofKeyEventArgs &key ){
@@ -140,9 +155,9 @@ namespace VUI {
         
     private:
         void _vuiEventHandler(vuiEventArgs& evt){
-            if ( evt.eventType == VUI_EVENT_TOGGLE_CHANGE ){
-                if ( evt.isSelected ) TriggerEvent( VUI_EVENT_FOCUS );
-                else TriggerEvent( VUI_EVENT_UNFOCUS );
+            if ( evt.eventType == VUI_EVENT_VALUE_CHANGE ){
+                if ( evt.value == 1 ) TriggerEvent( VUI_EVENT_FOCUS );
+                else if ( evt.value == 0 ) TriggerEvent( VUI_EVENT_UNFOCUS );
             }
         }
     };

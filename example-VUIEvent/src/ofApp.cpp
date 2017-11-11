@@ -91,12 +91,14 @@ void ofApp::setup(){
     postToggle->MakeToggle();
     
     
-    // ------------------------------------------------------------------- TextField / Toggle EVENTS
-    ofAddListener( textField->onFocus, this, &ofApp::vuiEventHandler );
-    ofAddListener( textField->onUnfocus, this, &ofApp::vuiEventHandler );
+    // ------------------------------------------------------------------- Toggle EVENTS
+    ofAddListener( postToggle->onValueChange, this, &ofApp::vuiEventHandler );
     
     
     // ------------------------------------------------------------------- TextField EVENTS
+    ofAddListener( textField->onFocus, this, &ofApp::vuiEventHandler );
+    ofAddListener( textField->onUnfocus, this, &ofApp::vuiEventHandler );
+    ofAddListener( textField->onTextChange, this, &ofApp::vuiEventHandler );
     ofAddListener( textField->onSubmit, this, &ofApp::vuiEventHandler );
     
     
@@ -153,9 +155,23 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
     switch( evt.eventType ){
         case VUI_EVENT_FOCUS:
             s += "VUI_EVENT_FOCUS";
+            ofLog() << s;
+            return;
             break;
         case VUI_EVENT_UNFOCUS:
             s += "VUI_EVENT_UNFOCUS";
+            ofLog() << s;
+            return;
+            break;
+        case VUI_EVENT_TEXT_CHANGE:
+            s += "VUI_EVENT_TEXT_CHANGE  text:" + evt.text;
+            ofLog() << s;
+            return;
+            break;
+        case VUI_EVENT_VALUE_CHANGE:
+            s += "VUI_EVENT_VALUE_CHANGE  value:" + ofToString(evt.value);
+            ofLog() << s;
+            return;
             break;
         case VUI_EVENT_SUBMIT:
             s += "VUI_EVENT_SUBMIT   text:" + evt.text;

@@ -59,7 +59,8 @@ namespace VUI {
         VUI_EVENT_TOUCH_DOUBLE_TAP,
         
         VUI_EVENT_STATE_CHANGE,
-        VUI_EVENT_TOGGLE_CHANGE,
+        VUI_EVENT_TEXT_CHANGE,
+        VUI_EVENT_VALUE_CHANGE,
         VUI_EVENT_SUBMIT,
         
         VUI_EVENT_FOCUS,
@@ -174,9 +175,8 @@ namespace VUI {
         int renderState;
         int virtualState;
         
-        bool isSelected;
-        
-        string text;
+        int value = -1;
+        string text = "";
         
         ofVec2f localMousePos;
         ofVec2f localDragDelta;
