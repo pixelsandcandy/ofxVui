@@ -17,6 +17,39 @@ namespace VUI {
         
 	protected:
 
+        struct Image {
+            ofRectangle bounds;
+            ofImage *image;
+            ofVec2f scale;
+            
+            bool active = false;
+            
+            ImageSize size = VUI_IMAGE_NORMAL;
+            
+            void Set( ofImage *imagePtr, int x = 0, int y = 0, int width = -1, int height = -1){
+                image = imagePtr;
+                bounds.set(x, y, width, height );
+                active = true;
+            }
+            
+            void Set( ofImage *imagePtr, string value ){
+                if ( value == "FILL" ) {
+                    image = imagePtr;
+                    size = VUI_IMAGE_FILL;
+                    scale.set(1,1);
+                    bounds.set(0,0, image->getWidth(), image->getHeight() );
+                    active = true;
+                }
+            }
+            
+            void Clear(){
+                active = false;
+            }
+        };
+        
+        map< int, Image> bgImage;
+
+        
 		string name;
 
 		map< int, map<string, string> > style;
@@ -50,7 +83,8 @@ namespace VUI {
 		ofColor color;
         
         string unparsedStyle;
-
+        
+        
 	public:
 		virtual ~Element();
 		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );

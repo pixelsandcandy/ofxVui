@@ -41,6 +41,11 @@ namespace VUI {
 		VUI_ALIGN_CENTER_CENTER,
 		VUI_ALIGN_CENTER_BOTTOM
 	};
+    
+    enum ImageSize {
+        VUI_IMAGE_NORMAL,
+        VUI_IMAGE_FILL
+    };
 
 	enum vuiEvent {
         VUI_EVENT_MOUSE_OVER,

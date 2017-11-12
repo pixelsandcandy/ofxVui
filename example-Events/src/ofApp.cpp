@@ -2,6 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetFrameRate(60);
     
     string styles = R"(
         [#square>
@@ -211,7 +212,7 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+    ofSetWindowTitle( ofToString(ofGetFrameRate()) );
 }
 
 //--------------------------------------------------------------

@@ -4,11 +4,16 @@
 void ofApp::setup(){
     
     string styles = R"(
+        [Images>
+         grunge: img/grunge.jpg;
+         illustration: img/union.jpg;
+         ]
+    
         [.baseClass>
              width: 160;
              height: 40;
              bg: #ff0000;
-             border: 1, #000000;
+             border: 1, #ffffff;
          
              &:over {
                 bg: #405c6c;
@@ -23,14 +28,20 @@ void ofApp::setup(){
     
     
         [#leftTop>
-             border: 1, #ffffff, ALL;
+             border: 1, #fff600, ALL;
+             bgImage: illustration, 0, 130;
              &:over{
                  border-left: 5, #f907df;
+                 bgImage: illustration, 160, 130;
+             }
+             &:down{
+                 bgImage: illustration, 320, 130;
              }
          ]
     
         [#leftCenter>
              anchorPoint: left-center;
+             bgImage: illustration, 210, 130, ALL;
              &:over{
                  border-left: 5, #f907df;
              }
@@ -38,8 +49,14 @@ void ofApp::setup(){
     
         [#leftBottom>
              anchorPoint: left-bottom;
+             bgImage: illustration, FILL;
              &:over{
                  border-left: 5, #f907df;
+                 bgImage: grunge, FILL;
+             }
+         
+             &:down{
+                 bgImage: grunge, 50, 50, 400, 50;
              }
          ]
     
@@ -74,7 +91,7 @@ void ofApp::setup(){
                  border-bottom: 5, #f907df;
              }
              &:down{
-                 opacity: .1;
+                 opacity: .25;
              }
          ]
     
@@ -110,6 +127,21 @@ void ofApp::setup(){
     //-------------------------------------------------------------- STYLES
     /*
      
+     SYNTAX
+     
+     [Images>
+         imageID: filepath;
+     ]
+     
+     [.styleClass>
+         (styles)
+     ]
+     
+     [#styleID>
+         (styles)
+     ]
+     
+     
      The primary style class/ID used is applied to ALL states.
      • VUI_STATE_UP
      • VUI_STATE_OVER
@@ -121,6 +153,7 @@ void ofApp::setup(){
      it behave like a primary style class/ID.
      • opacity
      • border
+     • background-image
      
      
      --------------------------------------------------------------
@@ -133,6 +166,12 @@ void ofApp::setup(){
      • scale
      • opacity                        0.0 - 1.0, ALL (optional)
      • rotation
+     
+     
+     • background-image               imageID, FIT -or- imageID (, sx, sy, sw, sh)
+     + bg-image
+     + backgroundImage
+     + bgImage
      
      
      • background-color               #hexColor -or- "clear"

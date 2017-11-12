@@ -638,6 +638,17 @@ namespace VUI {
 			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, 0, 0, width, height);
 		}
         
+        Image &img = bgImage[renderState];
+        if ( img.active ) {
+            if ( img.size == VUI_IMAGE_FILL ){
+                img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, 0, 0, img.bounds.width, img.bounds.height);
+            } else {
+                if ( img.bounds.width == -1 ) img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, img.bounds.x, img.bounds.y, width, height);
+                else img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
+            }
+            
+        }
+        
         for (vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++){
             if ( styleInt[renderState][(*it)] != 0 ) {
                 //if ( name == "#leftTop" ) ofLog() << (*it) << " -> " << styleFloat[renderState][(*it)];
@@ -809,107 +820,140 @@ namespace VUI {
         return split;
     }
 
-	Element* Element::SetStyle(string style, int toState, bool initState) 
-	{
+    Element* Element::SetStyle(string style, int state, bool initState)
+    {
         
-		if (style == "") {
-			//cout << "ERROR - SetStyle - style is empty" << endl;
-			//cout << "[" << toState << "] " << "style => " << style << endl;
-			return this;
-		}
-		
-		if (!hasStyle ) {
+        if (style == "") {
+            //cout << "ERROR - SetStyle - style is empty" << endl;
+            //cout << "[" << state << "] " << "style => " << style << endl;
+            return this;
+        }
+        
+        if (!hasStyle ) {
             //ofLog() << " ";
             //ofLog() << "[" << name << "] hasStyle:" << ofToString(hasStyle);
-			
-			//cout << "[" << toState << "] " << "mainStyle => " << mainStyle << endl;
+            
+            //cout << "[" << state << "] " << "mainStyle => " << mainStyle << endl;
             //ofLog() << "mainStyle:" << mainStyle;
             
             string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
             //ofLog() << mainStyle;
             
-			if (mainStyle == "") {
-				//cout << "ERROR - SetStyle - style is empty" << endl;
-				if (style.find(":over") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER);
-				if (style.find(":down") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN);
-				return this;
-			}
-
-			hasStyle = true;
-
-			SetStyle(mainStyle, VUI_STATE_UP);
-			SetStyle(mainStyle, VUI_STATE_OVER, false);
-			SetStyle(mainStyle, VUI_STATE_DOWN, false);
-
-			if (style.find(":over") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER);
-			if (style.find(":down") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN);
-			
-			return this;
-		}
-		else if (toState == VUI_STATE_ALL) {
-			string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
-			//cout << "[" << toState << "] " << "mainStyle => " << mainStyle << endl;
-
-			if (mainStyle == "") {
-				//cout << "ERROR - SetStyle - style is empty" << endl;
-				SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER, initState);
-				SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN, initState);
-				return this;
-			}
-
-			hasStyle = true;
-
-			SetStyle(mainStyle, VUI_STATE_UP);
-			SetStyle(mainStyle, VUI_STATE_OVER, initState);
-			SetStyle(mainStyle, VUI_STATE_DOWN, initState);
+            if (mainStyle == "") {
+                //cout << "ERROR - SetStyle - style is empty" << endl;
+                if (style.find(":over") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER);
+                if (style.find(":down") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN);
+                return this;
+            }
+            
+            hasStyle = true;
+            
+            SetStyle(mainStyle, VUI_STATE_UP);
+            SetStyle(mainStyle, VUI_STATE_OVER, false);
+            SetStyle(mainStyle, VUI_STATE_DOWN, false);
+            
+            if (style.find(":over") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER);
+            if (style.find(":down") != string::npos) SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN);
+            
+            return this;
+        }
+        else if (state == VUI_STATE_ALL) {
+            string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
+            //cout << "[" << state << "] " << "mainStyle => " << mainStyle << endl;
+            
+            if (mainStyle == "") {
+                //cout << "ERROR - SetStyle - style is empty" << endl;
+                SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_OVER), VUI_STATE_OVER, initState);
+                SetStyle(StyleSheet::ExtractStyleByState(style, VUI_STATE_DOWN), VUI_STATE_DOWN, initState);
+                return this;
+            }
+            
+            hasStyle = true;
+            
+            SetStyle(mainStyle, VUI_STATE_UP);
+            SetStyle(mainStyle, VUI_STATE_OVER, initState);
+            SetStyle(mainStyle, VUI_STATE_DOWN, initState);
         }
         
-        if ( toState == VUI_STATE_UP ) unparsedStyle = style;
-		
+        if ( state == VUI_STATE_UP ) unparsedStyle = style;
+        
         
         vector<string> split = SplitStyles( style );
         
-		vector<string> tempSplit;
-
-		for (vector<string>::iterator it = split.begin(); it != split.end(); it++) {
-			tempSplit = ofSplitString((*it), ":");
-			if (tempSplit.size() == 2) {
-                if (tempSplit[0] == "image" || tempSplit[0] == "img" ) {
-					if (styleSheet != nullptr) {
-						//images[toState][tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
-						//this->style[toState][tempSplit[1]] = "image";
-						
-                        // TODO: multiple images per state
-                        //imageIDs[toState].push_back(tempSplit[1]);
-						//images[tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
-                        
-                        if ( styleSheet->HasImage(tempSplit[1]) ){
-                            imageIDs[toState].clear();
-                            
-                            imageIDs[toState].push_back(tempSplit[1]);
-                            images[tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
-                        } else {
-                            ofLog( OF_LOG_WARNING ) << "[" << GetName() << "] image id(" << tempSplit[1] << ") doesn't exist";
+        vector<string> tempSplit;
+        
+        for (vector<string>::iterator it = split.begin(); it != split.end(); it++) {
+            tempSplit = ofSplitString((*it), ":");
+            if (tempSplit.size() == 2) {
+                if ( tempSplit[0] == "background-image" || tempSplit[0] == "bg-image" || tempSplit[0] == "bgImage" || tempSplit[0] == "backgroundImage" ) {
+                    if ( styleSheet == nullptr ) continue;
+                    
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    
+                    bool all = false;
+                    if ( props[props.size()-1] == "ALL" ) {
+                        all = true;
+                        props.pop_back();
+                    }
+                    
+                    if ( all ){
+                        for ( int i = 0; i < 3; i++){
+                            if ( styleSheet->HasImage( props[0] ) ){
+                                if ( props.size() == 1 ) bgImage[i].Set( styleSheet->GetImage(props[0]) );
+                                else if ( props.size() == 2 ) bgImage[i].Set( styleSheet->GetImage(props[0]), props[1] );
+                                else if ( props.size() == 3 ) bgImage[i].Set( styleSheet->GetImage(props[0]), ofToInt(props[1]), ofToInt(props[2]) );
+                                else if ( props.size() == 5 ) bgImage[i].Set( styleSheet->GetImage(props[0]), ofToInt(props[1]), ofToInt(props[2]), ofToInt(props[3]), ofToInt(props[4]) );
+                            } else {
+                                ofLog( OF_LOG_WARNING ) << "[" << GetName() << "] image id(" << props[0] << ") doesn't exist";
+                            }
                         }
-					}
-				}
-				else if (tempSplit[0] == "video") {
-
+                    } else {
+                        if ( styleSheet->HasImage( props[0] ) ){
+                            if ( props.size() == 1 ) bgImage[state].Set( styleSheet->GetImage(props[0]) );
+                            else if ( props.size() == 2 ) bgImage[state].Set( styleSheet->GetImage(props[0]), props[1] );
+                            else if ( props.size() == 3 ) bgImage[state].Set( styleSheet->GetImage(props[0]), ofToInt(props[1]), ofToInt(props[2]) );
+                            else if ( props.size() == 5 ) bgImage[state].Set( styleSheet->GetImage(props[0]), ofToInt(props[1]), ofToInt(props[2]), ofToInt(props[3]), ofToInt(props[4]) );
+                        } else {
+                            ofLog( OF_LOG_WARNING ) << "[" << GetName() << "] image id(" << props[0] << ") doesn't exist";
+                        }
+                    }
+                    
+                    
+                } if (tempSplit[0] == "image" || tempSplit[0] == "img" ) {
+                    if ( styleSheet == nullptr ) continue;
+                    //images[state][tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
+                    //this->style[state][tempSplit[1]] = "image";
+                    
+                    // TODO: multiple images per state
+                    //imageIDs[state].push_back(tempSplit[1]);
+                    //images[tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
+                    
+                    if ( styleSheet->HasImage(tempSplit[1]) ){
+                        imageIDs[state].clear();
+                        
+                        imageIDs[state].push_back(tempSplit[1]);
+                        images[tempSplit[1]] = styleSheet->GetImage(tempSplit[1]);
+                    } else {
+                        ofLog( OF_LOG_WARNING ) << "[" << GetName() << "] image id(" << tempSplit[1] << ") doesn't exist";
+                    }
+                }
+                else if (tempSplit[0] == "video") {
+                    
                 } else if (tempSplit[0] == "rotation"){
                     SetRotation( ofToFloat(tempSplit[1]) );
                 } else if (tempSplit[0] == "scale"){
                     SetScale( ofToFloat(tempSplit[1]) );
                 } else if (tempSplit[0] == "anchorPoint" || tempSplit[0] == "anchor-point" ) {
-					if (tempSplit[1] == "left-top") SetAnchorPoint(VUI_ALIGN_LEFT_TOP);
-					else if (tempSplit[1] == "left-center") SetAnchorPoint(VUI_ALIGN_LEFT_CENTER);
-					else if (tempSplit[1] == "left-bottom") SetAnchorPoint(VUI_ALIGN_LEFT_BOTTOM);
-					else if (tempSplit[1] == "center-top") SetAnchorPoint(VUI_ALIGN_CENTER_TOP);
-					else if (tempSplit[1] == "center-center") SetAnchorPoint(VUI_ALIGN_CENTER_CENTER);
-					else if (tempSplit[1] == "center-bottom") SetAnchorPoint(VUI_ALIGN_CENTER_BOTTOM);
-					else if (tempSplit[1] == "right-top") SetAnchorPoint(VUI_ALIGN_RIGHT_TOP);
-					else if (tempSplit[1] == "right-center") SetAnchorPoint(VUI_ALIGN_RIGHT_CENTER);
-					else if (tempSplit[1] == "right-bottom") SetAnchorPoint(VUI_ALIGN_RIGHT_BOTTOM);
-				}
+                    if (tempSplit[1] == "left-top") SetAnchorPoint(VUI_ALIGN_LEFT_TOP);
+                    else if (tempSplit[1] == "left-center") SetAnchorPoint(VUI_ALIGN_LEFT_CENTER);
+                    else if (tempSplit[1] == "left-bottom") SetAnchorPoint(VUI_ALIGN_LEFT_BOTTOM);
+                    else if (tempSplit[1] == "center-top") SetAnchorPoint(VUI_ALIGN_CENTER_TOP);
+                    else if (tempSplit[1] == "center-center") SetAnchorPoint(VUI_ALIGN_CENTER_CENTER);
+                    else if (tempSplit[1] == "center-bottom") SetAnchorPoint(VUI_ALIGN_CENTER_BOTTOM);
+                    else if (tempSplit[1] == "right-top") SetAnchorPoint(VUI_ALIGN_RIGHT_TOP);
+                    else if (tempSplit[1] == "right-center") SetAnchorPoint(VUI_ALIGN_RIGHT_CENTER);
+                    else if (tempSplit[1] == "right-bottom") SetAnchorPoint(VUI_ALIGN_RIGHT_BOTTOM);
+                }
                 else if (tempSplit[0] == "font" ){
                     vector<string> fontProps = ofSplitString(tempSplit[1], "," );
                     int size = VUI::fontSize;
@@ -927,7 +971,7 @@ namespace VUI {
                     if ( props.size() < 2 ) {
                         if ( props.size() == 1 && props[0] == "clear" ) {
                             for ( vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++ ){
-                                this->styleInt[toState][(*it)] = 0;
+                                this->styleInt[state][(*it)] = 0;
                             }
                         }
                         continue;
@@ -951,8 +995,8 @@ namespace VUI {
                         }
                     } else {
                         for ( vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++ ){
-                            this->styleInt[toState][(*it)] = ofToInt(props[0]);
-                            this->styleFloat[toState][(*it)] = stoul(str, nullptr, 16);
+                            this->styleInt[state][(*it)] = ofToInt(props[0]);
+                            this->styleFloat[state][(*it)] = stoul(str, nullptr, 16);
                         }
                     }
                     
@@ -960,7 +1004,7 @@ namespace VUI {
                     vector<string> props = ofSplitString(tempSplit[1], ",");
                     if ( props.size() < 2 ) {
                         if ( props.size() == 1 && props[0] == "clear" ) {
-                            this->styleInt[toState][tempSplit[0]] = 0;
+                            this->styleInt[state][tempSplit[0]] = 0;
                         }
                         continue;
                     }
@@ -977,20 +1021,20 @@ namespace VUI {
                             this->styleFloat[i][tempSplit[0]] = stoul(str, nullptr, 16);
                         }
                     } else {
-                        this->styleInt[toState][tempSplit[0]] = ofToInt(props[0]);
-                        this->styleFloat[toState][tempSplit[0]] = stoul(str, nullptr, 16);
+                        this->styleInt[state][tempSplit[0]] = ofToInt(props[0]);
+                        this->styleFloat[state][tempSplit[0]] = stoul(str, nullptr, 16);
                     }
                     
                 } else if ( tempSplit[0] == "offset" ) {
                     vector<string> props = ofSplitString(tempSplit[1], ",");
                     if ( props.size() != 2 ) continue;
-                    this->style[toState]["offset-x"] = props[0];
-                    this->style[toState]["offset-y"] = props[1];
+                    this->style[state]["offset-x"] = props[0];
+                    this->style[state]["offset-y"] = props[1];
                 } else if (tempSplit[0] == "opacity" ) {
                     vector<string> props = ofSplitString(tempSplit[1], ",");
                     if ( props.size() == 1 ) {
-                        this->styleFloat[toState][tempSplit[0]] = ofToFloat(props[0]) * 255.0;
-                        this->style[toState][tempSplit[0]] = props[0];
+                        this->styleFloat[state][tempSplit[0]] = ofToFloat(props[0]) * 255.0;
+                        this->style[state][tempSplit[0]] = props[0];
                     }
                     else if ( props.size() == 2 && props[1] == "ALL" ){
                         for ( int i = 0; i < 3; i++ ){
@@ -1001,29 +1045,29 @@ namespace VUI {
                 } else {
                     if ( tempSplit[0] == "bg" || tempSplit[0] == "bgColor" || tempSplit[0] == "backgroundColor" ) tempSplit[0] = "background-color";
                     
-					this->style[toState][tempSplit[0]] = tempSplit[1];
+                    this->style[state][tempSplit[0]] = tempSplit[1];
                     
-					if (toState == VUI_STATE_UP) {
-						if (tempSplit[0] == "width" || tempSplit[0] == "height" ) {
-							/*for (int i = 0; i < 3; i++) {
-								this->style[i][tempSplit[0]] = tempSplit[1];
-							}*/
+                    if (state == VUI_STATE_UP) {
+                        if (tempSplit[0] == "width" || tempSplit[0] == "height" ) {
+                            /*for (int i = 0; i < 3; i++) {
+                             this->style[i][tempSplit[0]] = tempSplit[1];
+                             }*/
                             if ( tempSplit[0] == "width" ) width = ofToFloat( tempSplit[1] );
                             else if ( tempSplit[0] == "height" ) height = ofToFloat( tempSplit[1] );
-						}
-					}
-				}
+                        }
+                    }
+                }
                 
                 StorePropValue( tempSplit[0], tempSplit[1] );
-			}
-		}
-
-		if ( initState ) hasState[toState] = true;
-
-		ParseStyle( "", toState );
-		Update( -1, -1, true );
-		Render();
-
-		return this;
-	}
+            }
+        }
+        
+        if ( initState ) hasState[state] = true;
+        
+        ParseStyle( "", state );
+        Update( -1, -1, true );
+        Render();
+        
+        return this;
+    }
 }

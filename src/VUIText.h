@@ -244,7 +244,7 @@ namespace VUI {
         }
         
         void UpdateRect(){
-            font->getStringBoundingBox(text, 0,0);
+            rect = font->getStringBoundingBox(text, 0,0);
         }
         
     private:
