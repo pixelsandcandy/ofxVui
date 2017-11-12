@@ -33,7 +33,6 @@ public:
         [.view-label>
              width: 200;
              height: 60;
-             background-color: transparent;
              font: Gotham-Medium.otf,{{font-size}};
              color: #ffffff;
              padding: 6;
@@ -46,7 +45,6 @@ public:
              color: #ffffff;
              anchorPoint: right-bottom;
              textAlign: right-bottom;
-             background-color: transparent;
          ]
         
         [.btn-setView>

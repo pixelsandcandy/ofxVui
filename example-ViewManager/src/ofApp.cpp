@@ -4,6 +4,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetFrameRate(60);
     
     // usually a transparent background
     VUI::SetBackground( 20 );
@@ -18,7 +19,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+    ofSetWindowTitle(ofToString(ofGetFrameRate()));
 }
 
 //--------------------------------------------------------------

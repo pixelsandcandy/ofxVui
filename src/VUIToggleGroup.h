@@ -21,8 +21,6 @@ namespace VUI {
         ~ToggleGroup(){}
         ToggleGroup( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
             
-            
-            
         }
         
         vector<Element*> toggles;
