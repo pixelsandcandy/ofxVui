@@ -23,7 +23,7 @@ namespace VUI {
 		map< int, map<string, float> > styleFloat;
         map< int, map<string, int> > styleInt;
         
-        vector<string> borderProps = {"border-top", "border-right", "border-bottom", "border-left" };
+        vector<string> borderProps = {"border-top", "border-bottom", "border-left", "border-right" };
 
 		map< int, vector<string> > imageIDs;
 		map< string, ofImage* > images;
@@ -84,6 +84,13 @@ namespace VUI {
         void DEBUG(){
             DEBUG_MODE = true;
         }
+        
+        void SetBorderRenderingOrder( string a, string b, string c, string d ){
+            borderProps[0] = a;
+            borderProps[1] = b;
+            borderProps[2] = c;
+            borderProps[3] = d;
+        };
         
 		void SetMask( ofTexture *maskTexture ) {
 			maskTex = maskTexture;

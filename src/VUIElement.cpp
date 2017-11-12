@@ -811,6 +811,7 @@ namespace VUI {
 
 	Element* Element::SetStyle(string style, int toState, bool initState) 
 	{
+        
 		if (style == "") {
 			//cout << "ERROR - SetStyle - style is empty" << endl;
 			//cout << "[" << toState << "] " << "style => " << style << endl;
@@ -825,6 +826,7 @@ namespace VUI {
             //ofLog() << "mainStyle:" << mainStyle;
             
             string mainStyle = StyleSheet::ExtractStyleByState(style, VUI_STATE_UP);
+            //ofLog() << mainStyle;
             
 			if (mainStyle == "") {
 				//cout << "ERROR - SetStyle - style is empty" << endl;

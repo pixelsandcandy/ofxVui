@@ -65,6 +65,7 @@ namespace VUI {
             if ( t == " " ) spaceOffsetX = font->getSize() * .5;
             else spaceOffsetX = 0;
             
+            UpdateRect();
             TriggerValueChangeEvent();
         }
         
@@ -74,6 +75,8 @@ namespace VUI {
             text = text.substr(0, text.size()-1);
             if ( text.size() > 0 && text.substr(text.size()-1,1) == " " ) spaceOffsetX = font->getSize() * .5;
             else spaceOffsetX = 0;
+            
+            UpdateRect();
             
             TriggerValueChangeEvent();
         }

@@ -29,11 +29,12 @@ namespace VUI {
             textColor.setHex(stoul("0x000000", nullptr, 16), 255.0 );
             
             for (int i = 0; i < 3; i++) {
-                style[i]["opacity"] = "1";
                 style[i]["background-color"] = "clear";
             }
             
             this->setPosition(x, y, 0);
+            
+            hasStyle = false;
             
             ParseStyle();
             
@@ -109,12 +110,21 @@ namespace VUI {
         string text = "";
         Align textAlignment = VUI_ALIGN_LEFT_TOP;
         
-        void SetText( string t ){
+        
+        
+        void SetText( string t, bool sizeToText = false ){
             text = t;
+            UpdateRect();
+            if ( sizeToText ) SizeToText();
         }
         
         string GetText(){
             return text;
+        }
+        
+        void SizeToText(){
+            ofRectangle rect = font->getStringBoundingBox(text, 0,0);
+            SetSize( rect.width + padding.x*2, rect.height + padding.y*2 );
         }
         
         bool IsFocused(){
@@ -162,6 +172,7 @@ namespace VUI {
         
         bool isTextField = false;
         
+        ofRectangle rect;
         
         void RenderAfter(float parentOffsetX = 0, float parentOffsetY = 0){
             
@@ -172,8 +183,6 @@ namespace VUI {
                 _Calibrate();
                 
                 //ofSetColor(255,0,255,255);
-                ofRectangle rect;
-                rect = font->getStringBoundingBox(text, 0,0);
                 float x = 0;
                 float y = 0;
                 
@@ -234,7 +243,13 @@ namespace VUI {
             }
         }
         
+        void UpdateRect(){
+            font->getStringBoundingBox(text, 0,0);
+        }
+        
     private:
+        
+        
         bool _isCalibrated = false;
         float _typingIndicatorOffset;
         void _Calibrate(){

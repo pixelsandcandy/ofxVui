@@ -128,11 +128,6 @@ void ofApp::setup(){
      • width                          (applies to all states)
      • height                         (applies to all states)
      
-     • background-color               #hexColor -or- "clear"
-         + backgroundColor
-         + bgColor
-         + bg
-     
      • color                          text color
      • font                           fontFilepath, fontSize
      • scale
@@ -140,12 +135,37 @@ void ofApp::setup(){
      • rotation
      
      
+     • background-color               #hexColor -or- "clear"
+     + backgroundColor
+     + bgColor
+     + bg
+     
+     
      • anchor-point
-         + anchorPoint
+     + anchorPoint
+     
+     
+     • border                         thickness, #hexColor, ALL (optional) -or- "clear" (turns border off)
+     ∟ border-top
+     ∟ border-right
+     ∟ border-bottom
+     ∟ border-left
+     
+     
+     • offset                         (not based on anchorPoint, from left-top)
+     ∟ offset-x
+     ∟ offset-y
+     
+     
+     • padding                        for text / textField
+     ∟ padding-x
+     ∟ padding-y
+     
      
      • text-align
-         + textAlign
+     + textAlign
      
+                                     VALUES for text-align and anchor-point
                                     - left-top
                                     - left-center
                                     - left-bottom
@@ -156,17 +176,6 @@ void ofApp::setup(){
                                     - right-center
                                     - right-bottom
      
-     
-     • border                         thickness, #hexColor, ALL (optional) -or- "clear" (turns border off)
-         ∟ border-top
-         ∟ border-right
-         ∟ border-bottom
-         ∟ border-left
-     
-     
-     • offset                         (not based on anchorPoint, from left-top)
-         ∟ offset-x
-         ∟ offset-y
      
      
      --------------------------------------------------------------
@@ -195,11 +204,22 @@ void ofApp::setup(){
     rightCenter = new Element( ofGetWidth(),ofGetHeight()*.5, ss, ".baseClass", "#rightCenter" );
     rightBottom = new Element( ofGetWidth(),ofGetHeight(), ss, ".baseClass", "#rightBottom" );
     
+    
+    
+    //-------------------------------------------------------------- BORDERS
+    
+    // normal rendering order is "border-top", "border-bottom", "border-left", "border-right"
+    // uncomment lines below to see difference
+    
+    //centerTop->SetBorderRenderingOrder( "border-left", "border-right", "border-top", "border-bottom" );
+    //centerBottom->SetBorderRenderingOrder( "border-left", "border-right", "border-top", "border-bottom" );
+ 
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
+    ofSetWindowTitle( ofToString(ofGetFrameRate()) );
 }
 
 //--------------------------------------------------------------

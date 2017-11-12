@@ -141,6 +141,10 @@ namespace VUI {
             return perc;
         }
         
+        float GetProgress(){
+            return perc;
+        }
+        
         vector<string> valueNames;
         map<string, float> endValues;
         map<string, float> startValues;
@@ -159,6 +163,9 @@ namespace VUI {
         void UpdateValues();
         void StoreValue( string param, string val );
         void StoreStartValues();
+        void SetID( string name ){
+            id = name;
+        }
         
         
         template <typename ArgumentsType, class ListenerClass>
