@@ -381,14 +381,17 @@ namespace VUI {
             } else if ( (*it) == "y" ){
                 startValues[ (*it) ] = el->getPosition().y;
             } else if ( (*it) == "width" ){
-                startValues[ (*it) ] = el->GetWidth();
+                //ofLog() << "width:" << el->GetWidth();
+                startValues[ (*it) ] = el->GetWidth(false);
             } else if ( (*it) == "height" ){
-                startValues[ (*it) ] = el->GetHeight();
+                //ofLog() << "height:" << el->GetHeight();
+                startValues[ (*it) ] = el->GetHeight(false);
             } else if ( (*it) == "rotation" ){
                 startValues[ (*it) ] = el->GetRotation();
             } else if ( (*it) == "opacity" ){
                 startValues[ (*it) ] = el->GetOpacity();
             } else if ( (*it) == "scale" ){
+                //ofLog() << "scale:" << el->GetScale();
                 startValues[ (*it) ] = el->GetScale();
             }
         }
@@ -481,7 +484,7 @@ namespace VUI {
                 opacity = ofxeasing::map(perc, 0.0, 1.0, startValues[(*it)], endValues[(*it)], ease);
                 //if ( el->GetName() == "#ShaveOver" ) ofLog() << opacity;
                 
-                el->SetOpacity( opacity );
+                el->SetOpacity( ofClamp(opacity, 0, 1) );
                 
             } else if ( (*it) == "scale" ){
                 scale = ofxeasing::map(perc, 0.0, 1.0, startValues[(*it)], endValues[(*it)], ease);
@@ -576,6 +579,7 @@ namespace VUI {
         }
         
         //ofLog() << "EMBridge::Update - " << ofRandomf();
+        //if ( EventHasElement(VUI_EVENT_MOUSE_CLICK) ) ofLog() << GetLatestElement(VUI_EVENT_MOUSE_CLICK)->GetName();
         for( vector<vuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
             if ( EventHasElement((*it)) ) GetLatestElement((*it))->TriggerEvent((*it));
         }

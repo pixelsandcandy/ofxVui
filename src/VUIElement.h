@@ -143,13 +143,15 @@ namespace VUI {
         float height = 60;
         float rotation = 0.0;
         
-        float GetWidth(){
-            return width*scale;
+        float GetWidth( bool scaled = true ){
+            if ( scaled ) return width*scale;
+            else return width;
             //return styleFloat[state]["width"];
         }
         
-        float GetHeight(){
-            return height*scale;
+        float GetHeight( bool scaled = true){
+            if ( scaled ) return height*scale;
+            else return height;
             //return styleFloat[state]["height"];
         }
         
@@ -376,7 +378,7 @@ namespace VUI {
         ofVec2f mouseDownPos;
         bool isMouseDown = false;
         bool isMouseInside = false;
-        int lastClickTimeMS;
+        int lastClickTimeMS = 0;
     private:
 		void SetDefaultStyles(int x, int y);
 		void UpdateAnchorOffset();

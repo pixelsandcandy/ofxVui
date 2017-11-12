@@ -364,31 +364,38 @@ namespace VUI {
             
         } else {
             
-            if (virtualState == VUI_STATE_DOWN && (toState == VUI_STATE_UP || toState == VUI_STATE_OVER)) {
-                /*ofLog() << "[" << name << "]  - " << ofRandomf();
-                ofLog() << "prevVirtual:" << prevVirtualState << "  virtual:" << virtualState << "  real:" << renderState << "->" << toState;
-                ofLog() << "update: " << update;*/
+            /*if (virtualState == VUI_STATE_DOWN && (toState == VUI_STATE_UP || toState == VUI_STATE_OVER)) {
                 VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
-            }
+            }*/
             
             if ( renderState == VUI_STATE_UP && toState == VUI_STATE_OVER ){
                 VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OVER );
             }
             
-            if ( toState == VUI_STATE_UP ) {
+            //int evt = -1;
+            
+            if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_DOWN ) {
+                if ( DEBUG_MODE ) ofLog() << "PRESSED";
+                //evt = VUI_EVENT_MOUSE_PRESSED;
+                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
+            } else if (virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ){
+                if ( DEBUG_MODE ) ofLog() << "RELEASED";
+                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
+                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+                //evt = VUI_EVENT_MOUSE_RELEASED;
+            }
+            
+            if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_UP ) {
                 renderState = toState;
                 VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OUT );
             } else if (update) {
+                if ( DEBUG_MODE ) ofLog() << "virtualState:" << virtualState << "  state:" << toState << "  " << ofRandomf();
                 VUI::EventManager.StoreState( this, (VUI::State)toState );
             } else {
                 renderState = VUI_STATE_UP;
             }
             
-            if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_DOWN ) {
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
-            } else if (virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ){
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
-            }
+            
         }
         
         
@@ -508,15 +515,19 @@ namespace VUI {
                 canDrag = false;
                 break;
             case VUI_EVENT_MOUSE_CLICK:
-                t = ofGetElapsedTimeMillis();
                 
+                
+                t = ofGetElapsedTimeMillis();
+                //if ( DEBUG_MODE ) ofLog() << "lastClickTimeMS:" << lastClickTimeMS << "  now:" << t;
                 if ( t - lastClickTimeMS < VUI::doubleClickThreshold ){
+                    if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_DOUBLE_CLICK)";
                     args.eventType = VUI_EVENT_MOUSE_DOUBLE_CLICK;
                     ofNotifyEvent(onMouseDoubleClick, args, this);
                     
                     argsTouch.eventType = VUI_EVENT_TOUCH_DOUBLE_TAP;
                     ofNotifyEvent(onTouchDoubleTap, argsTouch, this );
                 } else {
+                    if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_CLICK)";
                     ofNotifyEvent(onMouseClick, args, this);
                     
                     argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
@@ -603,6 +614,7 @@ namespace VUI {
         
         parentSumOpacity = parentOpacity * opacity;
         parentSumOffset.set( parentOffsetX, parentOffsetY );
+        
         if ( !userUpdating ) Update(-1, -1, true);
         
         

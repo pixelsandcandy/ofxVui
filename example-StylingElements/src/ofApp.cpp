@@ -5,8 +5,8 @@ void ofApp::setup(){
     
     string styles = R"(
         [Images>
-         grunge: img/grunge.jpg;
-         illustration: img/union.jpg;
+             grunge: img/grunge.jpg;
+             illustration: img/union.jpg;
          ]
     
         [.baseClass>
@@ -142,7 +142,7 @@ void ofApp::setup(){
      ]
      
      
-     The primary style class/ID used is applied to ALL states.
+     The primary styleClass/ID is applied to ALL states.
      • VUI_STATE_UP
      • VUI_STATE_OVER
      • VUI_STATE_DOWN
@@ -150,7 +150,7 @@ void ofApp::setup(){
      
      The secondary style class/ID overrides properties for specific states.
      Some properties have an ALL flag that will override ALL states to make
-     it behave like a primary style class/ID.
+     it behave like a primary styleClass/ID.
      • opacity
      • border
      • background-image
@@ -191,12 +191,12 @@ void ofApp::setup(){
      ∟ border-left
      
      
-     • offset                         (not based on anchorPoint, from left-top)
+     • offset                         (not based on anchorPoint, from left-top position)
      ∟ offset-x
      ∟ offset-y
      
      
-     • padding                        for text / textField
+     • padding                        for text / textFields, adds to textAligned position (be mindful)
      ∟ padding-x
      ∟ padding-y
      
@@ -247,8 +247,8 @@ void ofApp::setup(){
     
     //-------------------------------------------------------------- BORDERS
     
-    // normal rendering order is "border-top", "border-bottom", "border-left", "border-right"
-    // uncomment lines below to see difference
+    // Normal rendering order is "border-top", "border-bottom", "border-left", "border-right"
+    // Uncomment lines below to see difference on OVER state
     
     //centerTop->SetBorderRenderingOrder( "border-left", "border-right", "border-top", "border-bottom" );
     //centerBottom->SetBorderRenderingOrder( "border-left", "border-right", "border-top", "border-bottom" );
