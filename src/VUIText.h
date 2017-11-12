@@ -22,7 +22,7 @@ namespace VUI {
     public:
         
         ~Text(){};
-        Text( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Element(x,y,ss,selector,selectorB){
+        Text( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
             
             VUI::Init();
             
@@ -30,14 +30,14 @@ namespace VUI {
             
             for (int i = 0; i < 3; i++) {
                 style[i]["opacity"] = "1";
-                style[i]["background-color"] = "transparent";
+                style[i]["background-color"] = "clear";
             }
             
             this->setPosition(x, y, 0);
             
             ParseStyle();
             
-            ParseStyleSheet(ss, selector, selectorB );
+            ParseStyleSheet(ss, primarySelector, secondarySelector );
             
             
             //textOffset.y = VUI::fontSize;

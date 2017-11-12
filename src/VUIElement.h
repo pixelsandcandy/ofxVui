@@ -21,6 +21,9 @@ namespace VUI {
 
 		map< int, map<string, string> > style;
 		map< int, map<string, float> > styleFloat;
+        map< int, map<string, int> > styleInt;
+        
+        vector<string> borderProps = {"border-top", "border-right", "border-bottom", "border-left" };
 
 		map< int, vector<string> > imageIDs;
 		map< string, ofImage* > images;
@@ -50,7 +53,7 @@ namespace VUI {
 
 	public:
 		virtual ~Element();
-		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string selector = "", string selectorB = "" );
+		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
 
 		ofEvent<vuiEventArgs> onMouseOver;
         ofEvent<vuiEventArgs> onMouseOut;
@@ -183,7 +186,7 @@ namespace VUI {
         void Render(float parentOffsetX = 0, float parentOffsetY = 0, float parentOpacity = 1.0, ofVec2f _anchorOffset = ofVec2f::zero() );
 		void Update(int mouseX = -1, int mouseY = -1, bool internalUpdate = false);
 		void ParseStyle(string property = "", int renderState = VUI_STATE_UP);
-        void ParseStyleSheet(StyleSheet *ss = nullptr, string selector = "", string selectorB = "");
+        void ParseStyleSheet(StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
 		float GetProperty(string property);
 		void SetProperty(string property, string val);
 		void SetProperty(string property, float val);

@@ -22,7 +22,7 @@ namespace VUI {
     public:
         
         ~TextField(){};
-        TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string selector = "", const string selectorB = "" ):Text(x,y,ss,selector,selectorB){
+        TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
             
             MakeToggle();
             isTextField = true;

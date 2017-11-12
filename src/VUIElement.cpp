@@ -7,31 +7,31 @@ namespace VUI {
         VUI::Init();
     }
 
-	Element::Element(int x, int y, StyleSheet *ss, string selector, string selectorB ) {
+	Element::Element(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
 		VUI::Init();
         
 		SetDefaultStyles(x, y);
-        ParseStyleSheet(ss, selector, selectorB );
+        ParseStyleSheet(ss, primarySelector, secondarySelector );
 	}
     
-    void Element::ParseStyleSheet(StyleSheet *ss, string selector, string selectorB){
+    void Element::ParseStyleSheet(StyleSheet *ss, string primarySelector, string secondarySelector){
         if (ss != nullptr) {
             SetStyleSheet(ss);
-            if (selector != "") {
-                if (selector.find(".") != string::npos) {
-                    UseStyleClass(selector.substr(1));
+            if (primarySelector != "") {
+                if (primarySelector.find(".") != string::npos) {
+                    UseStyleClass(primarySelector.substr(1));
                 }
-                else if (selector.find("#") != string::npos) {
-                    UseStyleID(selector.substr(1));
+                else if (primarySelector.find("#") != string::npos) {
+                    UseStyleID(primarySelector.substr(1));
                 }
             }
             
-            if (selectorB != "") {
-                if (selectorB.find(".") != string::npos) {
-                    UseStyleClass(selectorB.substr(1));
+            if (secondarySelector != "") {
+                if (secondarySelector.find(".") != string::npos) {
+                    UseStyleClass(secondarySelector.substr(1));
                 }
-                else if (selectorB.find("#") != string::npos) {
-                    UseStyleID(selectorB.substr(1));
+                else if (secondarySelector.find("#") != string::npos) {
+                    UseStyleID(secondarySelector.substr(1));
                 }
             }
         }
@@ -616,8 +616,10 @@ namespace VUI {
 		ofEnableAlphaBlending();
 
 		if (maskTex != nullptr && fbo != nullptr) fbo->begin();
+        
+        ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, width*scale, height*scale);
 
-		if (style[renderState]["background-color"] != "transparent") {
+		if (style[renderState]["background-color"] != "clear") {
 			//ofSetHexColor(styleFloat[state]["background-color"]);
 			color.setHex(styleFloat[renderState]["background-color"], styleFloat[renderState]["opacity"]*parentSumOpacity);
 			ofSetColor(color);
@@ -625,7 +627,7 @@ namespace VUI {
 			//ofSetColor( )
             
             //if ( name == "comfortBar" ) ofLog() << style[renderState]["background-color"] << " -> " << styleFloat[renderState]["background-color"];
-			ofDrawRectangle(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, width*scale, height*scale);
+			ofDrawRectangle(rect.x, rect.y, rect.width, rect.height);
 		}
 		
 		//ofSetColor(ofColor::white);
@@ -635,6 +637,21 @@ namespace VUI {
 		for (vector<string>::iterator it = imageIDs[renderState].begin(); it != imageIDs[renderState].end(); it++) {
 			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, 0, 0, width, height);
 		}
+        
+        for (vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++){
+            if ( styleInt[renderState][(*it)] != 0 ) {
+                //if ( name == "#leftTop" ) ofLog() << (*it) << " -> " << styleFloat[renderState][(*it)];
+                color.setHex(styleFloat[renderState][(*it)], styleFloat[renderState]["opacity"]*parentSumOpacity);
+                ofSetColor(color);
+                
+                float thickness = styleInt[renderState][(*it)];
+                
+                if ( (*it) == "border-top" ) ofDrawRectangle(rect.x, rect.y, rect.width, thickness );
+                else if ( (*it) == "border-right" ) ofDrawRectangle(rect.x+rect.width-thickness, rect.y, thickness, rect.height );
+                else if ( (*it) == "border-bottom" ) ofDrawRectangle(rect.x, rect.y+rect.height-thickness, rect.width, thickness );
+                else if ( (*it) == "border-left" ) ofDrawRectangle(rect.x, rect.y, thickness, rect.height );
+            }
+        }
         
         RenderAfter( _anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y );
         
@@ -667,7 +684,7 @@ namespace VUI {
 		cout << "width:" << style[toState]["width"] << endl;
 		cout << "height:" << style[toState]["height"] << endl;*/
 		
-		if (style[toState]["background-color"] != "transparent" ) {
+		if (style[toState]["background-color"] != "clear" ) {
             if ( style[toState]["background-color"].find( "#" ) != string::npos ){
                 string str(style[toState]["background-color"]);
                 ofStringReplace(str, "#", "");
@@ -683,6 +700,12 @@ namespace VUI {
 		styleFloat[toState]["offset-x"] = ofToFloat(style[toState]["offset-x"]);
 		styleFloat[toState]["offset-y"] = ofToFloat(style[toState]["offset-y"]);
 		styleFloat[toState]["opacity"] = ofToFloat(style[toState]["opacity"]) * 255.0;
+        
+        /*styleFloat[toState]["border-top"] = ofToFloat(style[toState]["border-top"]);
+        styleFloat[toState]["border-right"] = ofToFloat(style[toState]["border-right"]);
+        styleFloat[toState]["border-bottom"] = ofToFloat(style[toState]["border-bottom"]);
+        styleFloat[toState]["border-left"] = ofToFloat(style[toState]["border-left"]);*/
+        
 		//cout << "x => " << ofToFloat(style["x"]) << endl;
 
 		//SetPosition(ofToFloat(style[toState]["x"]), ofToFloat(style[toState]["y"]), ofToFloat(style[state]["z"]), toState, false);
@@ -897,7 +920,85 @@ namespace VUI {
                         font = VUI::AddFont( fontProps[0], size );
                     }
                 }
-				else {
+                else if (tempSplit[0] == "border" ){
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    if ( props.size() < 2 ) {
+                        if ( props.size() == 1 && props[0] == "clear" ) {
+                            for ( vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++ ){
+                                this->styleInt[toState][(*it)] = 0;
+                            }
+                        }
+                        continue;
+                    }
+                    if ( props[1].find("#") == string::npos ) continue;
+                    
+                    string str(props[1]);
+                    ofStringReplace(str, "#", "");
+                    
+                    //ofLog() << "border: " << props[0] << ":" << props[1];
+                    
+                    //ofLog() << str << " => " << stoul(str, nullptr, 16);
+                    //if ( name == "#leftCenter" ) ofLog() << tempSplit[0] << " => " << str << " => " << stoul(str, nullptr, 16);
+                    
+                    if ( props.size() == 3 && props[2] == "ALL" ){
+                        for ( int i = 0; i < 3; i++ ){
+                            for ( vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++ ){
+                                this->styleInt[i][(*it)] = ofToInt(props[0]);
+                                this->styleFloat[i][(*it)] = stoul(str, nullptr, 16);
+                            }
+                        }
+                    } else {
+                        for ( vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++ ){
+                            this->styleInt[toState][(*it)] = ofToInt(props[0]);
+                            this->styleFloat[toState][(*it)] = stoul(str, nullptr, 16);
+                        }
+                    }
+                    
+                } else if ( tempSplit[0].find("border-") != string::npos ){
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    if ( props.size() < 2 ) {
+                        if ( props.size() == 1 && props[0] == "clear" ) {
+                            this->styleInt[toState][tempSplit[0]] = 0;
+                        }
+                        continue;
+                    }
+                    if ( props[1].find("#") == string::npos ) continue;
+                    
+                    string str(props[1]);
+                    ofStringReplace(str, "#", "");
+                    
+                    //if ( name == "#leftCenter" ) ofLog() << tempSplit[0] << " => " << str << " => " << stoul(str, nullptr, 16);
+                    
+                    if ( props.size() == 3 && props[2] == "ALL" ){
+                        for ( int i = 0; i < 3; i++ ){
+                            this->styleInt[i][tempSplit[0]] = ofToInt(props[0]);
+                            this->styleFloat[i][tempSplit[0]] = stoul(str, nullptr, 16);
+                        }
+                    } else {
+                        this->styleInt[toState][tempSplit[0]] = ofToInt(props[0]);
+                        this->styleFloat[toState][tempSplit[0]] = stoul(str, nullptr, 16);
+                    }
+                    
+                } else if ( tempSplit[0] == "offset" ) {
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    if ( props.size() != 2 ) continue;
+                    this->style[toState]["offset-x"] = props[0];
+                    this->style[toState]["offset-y"] = props[1];
+                } else if (tempSplit[0] == "opacity" ) {
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    if ( props.size() == 1 ) {
+                        this->styleFloat[toState][tempSplit[0]] = ofToFloat(props[0]) * 255.0;
+                        this->style[toState][tempSplit[0]] = props[0];
+                    }
+                    else if ( props.size() == 2 && props[1] == "ALL" ){
+                        for ( int i = 0; i < 3; i++ ){
+                            this->styleFloat[i][tempSplit[0]] = ofToFloat(props[0]) * 255.0;
+                            this->style[i][tempSplit[0]] = props[0];
+                        }
+                    }
+                } else {
+                    if ( tempSplit[0] == "bg" || tempSplit[0] == "bgColor" || tempSplit[0] == "backgroundColor" ) tempSplit[0] = "background-color";
+                    
 					this->style[toState][tempSplit[0]] = tempSplit[1];
                     
 					if (toState == VUI_STATE_UP) {
