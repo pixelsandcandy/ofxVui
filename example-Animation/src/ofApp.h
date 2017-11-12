@@ -34,5 +34,23 @@ class ofApp : public ofBaseApp{
     Text* animationC;
     
     StyleSheet* ss;
+    
+    
+    // alignments
+    
+    Text* toggleGroupLabel;
+    ToggleGroup* toggleGroup;
+    
+    Element* alignLeftTop;
+    Element* alignLeftCenter;
+    Element* alignLeftBottom;
+    
+    Element* alignCenterTop;
+    Element* alignCenterCenter;
+    Element* alignCenterBottom;
+    
+    Element* alignRightTop;
+    Element* alignRightCenter;
+    Element* alignRightBottom;
 		
 };

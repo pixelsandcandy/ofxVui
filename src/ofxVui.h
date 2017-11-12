@@ -66,6 +66,7 @@ namespace VUI {
         VUI_EVENT_STATE_CHANGE,
         VUI_EVENT_TEXT_CHANGE,
         VUI_EVENT_VALUE_CHANGE,
+        VUI_EVENT_TOGGLE_CHANGE,
         VUI_EVENT_SUBMIT,
         
         VUI_EVENT_FOCUS,
@@ -354,6 +355,7 @@ namespace VUI {
 #include "VUIElement.h"
 #include "VUIText.h"
 #include "VUITextField.h"
+#include "VUIToggleGroup.h"
 
 
 // ViewManager

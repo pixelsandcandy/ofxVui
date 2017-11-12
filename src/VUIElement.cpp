@@ -40,7 +40,7 @@ namespace VUI {
 	void Element::SetDefaultStyles(int x, int y) {
 		for (int i = 0; i < 3; i++) {
 			style[i]["opacity"] = "1";
-			style[i]["background-color"] = "#FF00FF";
+			style[i]["background-color"] = "clear";
 		}
 
 		this->setPosition(x, y, 0);
@@ -448,6 +448,16 @@ namespace VUI {
     ofVec2f prevMousePos;
     bool firstMove = true;
     bool canDrag = false;
+    
+    vuiEventArgs Element::GetEventArgs(vuiEvent eventType){
+        vuiEventArgs args;
+        args.element = this;
+        args.eventType = eventType;
+        args.localMousePos.set( VUI::mouseX - globalMinPosition.x, VUI::mouseY - globalMinPosition.y );
+        args.globalMousePos.set( VUI::mouseX, VUI::mouseY );
+        
+        return args;
+    }
     
     void Element::TriggerEvent(vuiEvent eventType){
         //ofLog() << "TriggerEvent[" << eventType << "]";
@@ -1064,8 +1074,11 @@ namespace VUI {
                             /*for (int i = 0; i < 3; i++) {
                              this->style[i][tempSplit[0]] = tempSplit[1];
                              }*/
+                            
                             if ( tempSplit[0] == "width" ) width = ofToFloat( tempSplit[1] );
                             else if ( tempSplit[0] == "height" ) height = ofToFloat( tempSplit[1] );
+                            
+                            //ofLog() << "w:" << width << " x h:" << height;
                         }
                     }
                 }

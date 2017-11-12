@@ -69,9 +69,7 @@ namespace VUI {
         int prevVirtualState = VUI_STATE_UP;
 		bool hasStyle = false;
         
-        int GetVirtualState(){
-            return virtualState;
-        }
+        
 
         bool DEBUG_MODE = false;
 		
@@ -114,6 +112,10 @@ namespace VUI {
 		ofTexture *maskTex = nullptr;
 
 		int vuiUID = abs((int)ofRandom(7, 7777777777));
+        
+        int GetVirtualState(){
+            return virtualState;
+        }
 
         void DEBUG(){
             DEBUG_MODE = true;
@@ -179,6 +181,10 @@ namespace VUI {
             if ( s != renderState ) renderState = s;
             
             UpdateVirtualState( toState );
+        }
+        
+        void SetSelected(){
+            SetState( VUI_STATE_DOWN );
         }
         
         void UpdateVirtualState( VUI::State toState, bool force = false ){
@@ -323,11 +329,13 @@ namespace VUI {
 		void SetStyleSheet(StyleSheet* ss) {
 			styleSheet = ss;
 		}
-		void SetAnchorPoint(int ap) {
-			anchorPoint = ap;
+		void SetAnchorPoint(Align alignment) {
+			anchorPoint = alignment;
 		}
         
         void TriggerEvent(vuiEvent eventType);
+        
+        vuiEventArgs GetEventArgs(vuiEvent eventType);
         
         map<string,string> propValue;
         
