@@ -240,6 +240,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofSetColor(100,100,100,255);
+    ofDrawCircle( 150, ofGetHeight()*.5, 3 );
+    ofDrawCircle( 640, ofGetHeight()*.5, 3 );
+    ofDrawCircle( 1100, ofGetHeight()*.5, 3 );
+    
     animElement->Render();
     
     ofSetColor(255,255,255,255);
