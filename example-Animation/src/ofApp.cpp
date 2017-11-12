@@ -113,9 +113,9 @@ void ofApp::setup(){
     
     
     // labels
-    animationA->SetText( "[A]  Animate(1, {x:1100, width: 100, height: 100,scale:.5, opacity: 1, rotation: 135, ease:Elastic.easeOut})", true );
+    animationA->SetText( "[A]  Animate(1.25, {x: 150, width :150, height: 50, scale:1, rotation: 0, ease:Bounce.easeOut})", true );
     animationB->SetText( "[B]  Animate(.5, {x:640, width: 100, height: 100, opacity:.5, scale: 1.75, rotation: -180, ease:Back.easeOut})", true );
-    animationC->SetText( "[C]  Animate(1.25, {x: 150, width :150, height: 50, scale:1, rotation: 0, ease:Bounce.easeOut})", true );
+    animationC->SetText( "[C]  Animate(1, {x:1100, width: 100, height: 100,scale:.5, opacity: 1, rotation: 135, ease:Elastic.easeOut})", true );
     
     
     // click event
@@ -154,8 +154,8 @@ void ofApp::setup(){
     alignRightBottom = new Element(w,h, ss, ".alignmentBtn", "#rightBottom" );
 
     
-    // add elements to toggle group - this uses AddChild() which renders them when only calling
-    // toggleGroup->Render();
+    // add elements to toggle group - this uses AddChild() which renders children
+    // when rendering parent - toggleGroup->Render();
     toggleGroup->AddToggle( alignLeftTop );
     toggleGroup->AddToggle( alignLeftCenter );
     toggleGroup->AddToggle( alignLeftBottom );
@@ -179,7 +179,7 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
             
             // COMPLETE Listener [Method A]
             
-            tweenPtr = animElement->Animate( 1, "{x:1100, width: 100, height: 100,scale:.5, opacity: 1, rotation: 135, ease:Elastic.easeOut}", this, &ofApp::vuiEventHandler );
+            tweenPtr = animElement->Animate( 1.25, "{x: 150, width:150, height: 50, scale:1, rotation: 0, ease:Bounce.easeOut}" );
             tweenPtr->SetID( "Animation A" );
             
         } else if ( evt.element == animationB ) {
@@ -195,7 +195,7 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
             
             //  Tween STEP/PROGRESS Listener
             
-            tweenPtr = animElement->Animate( 1.25, "{x: 150, width:150, height: 50, scale:1, rotation: 0, ease:Bounce.easeOut}" );
+            tweenPtr = animElement->Animate( 1, "{x:1100, width: 100, height: 100,scale:.5, opacity: 1, rotation: 135, ease:Elastic.easeOut}", this, &ofApp::vuiEventHandler );
             
             tweenPtr->SetID( "Animation C" );
             
@@ -213,7 +213,7 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
     
     
     
-    // change alignment
+    // change anchorPoint
     
     if ( evt.eventType == VUI_EVENT_TOGGLE_CHANGE ){
         if ( evt.value == 1 ) {
@@ -240,21 +240,28 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    // animation targers
     ofSetColor(100,100,100,255);
     ofDrawCircle( 150, ofGetHeight()*.5, 3 );
     ofDrawCircle( 640, ofGetHeight()*.5, 3 );
     ofDrawCircle( 1100, ofGetHeight()*.5, 3 );
     
+    // animated element
     animElement->Render();
     
+    // anchorPoint
     ofSetColor(255,255,255,255);
     ofDrawCircle( animElement->GetPosition(), 3 );
     
+    // buttons / cmds
     animationA->Render();
     animationB->Render();
     animationC->Render();
     
+    // anchorPoint selection - this renders all the toggles added to the group
     toggleGroup->Render();
+    
+    // anchorPoint label
     toggleGroupLabel->Render();
 }
 
