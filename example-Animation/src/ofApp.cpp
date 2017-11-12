@@ -243,7 +243,7 @@ void ofApp::draw(){
     animElement->Render();
     
     ofSetColor(255,255,255,255);
-    ofDrawCircle( animElement->GetPosition(), 2 );
+    ofDrawCircle( animElement->GetPosition(), 3 );
     
     animationA->Render();
     animationB->Render();
