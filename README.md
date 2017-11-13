@@ -173,9 +173,31 @@ ofAddListener( elementPtr->onMouseClick, this, &ListenerClass::vuiEventHandler )
 // eventHandler
 ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   if ( evt.element == elementPtr ){
-    if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ) /* do stuff */;
+    if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ) {
+      ofLog() << evt.localMousePos;
+    };
   }
 }
+
+/* vuiEventArgs
+  
+  Element* element;
+  int eventType;
+  int renderState;
+  int virtualState;
+
+  int value = -1;
+  string text = "";
+
+  ofVec2f localMousePos;
+  ofVec2f localDragDelta;
+  ofVec2f localDragStart;
+
+  ofVec2f globalMousePos;
+
+  Tween* tween;
+
+*/
 
 /* events
 
