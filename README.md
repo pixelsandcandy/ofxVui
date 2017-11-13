@@ -26,7 +26,7 @@ So everything works! 🎉 Although, the code under the hood is a little bit of s
 
 Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown fond of it in C#/Unity - it just seems more legible IMO :)
 ***
-###### *[TODO](#todo)* 
+###### *[IN PROGRESS](#todo)* 
 
 ```    
   ⭐️ Touch
@@ -51,9 +51,12 @@ Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown 
 If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
 ***
-# **[ofxVui](#ofxvui)**
+# **[ofxVui Features](#ofxvui)**
 ### View Manager
-*VUI Mouse/Touch Events still work when scaling/rotating view* 👍🏻
+* *Easily add/set views from anywhere*
+* *View methods same as ofApp*
+* *VUI Mouse/Touch Events still work when scaling/rotating view*
+
 ```
 Resolution
 Scale
@@ -63,6 +66,11 @@ Rotation
   
   
 ### UI System
+* *Mouse/Touch events on top Element only*
+* *Easily Animate VUI Elements with START, STEP, COMPLETE events*
+* *Easily style/texture Elements per state: UP, OVER, DOWN*
+* *StyleSheet manages fonts/images so there's no redundant loading*
+
 ```
 Elements
   • Element
@@ -116,9 +124,6 @@ UI States
   • STATE_OVER
   • STATE_DOWN
   
-UI StyleSheet  
-  • Manages fonts/image assets so there's no redundant loading
-  
 UI StyleSheet: Styles
   • width
   • height
@@ -133,6 +138,17 @@ UI StyleSheet: Styles
   • padding <Text/TextField>
   • textAlign <Text/TextField>
   • font <Text/TextField>
+  
+UI Alignments for anchorPoint/textAlign
+  • LEFT_TOP
+  • LEFT_CENTER
+  • LEFT_BOTTOM
+  • CENTER_TOP
+  • CENTER_CENTER
+  • CENTER_BOTTOM
+  • RIGHT_TOP
+  • RIGHT_CENTER
+  • RIGHT_BOTTOM
 ```
 ***
 # **[Code Examples](#code-examples)**
@@ -153,6 +169,9 @@ elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotatio
 Tween* tweenPtr = elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotation: -135, opacity: .75, ease: Elastic.easeOut }");
 ofAddListener( tweenPtr->onStep, this, &ListenerClass::vuiEventHandler );
 ofAddListener( tweenPtr->onComplete, this, &ListenerClass::vuiEventHandler );
+
+// can also set/reset animation properties:
+elementPtr->Set("{x: 0, width: 100, height: 100, scale: 1, rotation: 0, opacity: 1}");
 
 // eventHandler
 ListenerClass::vuiEventHandler(vuiEventArgs& evt){
