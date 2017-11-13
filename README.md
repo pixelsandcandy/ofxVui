@@ -67,7 +67,7 @@ Rotation
   
 ### UI System
 * *Mouse/Touch events on top Element only*
-* *Easily Animate VUI Elements with START, STEP, COMPLETE events*
+* *Easily Animate Elements with START, STEP, COMPLETE events*
 * *Easily style/texture Elements per state: UP, OVER, DOWN*
 * *StyleSheet manages fonts/images so there's no redundant loading*
 
