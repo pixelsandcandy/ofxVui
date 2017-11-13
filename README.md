@@ -1,7 +1,7 @@
 # View + UI System for openFrameworks
 ###### *CONTENTS*
 * *<a href='#dependencies' class='anchor'>Dependencies</a>*
-* *<a href='#works-on' class='anchor'>Works / Tested On</a>*
+* *<a href='#tested-on' class='anchor'>Works / Tested On</a>*
 * *<a href='#quick-note' class='anchor'>Quick Note</a>*
 * *<a href='#todo' class='anchor'>TODO</a>*
 * **<a href='#ofxvui' class='anchor'>ofxVui</a>**
@@ -9,7 +9,7 @@
   * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
   * **<a href='#ui-events' class='anchor'>UI Events</a>**
   * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
-  * **<a href='#view-manager' class='anchor'>View Manager</a>**
+  * **<a href='#example-view-manager' class='anchor'>View Manager</a>**
 
 ***
 ###### *[DEPENDENCIES](#dependencies)*
@@ -19,7 +19,7 @@
     1. add Preprocessor Macro **USING_ofxWinTouchHook**
     2. call **VUI::EnableTouch()** in ofApp::setup()
 ***
-###### *[WORKS / TESTED ON](#works-on)*
+###### *[WORKS / TESTED ON](#tested-on)*
 * ***openFrameworks 0.9.8***
   * macOS High Sierra (10.13) » Xcode 9
   * Windows 10 » Visual Studio 2017 
@@ -351,7 +351,7 @@ void draw(){
 
 ```
 
-### **[View Manager](#view-manager)**
+### **[View Manager](#example-view-manager)**
 *For more info checkout the **example-ViewManager** project/code*
 
 ```c++
