@@ -1,6 +1,6 @@
 # View + UI System for openFrameworks
 ###### *TELEPORT*
-* **<a href='#ofxvui' class='anchor'>ofxVui</a>**
+* **<a href='#ofxvui' class='anchor'>ofxVui Features</a>**
 * **<a href='#code-examples' class='anchor'>Code Examples</a>**
   * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
   * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
