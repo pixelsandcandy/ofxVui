@@ -8,14 +8,14 @@
 
 ###### *QUICK NOTE* 😅
 
-So everything works but sorry the code is a little bit of spaghetti at the moment. This was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two. I'll slowly clean up the code but for now have been focusing on making sure that everything works as intended, creating example projects to learn from, and adding useful features.
+So everything works but sorry the code is a little bit of spaghetti at the moment. ofxVUI was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two - mainly so that GUI Mouse/Touch events work when the View is scaled/rotated but also because I wanted to make things as easy as possible. I'll slowly clean up the code but for now have been focusing on making sure that everything works as intended, creating example projects to learn from, and adding useful features.
 
 
 ***
 # **ofxVui**
 ### View Manager
-
-  * Resolution / Scaling
+  * Resolution
+  * Scale
   * Rotation
   
 ### UI System
