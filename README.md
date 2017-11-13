@@ -95,8 +95,8 @@ UI StyleSheet: Styles
   • font <Text/TextField>
 ```
 ***
-## Code Examples
-There are a bunch of example projects to check out but here are some basic examples.
+# **Code Examples**
+There are a bunch of example projects/code in the repo but here are some basics.
 
 ### UI Animation
 *For more info checkout the **example-Animation** project/code*
