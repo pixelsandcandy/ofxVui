@@ -1,5 +1,4 @@
 ## View + UI System for openFrameworks
-***
 ###### *DEPENDENCIES*
 * **ofxEasing** » https://github.com/arturoc/ofxEasing
 * **ofxWinTouchHook** » https://github.com/trentbrooks/ofxWinTouchHook (optional)
