@@ -402,6 +402,7 @@ class MyView : public View {
 #include "MyOtherView.h"
 
 void setup(){
+  //Windows only, please see Dependencies section above for more info
   //VUI::EnableTouch();
   
   VUI::AddView( "view-name", new MyView() );
