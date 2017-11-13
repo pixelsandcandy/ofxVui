@@ -1,4 +1,4 @@
-# View + UI System for openFrameworks
+# ✨ View + UI System for openFrameworks ✨
 ###### *TELEPORT*
 * **<a href='#ofxvui' class='anchor'>ofxVui Features</a>**
 * **<a href='#code-examples' class='anchor'>Code Examples</a>**
