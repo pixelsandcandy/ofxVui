@@ -4,7 +4,13 @@
 void ofApp::setup(){
     ofSetFrameRate(60);
 
-	VUI::EnableTouch();
+    /*
+      This only works on Windows. To use this you have to:
+      • add ofxWinTouchHook addon - https://github.com/trentbrooks/ofxWinTouchHook
+      • add Preprocessor Macro "USING_ofxWinTouchHook"
+    */
+    
+	  VUI::EnableTouch();
     
     string styles = R"(
         [#square>
@@ -88,7 +94,7 @@ void ofApp::setup(){
     square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
     rectangle = new Element( 760, ofGetHeight()*.5, ss, "#rectangle" );
     
-    
+    //
     
     preToggle = new Element( 50, 160, ss, ".toggle" );
     
@@ -106,7 +112,26 @@ void ofApp::setup(){
     ofAddListener( textField->onTextChange, this, &ofApp::vuiEventHandler );
     ofAddListener( textField->onSubmit, this, &ofApp::vuiEventHandler );
     
-    
+  
+    // ------------------------------------------------------------------- Touch EVENTS
+    /*
+        VUI_EVENT_TOUCH_DOWN
+        VUI_EVENT_TOUCH_UP
+        VUI_EVENT_TOUCH_TAP
+        VUI_EVENT_TOUCH_DOUBLE_TAP
+     */
+  
+    ofAddListener( square->onTouchDown, this, &ofApp::vuiEventHandler );
+    ofAddListener( square->onTouchUp, this, &ofApp::vuiEventHandler );
+    ofAddListener( square->onTouchTap, this, &ofApp::vuiEventHandler );
+    ofAddListener( square->onTouchDoubleTap, this, &ofApp::vuiEventHandler );
+
+    ofAddListener( rectangle->onTouchDown, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangle->onTouchUp, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangle->onTouchTap, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangle->onTouchDoubleTap, this, &ofApp::vuiEventHandler );
+  
+  
     // ------------------------------------------------------------------- Mouse EVENTS
     /*
          VUI_EVENT_MOUSE_OVER
@@ -119,58 +144,44 @@ void ofApp::setup(){
          VUI_EVENT_MOUSE_DOUBLE_CLICK
      
      */
-
-
-	ofAddListener( square->onTouchDown, this, &ofApp::vuiEventHandler );
-	ofAddListener(square->onTouchUp, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onTouchTap, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onTouchDoubleTap, this, &ofApp::vuiEventHandler);
-
-	ofAddListener(rectangle->onTouchDown, this, &ofApp::vuiEventHandler);
-	ofAddListener(rectangle->onTouchUp, this, &ofApp::vuiEventHandler);
-	ofAddListener(rectangle->onTouchTap, this, &ofApp::vuiEventHandler);
-	ofAddListener(rectangle->onTouchDoubleTap, this, &ofApp::vuiEventHandler);
-
-
-
-	/*ofAddListener(square->onMouseOver, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMouseOut, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMousePressed, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMouseMoved, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMouseDragged, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMouseReleased, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMouseClick, this, &ofApp::vuiEventHandler);
-	ofAddListener(square->onMouseDoubleClick, this, &ofApp::vuiEventHandler);
-    
-    ofAddListener( rectangle->onMouseOver, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMouseOut, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMousePressed, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMouseMoved, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMouseDragged, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMouseReleased, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMouseClick, this, &ofApp::vuiEventHandler );
-    ofAddListener( rectangle->onMouseDoubleClick, this, &ofApp::vuiEventHandler );*/
-
-	
-    
-    /*
-        ofAddListener( textField->onMouseOver, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMouseOut, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMousePressed, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMouseMoved, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMouseDragged, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMouseReleased, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMouseClick, this, &ofApp::vuiEventHandler );
-        ofAddListener( textField->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
      
-     */
+     // Uncomment this if you want to see Mouse and Touch events
+    /*
+
+      ofAddListener(square->onMouseOver, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMouseOut, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMousePressed, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMouseMoved, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMouseDragged, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMouseReleased, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMouseClick, this, &ofApp::vuiEventHandler);
+      ofAddListener(square->onMouseDoubleClick, this, &ofApp::vuiEventHandler);
+
+      ofAddListener( rectangle->onMouseOver, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMouseOut, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMousePressed, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMouseMoved, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMouseDragged, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMouseReleased, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMouseClick, this, &ofApp::vuiEventHandler );
+      ofAddListener( rectangle->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
+
+      ofAddListener( textField->onMouseOver, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMouseOut, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMousePressed, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMouseMoved, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMouseDragged, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMouseReleased, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMouseClick, this, &ofApp::vuiEventHandler );
+      ofAddListener( textField->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
+
+    */
     
 }
 
 void ofApp::vuiEventHandler(vuiEventArgs& evt){
     
     string s = "[" + evt.element->GetName() + "] ";
-    
     
     switch( evt.eventType ){
         case VUI_EVENT_FOCUS:
@@ -222,18 +233,18 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
         case VUI_EVENT_MOUSE_DOUBLE_CLICK:
             s += "VUI_EVENT_MOUSE_DOUBLE_CLICK";
             break;
-		case VUI_EVENT_TOUCH_DOWN:
-			s += "VUI_EVENT_TOUCH_DOWN";
-			break;
-		case VUI_EVENT_TOUCH_UP:
-			s += "VUI_EVENT_TOUCH_UP";
-			break;
-		case VUI_EVENT_TOUCH_TAP:
-			s += "VUI_EVENT_TOUCH_TAP";
-			break;
-		case VUI_EVENT_TOUCH_DOUBLE_TAP:
-			s += "VUI_EVENT_TOUCH_DOUBLE_TAP";
-			break;
+        case VUI_EVENT_TOUCH_DOWN:
+        	s += "VUI_EVENT_TOUCH_DOWN";
+        	break;
+        case VUI_EVENT_TOUCH_UP:
+        	s += "VUI_EVENT_TOUCH_UP";
+        	break;
+        case VUI_EVENT_TOUCH_TAP:
+        	s += "VUI_EVENT_TOUCH_TAP";
+        	break;
+        case VUI_EVENT_TOUCH_DOUBLE_TAP:
+        	s += "VUI_EVENT_TOUCH_DOUBLE_TAP";
+        	break;
     }
     
     ofLog() << s << "  local:" << evt.localMousePos.x << "," << evt.localMousePos.y << "  global:" << evt.globalMousePos.x << "," << evt.globalMousePos.y;

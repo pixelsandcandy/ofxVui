@@ -26,9 +26,7 @@ So everything works! 🎉 Although, the code under the hood is a little bit of s
 ***
 ###### *[TODO](#todo)* 
 
-```
-  ⭐️ Cleanup example-TouchEvents
-      
+```    
   ⭐️ Touch
       + Test multiple touch events / scenarios
       + Add - VUI_EVENT_TOUCH_DRAG
