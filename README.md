@@ -22,7 +22,7 @@
 ***
 ###### *[QUICK NOTE](#quick-note)*
 
-So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅 (which gets stripped out when compiled anyways). I was originally working on two different addons but decided to merge them together. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
+So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅. I was originally working on two different addons but decided to merge them together. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
 
 Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown fond of it in C#/Unity - it just seems more legible IMO :)
 ***
