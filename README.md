@@ -30,7 +30,8 @@ TODOs
       + width/height - percentage based values
       + width/height - calc() based values
       
-  • Cleanup code
+  • Cleanup example-TouchEvents
+  • Cleanup ofxVui code
 ```
 If you think of a feature that would be super useful in this addon please feel free to email me! or submit a pull request ***hi.christophermiles@gmail.com***
 
@@ -182,7 +183,17 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 
 ### UI Events
 *For more info checkout the **example-Events** project/code*
+
 ```c++
+/*
+  Some Mouse/Touch events are interchangeable so if you
+  use VUI::EnableTouch() you don't have to change your code:
+    - onMousePressed / onTouchDown
+    - onMouseReleased / onTouchUp
+    - onMouseClick / onTouchTap
+    - onMouseDoubleClick / onTouchDoubleTap
+*/
+
 // add listener
 ofAddListener( elementPtr->onMouseClick, this, &ListenerClass::vuiEventHandler );
 
