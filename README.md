@@ -54,8 +54,8 @@ If you think of a feature that would be super useful in this addon or have a req
 # **[ofxVui Features](#ofxvui)**
 ### View Manager
 * *Easily add/set views from anywhere*
-* *View methods same as ofApp*
-* *VUI Mouse/Touch Events still work when scaling/rotating view*
+* *View has access to same methods as ofApp*
+* *Mouse/Touch Events still work when scaling/rotating view*
 
 ```
 Resolution
@@ -66,7 +66,7 @@ Rotation
   
   
 ### UI System
-* *Mouse/Touch events on top Element only even when overlapping Elements*
+* *Mouse/Touch events on top Element only, even when overlapping Elements*
   * *Event sends local and global Mouse/Touch positions*
 * *Easily animate Elements using one call*
   * *Tween has START, STEP, COMPLETE events*
