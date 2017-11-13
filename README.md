@@ -14,12 +14,12 @@ So everything works but sorry the code is a little bit of spaghetti at the momen
 
 ***
 # **ofxVui**
-## View Manager
+### View Manager
 
   * Resolution / Scaling
   * Rotation
   
-## UI System
+### UI System
   * #### Elements
     * Element
     * Element (toggle)
