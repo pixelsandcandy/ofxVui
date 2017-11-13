@@ -14,85 +14,87 @@ So everything works but sorry the code is a little bit of spaghetti at the momen
 ***
 # **ofxVui**
 ### View Manager
-  * Resolution
-  * Scale
-  * Rotation
+```
+• Resolution
+• Scale
+• Rotation
+```
+  
   
 ### UI System
-  * #### Elements
-    * Element
-    * Element (toggle)
-    * Text
-    * TextField
-    * ToggleGroup
+```
+Elements
+  • Element
+  • Element->MakeToggle()
+  • ToggleGroup
+  • Text
+  • TextField
     
-  * #### Animation
-    * Tween
-      * x
-      * y
-      * width
-      * height
-      * scale
-      * opacity
-      * rotation
-      * easing function (using ofxEasing)
+Animation Tween
+  • x
+  • y
+  • width
+  • height
+  • scale
+  • opacity
+  • rotation
+  • ease/easing
   
-  * #### Animation Events
-    * ANIMATE_START
-    * ANIMATE_STEP
-    * ANIMATE_COMPLETE
+Animation Events
+  • ANIMATE_START
+  • ANIMATE_STEP
+  • ANIMATE_COMPLETE
     
-  * #### Mouse Events
-    * MOUSE_OVER
-    * MOUSE_OUT
-    * MOUSE_PRESSED
-    * MOUSE_MOVED
-    * MOUSE_DRAGGED
-    * MOUSE_RELEASED
-    * MOUSE_CLICK
-    * MOUSE_DOUBLE_CLICK
+Mouse Events
+  • MOUSE_OVER
+  • MOUSE_OUT
+  • MOUSE_PRESSED
+  • MOUSE_MOVED
+  • MOUSE_DRAGGED
+  • MOUSE_RELEASED
+  • MOUSE_CLICK
+  • MOUSE_DOUBLE_CLICK
     
-  * #### Touch Events
-    * TOUCH_DOWN
-    * TOUCH_UP
-    * TOUCH_TAP
-    * TOUCH_DOUBLE_TAP
+Touch Events
+  • TOUCH_DOWN
+  • TOUCH_UP
+  • TOUCH_TAP
+  • TOUCH_DOUBLE_TAP
     
-  * #### Other Events
-    * STATE_CHANGE
-    * TEXT_CHANGE (Text/TextField)
-    * VALUE_CHANGE (Toggle)
-    * TOGGLE_CHANGE (ToggleGroup)
-    * TextField
-      * SUBMIT
-      * FOCUS
-      * UNFOCUS
+Other Events
+  • STATE_CHANGE
+  • TEXT_CHANGE <Text/TextField>
+  • VALUE_CHANGE <Element->MakeToggle()>
+  • TOGGLE_CHANGE <ToggleGroup>
+  • TextField
+    • SUBMIT
+    • FOCUS
+    • UNFOCUS
     
-  * #### UI States
-    * STATE_UP
-    * STATE_OVER
-    * STATE_DOWN
+UI States
+  • STATE_UP
+  • STATE_OVER
+  • STATE_DOWN
   
-  * #### UI StyleSheet  
-    * Manages fonts
-    * Manages image assets
+UI StyleSheet  
+  • Manages fonts
+  • Manages image assets
   
-  * #### UI StyleSheet: Styles
-    * width
-    * height
-    * scale
-    * opacity
-    * rotation
-    * background image
-    * background color
-    * anchor point
-    * offset
-    * text
-      * color
-      * padding
-      * alignment
-      * font / font size
-
+UI StyleSheet: Styles
+  • width
+  • height
+  • scale
+  • opacity
+  • rotation
+  • backgroundImage
+  • backgroundColor
+  • anchorPoint
+  • offset
+  • color <Text/TextField>
+  • padding <Text/TextField>
+  • textAlign <Text/TextField>
+  • font <Text/TextField>
+```
 ***
 ## Code Examples
 There are a bunch of example projects to check out but here are some basic examples.
@@ -122,6 +124,36 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
     }
   }
 }
+
+/* easing functions
+
+  Back.easeIn
+  Back.easeOut
+  Back.easeInOut
+  Bounce.easeIn
+  Bounce.easeOut
+  Bounce.easeInOut
+  Circ.easeIn
+  Circ.easeOut
+  Circ.easeInOut
+  Cubic.easeIn
+  Cubic.easeOut
+  Cubic.easeInOut
+  Elastic.easeIn
+  Elastic.easeOut
+  Elastic.easeInOut
+  Exp.easeIn
+  Exp.easeOut
+  Exp.easeInOut
+  Linear.easeIn
+  Linear.easeOut
+  Linear.easeInOut
+  Linear.easeNone
+  Quad.easeIn
+  Quad.easeOut
+  Quad.easeInOut
+  
+*/
   
 ```
 
@@ -138,34 +170,33 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   }
 }
 
-/* EVENTS
+/* events
 
-  VUI_EVENT_MOUSE_OVER,
-  VUI_EVENT_MOUSE_OUT,
-  VUI_EVENT_MOUSE_PRESSED,
-  VUI_EVENT_MOUSE_MOVED,
-  VUI_EVENT_MOUSE_DRAGGED,
-  VUI_EVENT_MOUSE_RELEASED,
-  VUI_EVENT_MOUSE_CLICK,
-  VUI_EVENT_MOUSE_DOUBLE_CLICK,
+  VUI_EVENT_MOUSE_OVER
+  VUI_EVENT_MOUSE_OUT
+  VUI_EVENT_MOUSE_PRESSED
+  VUI_EVENT_MOUSE_MOVED
+  VUI_EVENT_MOUSE_DRAGGED
+  VUI_EVENT_MOUSE_RELEASED
+  VUI_EVENT_MOUSE_CLICK
+  VUI_EVENT_MOUSE_DOUBLE_CLICK
 
+  VUI_EVENT_TOUCH_DOWN
+  VUI_EVENT_TOUCH_UP
+  VUI_EVENT_TOUCH_TAP
+  VUI_EVENT_TOUCH_DOUBLE_TAP
 
-  VUI_EVENT_TOUCH_DOWN,
-  VUI_EVENT_TOUCH_UP,
-  VUI_EVENT_TOUCH_TAP,
-  VUI_EVENT_TOUCH_DOUBLE_TAP,
+  VUI_EVENT_STATE_CHANGE
+  VUI_EVENT_TEXT_CHANGE
+  VUI_EVENT_VALUE_CHANGE
+  VUI_EVENT_TOGGLE_CHANGE
+  VUI_EVENT_SUBMIT
 
-  VUI_EVENT_STATE_CHANGE,
-  VUI_EVENT_TEXT_CHANGE,
-  VUI_EVENT_VALUE_CHANGE,
-  VUI_EVENT_TOGGLE_CHANGE,
-  VUI_EVENT_SUBMIT,
+  VUI_EVENT_FOCUS
+  VUI_EVENT_UNFOCUS
 
-  VUI_EVENT_FOCUS,
-  VUI_EVENT_UNFOCUS,
-
-  VUI_EVENT_ANIMATE_COMPLETE,
-  VUI_EVENT_ANIMATE_STEP,
+  VUI_EVENT_ANIMATE_COMPLETE
+  VUI_EVENT_ANIMATE_STEP
   VUI_EVENT_ANIMATE_START
   
 */
@@ -178,6 +209,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 StyleSheet* ss;
 Element* buttonA;
 Element* buttonB;
+Text* label;
 
 // --------------------------------------------
 void setup(){
@@ -206,16 +238,29 @@ void setup(){
       scale: 1.25;
       opacity: .9;
     ]
+    
+    [.text>
+      font: path/to/fontfile.ttf,16;
+      color: #dddddd;
+      padding: 10;
+      bg: #ffffff;
+    ]
   )";
 
   ss = new StyleSheet( styles );
 
-  buttonA = new Element( 20, 20, ss, ".button" );
-  buttonB = new Element( 20, 60, ss, ".button", "#buttonB" );
+  label = new Text( 20, 20, ss, ".text" );
+  // true = automatically set size
+  label->SetText( "Stuff", true );
+  
+  buttonA = new Element( 20, 40, ss, ".button" );
+  buttonB = new Element( 20, 80, ss, ".button", "#buttonB" );
+  
 }
 
 // --------------------------------------------
 void draw(){
+  label->Render();
   buttonA->Render();
   buttonB->Render();
 }
