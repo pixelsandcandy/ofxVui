@@ -1,7 +1,7 @@
 # View + UI System for openFrameworks
 ###### *CONTENTS*
 * *<a href='#dependencies' class='anchor'>Dependencies</a>*
-* *<a href='#tested-on' class='anchor'>Works / Tested On</a>*
+* *<a href='#works--tested-on' class='anchor'>Works / Tested On</a>*
 * *<a href='#quick-note' class='anchor'>Quick Note</a>*
 * *<a href='#todo' class='anchor'>TODO</a>*
 * **<a href='#ofxvui' class='anchor'>ofxVui</a>**
@@ -9,7 +9,7 @@
   * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
   * **<a href='#ui-events' class='anchor'>UI Events</a>**
   * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
-  * **<a href='#example-view-manager' class='anchor'>View Manager</a>**
+  * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
 
 ***
 ###### *[DEPENDENCIES](#dependencies)*
