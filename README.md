@@ -24,7 +24,7 @@
 
 So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅 (which gets stripped out when compiled anyways). I was originally working on two different addons but decided to merge them together. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
 
-Also, I really like the code style of Unity - it uses *UpperCamelCase* for methods - seems more legible IMO. So everything specific to ofxVui is using UpperCamelCase :)
+Also, I really like the coding style of Unity - it uses *Pascal Case (UpperCamelCase)* for methods - seems more legible IMO. So everything specific to ofxVui is using Pascal Case :)
 ***
 ###### *[TODO](#todo)* 
 
