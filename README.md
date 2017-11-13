@@ -7,7 +7,7 @@
     2. call **VUI::EnableTouch()** in ofApp::setup()
 ***
 ###### *WORKS / TESTED ON*
-* openFrameworks 0.9.8
+* ***openFrameworks 0.9.8***
   * macOS High Sierra (10.13) » Xcode 9
   * Windows 10 » Visual Studio 2017 
 ***
