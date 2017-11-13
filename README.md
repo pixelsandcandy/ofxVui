@@ -1,5 +1,10 @@
 # View + UI System for openFrameworks
-###### *DEPENDENCIES*
+###### *CONTENTS*
+* <a href='#dependencies' class='anchor'>Dependencies</a>
+* <a href='#quick-note' class='anchor'>Quick Note</a>
+
+***
+###### *[DEPENDENCIES](#dependencies)*
 * **ofxEasing** » https://github.com/arturoc/ofxEasing
 * **ofxWinTouchHook** » https://github.com/trentbrooks/ofxWinTouchHook
   * OPTIONAL (Windows only)
@@ -11,7 +16,7 @@
   * macOS High Sierra (10.13) » Xcode 9
   * Windows 10 » Visual Studio 2017 
 ***
-###### *QUICK NOTE* 
+###### *[QUICK NOTE](#quick-note)*
 
 So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅. I was originally working on two different addons but it made more sense to combine them. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples for people to learn from. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
 ***
