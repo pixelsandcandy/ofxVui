@@ -137,7 +137,7 @@ UI StyleSheet: Styles
 # **[Code Examples](#code-examples)**
 There are a bunch of example projects/code in the repo but here are some basics.
 
-### [UI Animation](#ui-animation)
+# [UI Animation](#ui-animation)
 *For more info checkout the **example-Animation** project/code*
 * *Animate( Float seconds, String params );*
 
@@ -194,8 +194,8 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 */
   
 ```
-***
-### **[UI Events](#ui-events)**
+
+# [UI Events](#ui-events)
 *For more info checkout the **example-Events** project/code*
 
 ```c++
@@ -272,8 +272,8 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 */
 
 ```
-***
-### **[UI Styling](#ui-styling)**
+
+# [UI Styling](#ui-styling)
 *For more info checkout the **example-StylingElements** project/code*
 ```c++
 StyleSheet* ss;
@@ -346,8 +346,8 @@ void draw(){
 
 
 ```
-***
-### **[View Manager](#example-view-manager)**
+
+# [View Manager](#example-view-manager)
 *For more info checkout the **example-ViewManager** project/code*
 
 ```c++
