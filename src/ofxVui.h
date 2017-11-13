@@ -25,9 +25,11 @@ namespace VUI {
 
     enum Rotate {
         VUI_ROTATE_NONE,
-        VUI_ROTATE_90_CW,
-        VUI_ROTATE_90_CCW,
-        VUI_ROTATE_180
+        VUI_ROTATE_90_CCW
+        /* TODO
+             VUI_ROTATE_90_CW,
+             VUI_ROTATE_180
+         */
     };
     
 	enum Align {

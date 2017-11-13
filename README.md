@@ -16,14 +16,21 @@
 So everything works but sorry the code is a little bit of spaghetti at the moment. ofxVUI was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two - mainly so that GUI Mouse/Touch events still work when the View is scaled/rotated but also because I wanted to simplify usage. I'll slowly clean up the code but for now I'm focusing on creating example projects/code to learn from, adding useful features, and making sure new features doesn't break anything :)
 
 ```
-TODO
-  + More Touch Event stuff
-    • Test multiple touch events / scenarios
-    • Add TOUCH_DRAG event
-  + Width / Height additions
-    • percentage based values
-    • calc() based values
-  + Cleanup code
+TODOs
+
+  • VUI::SetRotation()
+      + Add option - VUI_ROTATE_90_CW
+      + Add option - VUI_ROTATE_180
+      
+  • Touch
+      + Test multiple touch events / scenarios
+      + Add TOUCH_DRAG event
+      
+  • StyleSheet
+      + width/height - percentage based values
+      + width/height - calc() based values
+      
+  • Cleanup code
 ```
 If you think of a feature that would be super useful in this addon please feel free to email me! or submit a pull request ***hi.christophermiles@gmail.com***
 
@@ -35,6 +42,7 @@ If you think of a feature that would be super useful in this addon please feel f
 • Resolution
 • Scale
 • Rotation
+  • VUI_ROTATE_90_CCW
 ```
   
   
