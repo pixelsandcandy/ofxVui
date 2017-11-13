@@ -1,9 +1,5 @@
 # View + UI System for openFrameworks
-###### *CONTENTS*
-* *<a href='#dependencies' class='anchor'>Dependencies</a>*
-* *<a href='#works--tested-on' class='anchor'>Works / Tested On</a>*
-* *<a href='#quick-note' class='anchor'>Quick Note</a>*
-* *<a href='#todo' class='anchor'>TODO</a>*
+###### *TELEPORT*
 * **<a href='#ofxvui' class='anchor'>ofxVui</a>**
 * **<a href='#code-examples' class='anchor'>Code Examples</a>**
   * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
