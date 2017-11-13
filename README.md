@@ -27,25 +27,26 @@ So everything works! 🎉 Although, the code under the hood is a little bit of s
 ###### *[TODO](#todo)* 
 
 ```
-  • Cleanup example-TouchEvents
+  ⭐️ Cleanup example-TouchEvents
       
-  • Touch
+  ⭐️ Touch
       + Test multiple touch events / scenarios
       + Add - VUI_EVENT_TOUCH_DRAG
       
-  • UI Elements
+  ⭐️ UI Elements
       + Add - Slider
       + Add - Slider2D
       
-  • StyleSheet
+  ⭐️ StyleSheet
       + width/height - percentage based values
       + width/height - calc() based values
       
-  • VUI::SetRotation()
+  ⭐️ VUI::SetRotation()
       + Add option - VUI_ROTATE_90_CW
       + Add option - VUI_ROTATE_180
       
-  • Cleanup / add comments to ofxVui code
+  ⭐️ Cleanup / add comments to ofxVui code
+  ⭐️ Add more emojis to this README 👓
 ```
 If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
