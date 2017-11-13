@@ -2,8 +2,8 @@
 ###### *DEPENDENCIES*
 * **ofxEasing** » https://github.com/arturoc/ofxEasing
 * **ofxWinTouchHook** » https://github.com/trentbrooks/ofxWinTouchHook (optional)
-  * add Preprocessor Macro **USING_ofxWinTouchHook**
-  * then use **VUI::EnableTouch()** to activate touch events
+  1. add Preprocessor Macro **USING_ofxWinTouchHook**
+  2. call **VUI::EnableTouch()**
 ***
 
 ###### *QUICK NOTE* 😅
@@ -66,10 +66,9 @@ Other Events
   • TEXT_CHANGE <Text/TextField>
   • VALUE_CHANGE <Element->MakeToggle()>
   • TOGGLE_CHANGE <ToggleGroup>
-  • TextField
-    • SUBMIT
-    • FOCUS
-    • UNFOCUS
+  • SUBMIT <TextField>
+  • FOCUS <TextField>
+  • UNFOCUS <TextField>
     
 UI States
   • STATE_UP
@@ -250,7 +249,7 @@ void setup(){
   ss = new StyleSheet( styles );
 
   label = new Text( 20, 20, ss, ".text" );
-  // true = automatically set size
+  // true = automatically set width/height to text
   label->SetText( "Stuff", true );
   
   buttonA = new Element( 20, 40, ss, ".button" );
@@ -273,7 +272,7 @@ void draw(){
 
 ```c++
 // ---------------------------------------- main.cpp
-VUI::SetResolution(1920,1080,.5);
+VUI::SetResolution(1080,1920,.4);
 // VUI::RotateView( VUI_ROTATE_90_CCW );
 ofSetupOpenGL(VUI::GetWindowWidth(),VUI::GetWindowHeight(),OF_WINDOW);
 
