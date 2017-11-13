@@ -1,4 +1,4 @@
-## View + UI System for openFrameworks
+# **ofxVui** = View + UI System for openFrameworks
 ###### *DEPENDENCIES*
 * **ofxEasing** » https://github.com/arturoc/ofxEasing
 * **ofxWinTouchHook** » https://github.com/trentbrooks/ofxWinTouchHook (optional)
@@ -8,8 +8,16 @@
 
 ###### *QUICK NOTE* 😅
 
-So everything works but sorry the code is a little bit of spaghetti at the moment. ofxVUI was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two - mainly so that GUI Mouse/Touch events still work when the View is scaled/rotated but also because I wanted to simplify things. I'll slowly clean up the code but for now have been focusing on making sure that everything works as intended, creating example projects to learn from, and adding useful features.
+So everything works but sorry the code is a little bit of spaghetti at the moment. ofxVUI was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two - mainly so that GUI Mouse/Touch events still work when the View is scaled/rotated but also because I wanted to simplify usage. I'll slowly clean up the code but for now I'm focusing on creating example projects/code to learn from, adding useful features, and making sure new features doesn't break anything :)
 
+```
+TODO
+  + Enhancing width / height
+    • percentage based values
+    • calc() based values
+  + Cleanup code
+```
+If you think of a feature that would be super useful in this addon please feel free to email me! or submit a pull request ***hi.christophermiles@gmail.com***
 
 ***
 # **ofxVui**
