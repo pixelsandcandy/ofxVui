@@ -132,7 +132,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   }
 }
 
-/* easing functions
+/* -------------------------------------------- easing functions
 
   Back.easeIn
   Back.easeOut
@@ -179,7 +179,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   }
 }
 
-/* vuiEventArgs
+/* -------------------------------------------- vuiEventArgs
   
   Element* element;
   int eventType;
@@ -199,7 +199,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 
 */
 
-/* events
+/* -------------------------------------------- events
 
   VUI_EVENT_MOUSE_OVER
   VUI_EVENT_MOUSE_OUT
