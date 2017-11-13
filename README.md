@@ -66,9 +66,9 @@ Rotation
   
   
 ### UI System
-* *Mouse/Touch events on top Element only*
-* *Easily Animate Elements with START, STEP, COMPLETE events*
-* *Easily style/texture Elements per state: UP, OVER, DOWN*
+* *Mouse/Touch events on top Element only even when overlapping Elements*
+* *Easily Animate Elements » Tween has START, STEP, COMPLETE events*
+* *Easily style/texture Elements per state » UP, OVER, DOWN*
 * *StyleSheet manages fonts/images so there's no redundant loading*
 
 ```
