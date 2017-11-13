@@ -56,7 +56,7 @@ If you think of a feature that would be super useful in this addon or have a req
 ***
 # **[ofxVui](#ofxvui)**
 ### View Manager
-*VUI Mouse/Touch Events still work when scaling/rotating view*
+*VUI Mouse/Touch Events still work when scaling/rotating view* 👍🏻
 ```
 Resolution
 Scale
