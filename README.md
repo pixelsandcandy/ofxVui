@@ -1,7 +1,15 @@
 # View + UI System for openFrameworks
 ###### *CONTENTS*
-* <a href='#dependencies' class='anchor'>Dependencies</a>
-* <a href='#quick-note' class='anchor'>Quick Note</a>
+* *<a href='#dependencies' class='anchor'>Dependencies</a>*
+* *<a href='#quick-note' class='anchor'>Quick Note</a>*
+* *<a href='#works-on' class='anchor'>Works / Tested On</a>*
+* *<a href='#todo' class='anchor'>TODO</a>*
+* **<a href='#ofxvui' class='anchor'>ofxVui</a>**
+* **<a href='#code-examples' class='anchor'>Code Examples</a>**
+  * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
+  * **<a href='#ui-events' class='anchor'>UI Events</a>**
+  * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
+  * **<a href='#view-manager' class='anchor'>View Manager</a>**
 
 ***
 ###### *[DEPENDENCIES](#dependencies)*
@@ -11,7 +19,7 @@
     1. add Preprocessor Macro **USING_ofxWinTouchHook**
     2. call **VUI::EnableTouch()** in ofApp::setup()
 ***
-###### *WORKS / TESTED ON*
+###### *[WORKS / TESTED ON](#works-on)*
 * ***openFrameworks 0.9.8***
   * macOS High Sierra (10.13) » Xcode 9
   * Windows 10 » Visual Studio 2017 
@@ -20,7 +28,7 @@
 
 So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅. I was originally working on two different addons but it made more sense to combine them. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples for people to learn from. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
 ***
-###### *TODO* 
+###### *[TODO](#todo)* 
 
 ```
   • Cleanup example-TouchEvents
@@ -46,7 +54,7 @@ So everything works! 🎉 Although, the code under the hood is a little bit of s
 If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
 ***
-# **ofxVui**
+# **[ofxVui](#ofxvui)**
 ### View Manager
 *VUI Mouse/Touch Events still work when scaling/rotating view*
 ```
@@ -130,10 +138,10 @@ UI StyleSheet: Styles
   • font <Text/TextField>
 ```
 ***
-# **Code Examples**
+# **[Code Examples](#code-examples)**
 There are a bunch of example projects/code in the repo but here are some basics.
 
-### UI Animation
+### [UI Animation](#ui-animation)
 *For more info checkout the **example-Animation** project/code*
 * *Animate( Float seconds, String params );*
 
@@ -191,7 +199,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   
 ```
 
-### UI Events
+### **[UI Events](#ui-events)**
 *For more info checkout the **example-Events** project/code*
 
 ```c++
@@ -269,7 +277,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 
 ```
 
-### UI Styling
+### **[UI Styling](#ui-styling)**
 *For more info checkout the **example-StylingElements** project/code*
 ```c++
 StyleSheet* ss;
@@ -343,7 +351,7 @@ void draw(){
 
 ```
 
-### View Manager
+### **[View Manager](#view-manager)**
 *For more info checkout the **example-ViewManager** project/code*
 
 ```c++
