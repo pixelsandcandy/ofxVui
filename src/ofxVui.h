@@ -414,20 +414,14 @@ namespace VUI {
         vscale = scale;
     }
     
-    extern bool usingVuiRender;
+    extern bool useViewManager;
     
-    static void SetResolution(int w, int h, float scale = 1.0, bool usingVuiRender = true ) {
-        if ( usingVuiRender ){
-            vw = w;
-            vh = h;
-            
-            ScaleView(scale);
-        } else {
-            vw = w * scale;
-            vh = h * scale;
-            ScaleView(1.0);
-        }
+    static void SetResolution(int w, int h, float scale = 1.0, bool enableViewManager = true ) {
+        vw = w;
+        vh = h;
         
+        ScaleView(scale);
+        useViewManager = enableViewManager;
     }
 
 	class ViewManagerBridge {
@@ -705,7 +699,7 @@ namespace VUI {
     }
     
     static void RenderBegin(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
-        if ( usingVuiRender ){
+        if ( useViewManager ){
             if (currView.empty() || views[currView] == nullptr) return;
         }
         
@@ -719,12 +713,12 @@ namespace VUI {
         
         ofEnableAlphaBlending();
         ofSetColor(255, 255, 255, 255);
-        if ( usingVuiRender ) views[currView]->Render();
+        if ( useViewManager ) views[currView]->Render();
         
         ofSetColor(255, 255, 255, 255);
         //ofLog() << visibleViews.size();
         
-        if ( usingVuiRender ){
+        if ( useViewManager ){
             for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
                 if ((*it) != nullptr) (*it)->Render();
             }

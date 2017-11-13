@@ -295,7 +295,7 @@ namespace VUI {
     Rotate uiRotation = VUI_ROTATE_NONE;
     Rotate viewRotation = VUI_ROTATE_NONE;
     
-    bool usingVuiRender = true;
+    bool useViewManager = true;
     
 	ofPixels vuiGlobalPixels;
 	ofImage vuiGlobalImage;

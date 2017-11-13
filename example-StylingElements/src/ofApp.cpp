@@ -4,8 +4,6 @@
 void ofApp::setup(){
 	ofSetFrameRate(60);
 
-	VUI::EnableTouch();
-
     string styles = R"(
         [Images>
              grunge: img/grunge.jpg;
