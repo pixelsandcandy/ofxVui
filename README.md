@@ -61,94 +61,96 @@ If you think of a feature that would be super useful in this addon or have a req
 Resolution
 Scale
 Rotation
-  • VUI_ROTATE_90_CCW
+  ∟ VUI_ROTATE_90_CCW
 ```
   
   
 ### UI System
 * *Mouse/Touch events on top Element only even when overlapping Elements*
-* *Easily Animate Elements » Tween has START, STEP, COMPLETE events*
+  * *Event sends local and global Mouse/Touch positions*
+* *Easily animate Elements using one call*
+  * *Tween has START, STEP, COMPLETE events*
 * *Easily style/texture Elements per state » UP, OVER, DOWN*
 * *StyleSheet manages fonts/images so there's no redundant loading*
 
 ```
 Elements
-  • Element
-  • Element->MakeToggle()
-  • ToggleGroup
-  • Text
-  • TextField
+  ∟ Element
+  ∟ Element->MakeToggle()
+  ∟ ToggleGroup
+  ∟ Text
+  ∟ TextField
     
 Animation Tween
-  • x
-  • y
-  • width
-  • height
-  • scale
-  • opacity
-  • rotation
-  • ease/easing
+  ∟ x
+  ∟ y
+  ∟ width
+  ∟ height
+  ∟ scale
+  ∟ opacity
+  ∟ rotation
+  ∟ ease/easing
   
 Animation Events
-  • ANIMATE_START
-  • ANIMATE_STEP
-  • ANIMATE_COMPLETE
+  ∟ ANIMATE_START
+  ∟ ANIMATE_STEP
+  ∟ ANIMATE_COMPLETE
     
 Mouse Events
-  • MOUSE_OVER
-  • MOUSE_OUT
-  • MOUSE_PRESSED
-  • MOUSE_MOVED
-  • MOUSE_DRAGGED
-  • MOUSE_RELEASED
-  • MOUSE_CLICK
-  • MOUSE_DOUBLE_CLICK
+  ∟ MOUSE_OVER
+  ∟ MOUSE_OUT
+  ∟ MOUSE_PRESSED
+  ∟ MOUSE_MOVED
+  ∟ MOUSE_DRAGGED
+  ∟ MOUSE_RELEASED
+  ∟ MOUSE_CLICK
+  ∟ MOUSE_DOUBLE_CLICK
     
 Touch Events (only single touch usage tested so far)
-  • TOUCH_DOWN
-  • TOUCH_UP
-  • TOUCH_TAP
-  • TOUCH_DOUBLE_TAP
+  ∟ TOUCH_DOWN
+  ∟ TOUCH_UP
+  ∟ TOUCH_TAP
+  ∟ TOUCH_DOUBLE_TAP
     
 Other Events
-  • STATE_CHANGE
-  • TEXT_CHANGE <Text/TextField>
-  • VALUE_CHANGE <Element->MakeToggle()>
-  • TOGGLE_CHANGE <ToggleGroup>
-  • SUBMIT <TextField>
-  • FOCUS <TextField>
-  • UNFOCUS <TextField>
+  ∟ STATE_CHANGE
+  ∟ TEXT_CHANGE <Text/TextField>
+  ∟ VALUE_CHANGE <Element->MakeToggle()>
+  ∟ TOGGLE_CHANGE <ToggleGroup>
+  ∟ SUBMIT <TextField>
+  ∟ FOCUS <TextField>
+  ∟ UNFOCUS <TextField>
     
 UI States
-  • STATE_UP
-  • STATE_OVER
-  • STATE_DOWN
+  ∟ STATE_UP
+  ∟ STATE_OVER
+  ∟ STATE_DOWN
   
 UI StyleSheet: Styles
-  • width
-  • height
-  • scale
-  • opacity
-  • rotation
-  • backgroundImage
-  • backgroundColor
-  • anchorPoint
-  • offset
-  • color <Text/TextField>
-  • padding <Text/TextField>
-  • textAlign <Text/TextField>
-  • font <Text/TextField>
+  ∟ width
+  ∟ height
+  ∟ scale
+  ∟ opacity
+  ∟ rotation
+  ∟ backgroundImage
+  ∟ backgroundColor
+  ∟ anchorPoint
+  ∟ offset
+  ∟ color <Text/TextField>
+  ∟ padding <Text/TextField>
+  ∟ textAlign <Text/TextField>
+  ∟ font <Text/TextField>
   
 UI Alignments for anchorPoint/textAlign
-  • LEFT_TOP
-  • LEFT_CENTER
-  • LEFT_BOTTOM
-  • CENTER_TOP
-  • CENTER_CENTER
-  • CENTER_BOTTOM
-  • RIGHT_TOP
-  • RIGHT_CENTER
-  • RIGHT_BOTTOM
+  ∟ LEFT_TOP
+  ∟ LEFT_CENTER
+  ∟ LEFT_BOTTOM
+  ∟ CENTER_TOP
+  ∟ CENTER_CENTER
+  ∟ CENTER_BOTTOM
+  ∟ RIGHT_TOP
+  ∟ RIGHT_CENTER
+  ∟ RIGHT_BOTTOM
 ```
 ***
 # **[Code Examples](#code-examples)**
