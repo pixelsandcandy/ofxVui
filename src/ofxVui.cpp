@@ -295,6 +295,8 @@ namespace VUI {
     Rotate uiRotation = VUI_ROTATE_NONE;
     Rotate viewRotation = VUI_ROTATE_NONE;
     
+    bool usingVuiRender = true;
+    
 	ofPixels vuiGlobalPixels;
 	ofImage vuiGlobalImage;
     map<string, map<int, ofTrueTypeFont*>> fonts;

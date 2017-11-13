@@ -414,6 +414,8 @@ namespace VUI {
         vscale = scale;
     }
     
+    extern bool usingVuiRender;
+    
     static void SetResolution(int w, int h, float scale = 1.0, bool usingVuiRender = true ) {
         if ( usingVuiRender ){
             vw = w;
@@ -444,6 +446,7 @@ namespace VUI {
                 if ( VUI::vw == -1 || VUI::vh == -1 ){
                     VUI::SetResolution( ofGetWidth(), ofGetHeight() );
                 }
+                ofLog() << VUI::vw << "x" << VUI::vh;
 				VUI::fbo.allocate(VUI::vw, VUI::vh, GL_RGBA);
 				VUI::fbo.begin();
 				ofClear(0);
@@ -702,27 +705,29 @@ namespace VUI {
     }
     
     static void RenderBegin(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
-        if (currView.empty() || views[currView] == nullptr) return;
+        if ( usingVuiRender ){
+            if (currView.empty() || views[currView] == nullptr) return;
+        }
+        
         PRIVATE.Init();
-        ofEnableAlphaBlending();
+        
+        fbo.begin();
+        ofClear(0);
         ofSetColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 255.0*backgroundOpacity);
         ofDrawRectangle(0, 0, vw, vh);
         ofSetColor(255, 255, 255, 255);
         
-        if (currView.empty() || views[currView] == nullptr) return;
-        
-        fbo.begin();
-        ofClear(0);
-        
         ofEnableAlphaBlending();
         ofSetColor(255, 255, 255, 255);
-        views[currView]->Render();
+        if ( usingVuiRender ) views[currView]->Render();
         
         ofSetColor(255, 255, 255, 255);
         //ofLog() << visibleViews.size();
         
-        for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
-            if ((*it) != nullptr) (*it)->Render();
+        if ( usingVuiRender ){
+            for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
+                if ((*it) != nullptr) (*it)->Render();
+            }
         }
     }
     
