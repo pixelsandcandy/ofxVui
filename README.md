@@ -198,7 +198,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 */
   
 ```
-
+***
 ### **[UI Events](#ui-events)**
 *For more info checkout the **example-Events** project/code*
 
@@ -276,7 +276,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 */
 
 ```
-
+***
 ### **[UI Styling](#ui-styling)**
 *For more info checkout the **example-StylingElements** project/code*
 ```c++
@@ -350,7 +350,7 @@ void draw(){
 
 
 ```
-
+***
 ### **[View Manager](#example-view-manager)**
 *For more info checkout the **example-ViewManager** project/code*
 
