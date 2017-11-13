@@ -182,7 +182,7 @@ namespace VUI {
             
             
             bool touchDownOnElement = false;
-            if (VUI::GetOverElement() == this) touchDownOnElement = true;
+			//if (VUI::GetPrevOverElement() == this) touchDownOnElement = true;
             
             //ofLog() << "Update - " << VUI::GetTouches()->size() << "  - " << ofRandomf();
             
@@ -193,25 +193,94 @@ namespace VUI {
                 if (p.x > globalMinPosition.x && p.x < globalMaxPosition.x) {
                     if (p.y > globalMinPosition.y && p.y < globalMaxPosition.y) {
                         //ofLog() << VUI::GetTouchDown() << " - " << ofGetMousePressed();
-                        VUI::EventManager.StoreOverElement( this );
-                        if (VUI::GetTouchDown()) {
-                            UpdateState(VUI_STATE_DOWN);
-                        }
-                        else {
-                            UpdateState(VUI_STATE_OVER);
-                        }
-                        
-                        //ofLog() << "touchDown:" << VUI::GetTouchDown() << "  -" << ofRandomf();
-                        return;
+						touchDownOnElement = true;
+						touchPoint.set(p.x, p.y);
+						break;
                     }
                 }
             }
+			
+			if (VUI::GetPrevOverElement() == this) {
+				if (touchDownOnElement) {
+					if (!isMouseDown) {
+						if (isToggle) {
+							if (virtualState == VUI_STATE_DOWN) {
+								SetState(VUI_STATE_UP);
+								TriggerEvent(VUI_EVENT_TOUCH_UP);
+							}
+							else {
+								SetState(VUI_STATE_DOWN);
+								TriggerEvent(VUI_EVENT_TOUCH_DOWN);
+							}
+						}
+						else {
+							SetState(VUI_STATE_DOWN);
+							TriggerEvent(VUI_EVENT_TOUCH_DOWN);
+						}
+						isMouseDown = true;
+					}
+				}
+				else {
+					if (isMouseDown && !isToggle) {
+						SetState(VUI_STATE_UP);
+						TriggerEvent(VUI_EVENT_TOUCH_UP);
+					}
+					isMouseDown = false;
+				}
+				
+			}
+			else {
+				if (isMouseDown && !isToggle) {
+					SetState(VUI_STATE_UP);
+					//TriggerEvent(VUI_EVENT_TOUCH_UP);
+				}
+				isMouseDown = false;
+			}
+
+			if ( touchDownOnElement ) VUI::EventManager.StoreOverElement(this);
+
+
+			/*if (VUI::GetPrevOverElement() == this) {
+				if (VUI::GetTouchDown()) {
+					//UpdateState(VUI_STATE_DOWN);
+					if (touchDownOnElement) {
+						SetState(VUI_STATE_DOWN);
+						if (!isMouseDown) {
+							TriggerEvent(VUI_EVENT_TOUCH_DOWN);
+							isMouseDown = true;
+						}
+					}
+				}
+				else {
+					//UpdateState(VUI_STATE_UP);
+					if (touchDownOnElement && isMouseDown) {
+						SetState(VUI_STATE_UP);
+						TriggerEvent(VUI_EVENT_TOUCH_UP);
+						isMouseDown = false;
+					}
+
+				}
+			}
+			else {
+				if (isMouseDown && !isToggle) {
+					TriggerEvent(VUI_EVENT_TOUCH_UP);
+					SetState(VUI_STATE_UP);
+					VUI::ClearOverElement();
+					isMouseDown = false;
+				}
+			}
+
+
+			if (VUI::GetOverElement() != this) VUI::EventManager.StoreOverElement(this);
+			//ofLog() << "touchDown:" << VUI::GetTouchDown() << "  -" << ofRandomf();
+			return;
             
             if (touchDownOnElement && !isToggle) {
                 TriggerEvent(VUI_EVENT_TOUCH_UP);
                 SetState(VUI_STATE_UP);
                 VUI::ClearOverElement();
-            }
+            }*/
+			
         }
         else {
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
@@ -255,14 +324,16 @@ namespace VUI {
                     return;
                 }
             }
+
+			if (isMouseInside) {
+				UpdateState(VUI_STATE_UP);
+				isMouseInside = false;
+			}
+
+			isMouseDown = false;
         }
 
-        if ( isMouseInside ) {
-            UpdateState(VUI_STATE_UP);
-            isMouseInside = false;
-        }
         
-        isMouseDown = false;
 		
 		
 	}
@@ -470,6 +541,8 @@ namespace VUI {
         
         vuiEventArgs argsTouch;
         argsTouch.element = this;
+		argsTouch.localMousePos.set(touchPoint.x - globalMinPosition.x, touchPoint.y - globalMinPosition.y);
+		argsTouch.globalMousePos.set(touchPoint.x, touchPoint.y);
         
         int t;
         
@@ -496,12 +569,28 @@ namespace VUI {
                 firstMove = true;
                 break;
             case VUI_EVENT_MOUSE_PRESSED:
+				//ofLog() << "TriggerEvent >> VUI_EVENT_MOUSE_PRESSED";
                 ofNotifyEvent(onMousePressed, args, this);
                 
                 argsTouch.eventType = VUI_EVENT_TOUCH_DOWN;
+				argsTouch.localMousePos = args.localMousePos;
+				argsTouch.globalMousePos = args.globalMousePos;
                 ofNotifyEvent(onTouchDown, argsTouch, this );
                 canDrag = true;
                 break;
+			case VUI_EVENT_TOUCH_DOWN:
+				//ofLog() << "TriggerEvent >> VUI_EVENT_TOUCH_DOWN";
+				touchDownTimeMS = ofGetElapsedTimeMillis();
+
+				args.localMousePos = argsTouch.localMousePos;
+				args.globalMousePos = argsTouch.globalMousePos;
+				args.eventType = VUI_EVENT_MOUSE_PRESSED;
+				ofNotifyEvent(onMousePressed, args, this);
+
+				argsTouch.eventType = VUI_EVENT_TOUCH_DOWN;
+				ofNotifyEvent(onTouchDown, argsTouch, this);
+				canDrag = true;
+				break;
             case VUI_EVENT_MOUSE_MOVED:
                 if ( firstMove ) {
                     firstMove = false;
@@ -521,23 +610,40 @@ namespace VUI {
                 ofNotifyEvent(onMousePressed, args, this);
                 
                 argsTouch.eventType = VUI_EVENT_TOUCH_UP;
+				argsTouch.localMousePos = args.localMousePos;
+				argsTouch.globalMousePos = args.globalMousePos;
                 ofNotifyEvent(onTouchUp, argsTouch, this );
                 canDrag = false;
                 break;
             case VUI_EVENT_MOUSE_CLICK:
-                
+			case VUI_EVENT_TOUCH_TAP:
+				//ofLog() << "TriggerEvent >> VUI_EVENT_MOUSE_CLICK";
                 
                 t = ofGetElapsedTimeMillis();
+
+				if (eventType == VUI_EVENT_TOUCH_TAP) {
+					args.localMousePos = argsTouch.localMousePos;
+					args.globalMousePos = argsTouch.globalMousePos;
+				}
+
+				if (eventType == VUI_EVENT_MOUSE_CLICK) {
+					argsTouch.localMousePos = args.localMousePos;
+					argsTouch.globalMousePos = args.globalMousePos;
+				}
+
                 //if ( DEBUG_MODE ) ofLog() << "lastClickTimeMS:" << lastClickTimeMS << "  now:" << t;
                 if ( t - lastClickTimeMS < VUI::doubleClickThreshold ){
-                    if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_DOUBLE_CLICK)";
+                    //if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_DOUBLE_CLICK)";
+					
+					
                     args.eventType = VUI_EVENT_MOUSE_DOUBLE_CLICK;
                     ofNotifyEvent(onMouseDoubleClick, args, this);
                     
                     argsTouch.eventType = VUI_EVENT_TOUCH_DOUBLE_TAP;
                     ofNotifyEvent(onTouchDoubleTap, argsTouch, this );
                 } else {
-                    if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_CLICK)";
+                    //if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_CLICK)";
+					args.eventType = VUI_EVENT_MOUSE_CLICK;
                     ofNotifyEvent(onMouseClick, args, this);
                     
                     argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
@@ -550,19 +656,22 @@ namespace VUI {
                 ofNotifyEvent(onMouseDoubleClick, args, this);
                 
                 argsTouch.eventType = VUI_EVENT_TOUCH_DOUBLE_TAP;
+				argsTouch.localMousePos = args.localMousePos;
+				argsTouch.globalMousePos = args.globalMousePos;
                 ofNotifyEvent(onTouchDoubleTap, argsTouch, this );
                 break;
 			case VUI_EVENT_TOUCH_UP:
-				args.eventType = VUI_EVENT_MOUSE_CLICK;
+				args.localMousePos = argsTouch.localMousePos;
+				args.globalMousePos = argsTouch.globalMousePos;
+				args.eventType = VUI_EVENT_MOUSE_RELEASED;
 				ofNotifyEvent(onMouseClick, args, this);
 
-				vuiEventArgs argsTouch2;
-				argsTouch2.element = this;
-				argsTouch2.eventType = VUI_EVENT_TOUCH_UP;
-				ofNotifyEvent(onTouchUp, argsTouch2, this);
+				argsTouch.eventType = VUI_EVENT_TOUCH_UP;
+				ofNotifyEvent(onTouchUp, argsTouch, this);
 
-				argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
-				ofNotifyEvent(onTouchTap, argsTouch, this);
+				t = ofGetElapsedTimeMillis();
+				if (t - touchDownTimeMS <= VUI::touchTapThreshold) TriggerEvent(VUI_EVENT_TOUCH_TAP);
+				
 				break;
         }
         

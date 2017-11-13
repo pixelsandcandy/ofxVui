@@ -530,6 +530,8 @@ namespace VUI {
             ofAddListener(ofEvents().touchMoved, this, &ViewManagerBridge::touchMoved);
             ofAddListener(ofEvents().touchUp, this, &ViewManagerBridge::touchUp);
 #endif
+
+			DisableMouseEvents();
         }
 
 
@@ -811,10 +813,15 @@ namespace VUI {
 	}
 
     extern int doubleClickThreshold;
+	extern int touchTapThreshold;
     
     static void SetDoubleClickThreshold( int milliseconds = 400 ){
         doubleClickThreshold = milliseconds;
     }
+
+	static void SetTouchTapThreshold(int milliseconds = 180) {
+		touchTapThreshold = milliseconds;
+	}
 
 	static void SetView(string name, bool triggerBeforeExitView = false ) {
 		if (currView == name) return;

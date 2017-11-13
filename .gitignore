@@ -4,3 +4,10 @@ config.make
 *.xcodeproj
 Makefile
 openFrameworks-Info.plist
+*.vs
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+icon.rc
+obj/

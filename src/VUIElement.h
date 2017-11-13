@@ -387,6 +387,9 @@ namespace VUI {
         bool isMouseDown = false;
         bool isMouseInside = false;
         int lastClickTimeMS = 0;
+		int touchDownTimeMS = 0;
+
+		ofVec2f touchPoint;
     private:
 		void SetDefaultStyles(int x, int y);
 		void UpdateAnchorOffset();

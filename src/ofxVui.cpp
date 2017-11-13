@@ -304,6 +304,7 @@ namespace VUI {
     bool _didInit = false;
     
     int doubleClickThreshold = 400;
+	int touchTapThreshold = 180;
     
     // Tween
     
