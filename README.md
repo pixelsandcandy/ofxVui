@@ -354,6 +354,7 @@ void setup(){
   // true = automatically set width/height to text
   label->SetText( "Stuff", true );
   
+  // Element(x, y, StyleSheet*, primarySelector, secondarySelector );
   buttonA = new Element( 20, 40, ss, ".button" );
   buttonB = new Element( 20, 80, ss, ".button", "#buttonB" );
   
