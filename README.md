@@ -14,7 +14,7 @@ So everything works but sorry the code is a little bit of spaghetti at the momen
 ***
 # **ofxVui**
 ### View Manager
-*VUI Mouse/Touch Events still work when scaling and rotating view*
+*VUI Mouse/Touch Events still work when scaling/rotating view*
 ```
 • Resolution
 • Scale
