@@ -11,18 +11,20 @@
   * macOS High Sierra (10.13) » Xcode 9
   * Windows 10 » Visual Studio 2017 
 ***
-###### *QUICK NOTE* 😅
+###### *QUICK NOTE* 
 
-So everything works but sorry the code is a little bit of spaghetti at the moment. ofxVUI was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two - mainly so that GUI Mouse/Touch events still work when the View is scaled/rotated but also because I wanted to simplify usage. I'll slowly clean up the code but for now I'm focusing on creating example projects/code to learn from, adding useful features, and making sure new features doesn't break anything :)
+So everything works but sorry the code is a little bit of spaghetti at the moment 😅. ofxVui was originally two different addons but it made more sense to combine them. Cleaning up the code is on my TODO list but wanted to get this addon out the door so people can use it while I continue to make changes.
 
 ```
-TODOs (based on priority)
-
   • Cleanup example-TouchEvents
       
   • Touch
       + Test multiple touch events / scenarios
-      + Add TOUCH_DRAG event
+      + Add - VUI_EVENT_TOUCH_DRAG
+      
+  • UI Elements
+      + Add - Slider
+      + Add - Slider2D
       
   • StyleSheet
       + width/height - percentage based values
@@ -32,9 +34,9 @@ TODOs (based on priority)
       + Add option - VUI_ROTATE_90_CW
       + Add option - VUI_ROTATE_180
       
-  • Cleanup ofxVui code
+  • Cleanup / add comments to ofxVui code
 ```
-If you think of a feature that would be super useful in this addon please feel free to email me! or submit a pull request ***hi.christophermiles@gmail.com***
+If you think of a feature that would be super useful in this addon please feel free to email me! ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
 ***
 # **ofxVui**
@@ -311,7 +313,7 @@ void setup(){
     name stylesheet if you want to load/use it elsewhere
     
     ss = new StyleSheet( styles, "dope-stylesheet" );
-    ss = VUI::GetStyleSheet( "dope-stylesheet" );
+    StyleSheet *elsewhere = VUI::GetStyleSheet( "dope-stylesheet" );
     
   */
 
@@ -339,7 +341,7 @@ void draw(){
 
 ```c++
 // ---------------------------------------- main.cpp
-VUI::SetResolution(1080,1920,.4);
+VUI::SetResolution(1080,1920,.6);
 // VUI::RotateView( VUI_ROTATE_90_CCW );
 ofSetupOpenGL(VUI::GetWindowWidth(),VUI::GetWindowHeight(),OF_WINDOW);
 
