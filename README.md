@@ -277,6 +277,11 @@ void setup(){
   )";
 
   ss = new StyleSheet( styles );
+  
+  /* name stylesheet if you want to load/use it elsewhere
+    ss = new StyleSheet( styles, "dope-stylesheet" );
+    ss = VUI::GetStyleSheet( "dope-stylesheet" );
+  */
 
   label = new Text( 20, 20, ss, ".text" );
   // true = automatically set width/height to text
