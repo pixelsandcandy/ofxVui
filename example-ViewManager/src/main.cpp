@@ -7,6 +7,11 @@ int main( ){
     VUI::SetResolution(1920,1080,.6);
     //VUI::SetResolution(1920,1080);
     
+    /* Rotate view
+     VUI::SetResolution(1920,1080,.4);
+     VUI::RotateView( VUI_ROTATE_90_CCW );
+     */
+    
     ofSetupOpenGL(VUI::GetWindowWidth(),VUI::GetWindowHeight(),OF_WINDOW);			// <-------- setup the GL context
 
 	// this kicks off the running of my app

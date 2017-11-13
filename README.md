@@ -1,18 +1,26 @@
 # View + UI System for openFrameworks
 ###### *DEPENDENCIES*
 * **ofxEasing** » https://github.com/arturoc/ofxEasing
-* **ofxWinTouchHook** » https://github.com/trentbrooks/ofxWinTouchHook (optional)
-  1. add Preprocessor Macro **USING_ofxWinTouchHook**
-  2. call **VUI::EnableTouch()**
+* **ofxWinTouchHook** » https://github.com/trentbrooks/ofxWinTouchHook
+  * OPTIONAL (Windows only)
+    1. add Preprocessor Macro **USING_ofxWinTouchHook**
+    2. call **VUI::EnableTouch()** in ofApp::setup()
 ***
-
+###### *WORKS / TESTED ON*
+* openFrameworks 0.9.8
+  * macOS High Sierra (10.13) » Xcode 9
+  * Windows 10 » Visual Studio 2017 
+***
 ###### *QUICK NOTE* 😅
 
 So everything works but sorry the code is a little bit of spaghetti at the moment. ofxVUI was originally split into two different addons (one for ViewManager and one for GUI) but ended up merging the two - mainly so that GUI Mouse/Touch events still work when the View is scaled/rotated but also because I wanted to simplify usage. I'll slowly clean up the code but for now I'm focusing on creating example projects/code to learn from, adding useful features, and making sure new features doesn't break anything :)
 
 ```
 TODO
-  + Enhancing width / height
+  + More Touch Event stuff
+    • Test multiple touch events / scenarios
+    • Add TOUCH_DRAG event
+  + Width / Height additions
     • percentage based values
     • calc() based values
   + Cleanup code
@@ -64,7 +72,7 @@ Mouse Events
   • MOUSE_CLICK
   • MOUSE_DOUBLE_CLICK
     
-Touch Events
+Touch Events (only single touch usage tested so far)
   • TOUCH_DOWN
   • TOUCH_UP
   • TOUCH_TAP
