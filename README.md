@@ -13,7 +13,7 @@
 ***
 ###### *QUICK NOTE* 
 
-So everything works but sorry the code is a little bit of spaghetti at the moment 😅 and there's a lot of legacy/debug stuff. ofxVui was originally two different addons but it made more sense to combine them. Cleaning up the code is on my TODO list but wanted to get this addon out the door so people can use it while I continue to make improvements.
+So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅. I was originally working on two different addons but it made more sense to combine them. Cleaning up the code is on my TODO list but wanted to first make this addon usable, tested, and make enough project/code examples for people to learn from. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
 ***
 ###### *TODO* 
 
