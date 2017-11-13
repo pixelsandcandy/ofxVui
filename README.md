@@ -15,6 +15,8 @@
 
 So everything works but sorry the code is a little bit of spaghetti at the moment 😅. ofxVui was originally two different addons but it made more sense to combine them. Cleaning up the code is on my TODO list but wanted to get this addon out the door so people can use it while I continue to make changes.
 
+###### *TODO* 
+
 ```
   • Cleanup example-TouchEvents
       
@@ -36,7 +38,7 @@ So everything works but sorry the code is a little bit of spaghetti at the momen
       
   • Cleanup / add comments to ofxVui code
 ```
-If you think of a feature that would be super useful in this addon please feel free to email me! ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
+If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
 ***
 # **ofxVui**
