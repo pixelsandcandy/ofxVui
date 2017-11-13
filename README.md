@@ -61,7 +61,7 @@ If you think of a feature that would be super useful in this addon or have a req
 Resolution
 Scale
 Rotation
-  ∟ VUI_ROTATE_90_CCW
+  ∟ VUI_ROTATE_90_CCW
 ```
   
   
@@ -76,7 +76,7 @@ Rotation
 ```
 Elements
   ∟ Element
-  ∟ Element->MakeToggle()
+  ∟ Element->MakeToggle()
   ∟ ToggleGroup
   ∟ Text
   ∟ TextField
@@ -142,15 +142,15 @@ UI StyleSheet: Styles
   ∟ font <Text/TextField>
   
 UI Alignments for anchorPoint/textAlign
-  ∟ LEFT_TOP
-  ∟ LEFT_CENTER
-  ∟ LEFT_BOTTOM
-  ∟ CENTER_TOP
-  ∟ CENTER_CENTER
-  ∟ CENTER_BOTTOM
-  ∟ RIGHT_TOP
-  ∟ RIGHT_CENTER
-  ∟ RIGHT_BOTTOM
+  ∟ LEFT_TOP
+  ∟ LEFT_CENTER
+  ∟ LEFT_BOTTOM
+  ∟ CENTER_TOP
+  ∟ CENTER_CENTER
+  ∟ CENTER_BOTTOM
+  ∟ RIGHT_TOP
+  ∟ RIGHT_CENTER
+  ∟ RIGHT_BOTTOM
 ```
 ***
 # **[Code Examples](#code-examples)**
