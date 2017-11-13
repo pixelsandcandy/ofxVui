@@ -6,10 +6,10 @@
 * *<a href='#todo' class='anchor'>TODO</a>*
 * **<a href='#ofxvui' class='anchor'>ofxVui</a>**
 * **<a href='#code-examples' class='anchor'>Code Examples</a>**
+  * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
   * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
   * **<a href='#ui-events' class='anchor'>UI Events</a>**
   * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
-  * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
 
 ***
 ###### *[DEPENDENCIES](#dependencies)*
