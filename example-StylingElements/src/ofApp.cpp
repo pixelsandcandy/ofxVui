@@ -12,7 +12,7 @@ void ofApp::setup(){
     
         [.baseClass>
              width: 160;
-             height: 40;
+             height: 60;
              bg: #ff0000;
              border: 1, #ffffff;
          
@@ -130,31 +130,31 @@ void ofApp::setup(){
      
      SYNTAX
      
-     [Images>
-         imageID: filepath;
-     ]
+         [Images>
+             imageID: filepath;
+         ]
      
-     [.styleClass>
-         (styles)
-     ]
+         [.styleClass>
+             (styles)
+         ]
      
-     [#styleID>
-         (styles)
-     ]
+         [#styleID>
+             (styles)
+         ]
      
      
      The primary styleClass/ID is applied to ALL states.
-     • VUI_STATE_UP
-     • VUI_STATE_OVER
-     • VUI_STATE_DOWN
+         • VUI_STATE_UP
+         • VUI_STATE_OVER
+         • VUI_STATE_DOWN
      
      
      The secondary style class/ID overrides properties for specific states.
      Some properties have an ALL flag that will override ALL states to make
      it behave like a primary styleClass/ID.
-     • opacity
-     • border
-     • background-image
+         • opacity
+         • border
+         • background-image
      
      
      --------------------------------------------------------------
@@ -162,7 +162,7 @@ void ofApp::setup(){
      • width                          (applies to all states)
      • height                         (applies to all states)
      
-     • color                          text color
+     • color                          text #hexColor
      • font                           fontFilepath, fontSize
      • scale
      • opacity                        0.0 - 1.0, ALL (optional)
@@ -205,25 +205,24 @@ void ofApp::setup(){
      • text-align
      + textAlign
      
-                                     VALUES for text-align and anchor-point
-                                    - left-top
-                                    - left-center
-                                    - left-bottom
-                                    - center-top
-                                    - center-center
-                                    - center-bottom
-                                    - right-top
-                                    - right-center
-                                    - right-bottom
+                                      VALUES for text-align and anchor-point
+                                        - left-top
+                                        - left-center
+                                        - left-bottom
+                                        - center-top
+                                        - center-center
+                                        - center-bottom
+                                        - right-top
+                                        - right-center
+                                        - right-bottom
      
      
      
      --------------------------------------------------------------
      
      STATES - must be appended to end of style block
-     
-     • &:over{<styles>}
-     • &:down{<styles>}
+         • &:over{<styles>}
+         • &:down{<styles>}
      
      
      
