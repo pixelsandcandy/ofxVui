@@ -77,8 +77,7 @@ UI States
   • STATE_DOWN
   
 UI StyleSheet  
-  • Manages fonts
-  • Manages image assets
+  • Manages fonts/image assets so there's no redundant loading
   
 UI StyleSheet: Styles
   • width
@@ -283,7 +282,37 @@ ofSetupOpenGL(VUI::GetWindowWidth(),VUI::GetWindowHeight(),OF_WINDOW);
 using namespace VUI;
 
 class MyView : public View {
-  /* stuff */
+    // a few extra stuff
+    /*
+       if overriding BeforeExitView(), you must call ExitView()
+       when you're done with what you need to do
+     */
+    virtual void BeforeExitView() {
+      ExitView();
+    };
+    
+    virtual void OnEnterView() {};
+    
+    // basic stuff
+    int mouseX;
+    int mouseY;
+    
+    void setup(){};
+    void update(){};
+    void draw(){};
+
+    void keyPressed(int key){};
+    void keyReleased(int key){};
+    void mouseMoved(int x, int y ){};
+    void mouseDragged(int x, int y, int button){};
+    void mousePressed(int x, int y, int button){};
+    void mouseReleased(int x, int y, int button){};
+    void mouseEntered(int x, int y){};
+    void mouseExited(int x, int y){};
+    void windowResized(int w, int h){};
+    void dragEvent(ofDragInfo dragInfo){};
+    void gotMessage(ofMessage msg){};
+    
 }
 
 
@@ -294,6 +323,8 @@ void setup(){
   //VUI::EnableTouch();
   
   VUI::AddView( "view-name", new MyView() );
+  //VUI::AddView( "view-exampleA", new JustAnExample() );
+  //VUI::AddView( "view-exampleB", new JustAnExampleB() );
   
   // can call from anywhere
   VUI::SetView( "view-name" );

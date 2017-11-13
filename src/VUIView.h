@@ -15,6 +15,11 @@ namespace VUI {
 		int mouseY = 0;
 
 		virtual void OnEnterView() {};
+        
+        /*
+         if overriding BeforeExitView(), you must call ExitView()
+         when you're done with what you need to do
+         */
 		virtual void BeforeExitView() {
             ExitView();
         };
