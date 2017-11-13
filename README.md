@@ -399,20 +399,42 @@ class MyView : public View {
 
 // ---------------------------------------- ofApp.cpp
 #include "MyView.h"
+#include "MyOtherView.h"
 
 void setup(){
   //VUI::EnableTouch();
   
   VUI::AddView( "view-name", new MyView() );
-  //VUI::AddView( "view-exampleA", new JustAnExample() );
-  //VUI::AddView( "view-exampleB", new JustAnExampleB() );
+  VUI::AddView( "my-other-view", new MyOtherView() );
   
   // can call from anywhere
   VUI::SetView( "view-name" );
 }
 
 void draw(){
+  /*
+      VUI::Render() is VUI::RenderBefore() + VUI::RenderAfter()
+  */
   VUI::Render();
+  
+  
+  /*
+   
+      If you still want to scale/rotate your view without using the
+      View Manager (via AddView()/SetView() you can like this:
+
+          VUI::RenderBefore();
+            // draw your stuff here
+          VUI::RenderAfter();
+
+
+      But you MUST set the 4th arg in VUI::SetResolution() to false (main.cpp):
+      (ofxVui Element's Mouse/Touch events will adapt to scaled/rotated coordinates)
+      
+          VUI::SetResolution(w, h, scale, enableViewManager );
+          eg: VUI::SetResolution(1920, 1080, .6, false);
+   
+   */
 }
 
 ```

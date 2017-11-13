@@ -24,23 +24,27 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    // VUI::Render() calls VUI::RenderBefore() and VUI::RenderAfter();
+    /*
+        VUI::Render() is VUI::RenderBefore() + VUI::RenderAfter()
+     */
     VUI::Render();
     
     
     /*
      
-     If you still want to scale/rotate your view without using VUI's
-     View Manager (via AddView()/SetView() you can like this:
+        If you still want to scale/rotate your view without using the
+        View Manager (via AddView()/SetView() you can like this:
+
+            VUI::RenderBefore();
+            // draw your stuff here
+            VUI::RenderAfter();
+
+
+        But you MUST set the 4th arg in VUI::SetResolution() to false (main.cpp):
+        (ofxVui Element's Mouse/Touch events will adapt to scaled/rotated coordinates)
      
-     VUI::RenderBefore();
-        // draw your stuff here
-     VUI::RenderAfter();
-     
-     
-     But you MUST set the 4th arg in VUI::SetResolution() to false (main.cpp):
-     VUI::SetResolution(w, h, scale, enableViewManager );
-     VUI::SetResolution(1920, 1080, .6, false);
+            VUI::SetResolution(w, h, scale, enableViewManager );
+            eg: VUI::SetResolution(1920, 1080, .6, false);
      
      */
 }
