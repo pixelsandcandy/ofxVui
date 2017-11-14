@@ -31,7 +31,7 @@ Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown 
 # **[ofxVui Features](#ofxvui)**
 ### View Manager
 * *Easily add/set views from anywhere*
-* *View has access to same methods as ofApp*
+* *Views have access to same methods as ofApp*
 * *Mouse/Touch Events still work when scaling/rotating view*
 
 ```
