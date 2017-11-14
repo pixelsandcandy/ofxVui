@@ -1,13 +1,13 @@
 # ✨ View + UI System for openFrameworks ✨
 ###### *TELEPORT*
 * **<a href='#watch-examples-video' class='anchor'>Watch Examples Video</a>**
-* **<a href='#ofxvui' class='anchor'>ofxVui Features</a>**
+* **<a href='#ofxvui-features' class='anchor'>ofxVui Features</a>**
 * **<a href='#code-examples' class='anchor'>Code Examples</a>**
   * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
   * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
   * **<a href='#ui-events' class='anchor'>UI Events</a>**
   * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
-* **<a href='#todo' class='anchor'>Features Requests / In Progress</a>**
+* **<a href='#feature-requests--in-progress' class='anchor'>Features Requests / In Progress</a>**
 
 ***
 ###### *[DEPENDENCIES](#dependencies)*
