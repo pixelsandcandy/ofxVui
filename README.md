@@ -30,7 +30,7 @@ Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown 
 
 ***
 ###### *[WATCH EXAMPLES VIDEO](#video)*
-[![ofxVui Video](https://i.imgur.com/Pwox7Xa.jpg)](https://vimeo.com/242682198 "ofxVui - View + UI System for openFrameworks")
+[![ofxVui Video](https://i.imgur.com/Pwox7Xa.jpg)](https://vimeo.com/242682198 "ofxVui - View + GUI System for openFrameworks")
 
 ***
 # **[ofxVui Features](#ofxvui)**
