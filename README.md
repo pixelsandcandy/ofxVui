@@ -143,6 +143,9 @@ There are a bunch of example projects/code in the repo but here are some basics.
 * *Animate( Float seconds, String params );*
 
 ```c++
+#include "ofxVui.h"
+using namespace VUI;
+
 // basic
 elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotation: -135, opacity: .75, ease: Elastic.easeOut }");
 
@@ -208,6 +211,9 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 *For more info checkout the **example-Events** project/code*
 
 ```c++
+#include "ofxVui.h"
+using namespace VUI;
+
 /*
   Some Mouse/Touch events are interchangeable so if you
   use VUI::EnableTouch() you don't have to change your code:
@@ -287,6 +293,9 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 # [UI Styling](#ui-styling)
 *For more info checkout the **example-StylingElements** project/code*
 ```c++
+#include "ofxVui.h"
+using namespace VUI;
+
 StyleSheet* ss;
 Element* buttonA;
 Element* buttonB;
@@ -372,6 +381,9 @@ void draw(){
 *For more info checkout the **example-ViewManager** project/code*
 
 ```c++
+#include "ofxVui.h"
+using namespace VUI;
+
 // ---------------------------------------- main.cpp
 
 VUI::SetResolution(1080,1920,.6);
