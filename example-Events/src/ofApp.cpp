@@ -115,6 +115,8 @@ void ofApp::setup(){
     text = new Text( 640, 50, ss, "#text" );
     text->SetText("Text / Button");
     
+    ofAddListener( text->onMouseClick, this, &ofApp::vuiEventHandler );
+    
     textField = new TextField( 640, 100, ss, "#textField" );
     textField->SetText("omg textfield");
     
