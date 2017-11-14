@@ -6,6 +6,7 @@
   * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
   * **<a href='#ui-events' class='anchor'>UI Events</a>**
   * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
+* **<a href='#todo' class='anchor'>Features Requests / In Progress</a>**
 
 ***
 ###### *[DEPENDENCIES](#dependencies)*
@@ -25,30 +26,6 @@
 So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅. I was originally working on two different addons but decided to merge them together. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements whenever I get the chance 😊
 
 Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown fond of it in C#/Unity - it just seems more legible IMO :)
-***
-###### *[IN PROGRESS](#todo)* 
-
-```    
-  ⭐️ Touch
-      + Test multiple touch events / scenarios
-      + Add - VUI_EVENT_TOUCH_DRAG
-      
-  ⭐️ UI Elements
-      + Add - Slider
-      + Add - Slider2D
-      
-  ⭐️ StyleSheet
-      + width/height - percentage based values
-      + width/height - calc() based values
-      
-  ⭐️ VUI::SetRotation()
-      + Add option - VUI_ROTATE_90_CW
-      + Add option - VUI_ROTATE_180
-      
-  ⭐️ Cleanup / add comments to ofxVui code
-  ⭐️ Add more emojis to this README 👓
-```
-If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
 ***
 # **[ofxVui Features](#ofxvui)**
@@ -461,5 +438,29 @@ void draw(){
 }
 
 ```
+***
+###### *[FEATURE REQUESTS / IN PROGRESS](#todo)* 
+
+```    
+  ⭐️ Touch
+      + Test multiple touch events / scenarios
+      + Add - VUI_EVENT_TOUCH_DRAG
+      
+  ⭐️ UI Elements
+      + Add - Slider
+      + Add - Slider2D
+      
+  ⭐️ StyleSheet
+      + width/height - percentage based values
+      + width/height - calc() based values
+      
+  ⭐️ VUI::SetRotation()
+      + Add option - VUI_ROTATE_90_CW
+      + Add option - VUI_ROTATE_180
+      
+  ⭐️ Cleanup / add comments to ofxVui code
+  ⭐️ Add more emojis to this README 👓
+```
+If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
 
 
