@@ -146,16 +146,20 @@ There are a bunch of example projects/code in the repo but here are some basics.
 // basic
 elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotation: -135, opacity: .75, ease: Elastic.easeOut }");
 
+
 // add listener - method A
 elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotation: -135, opacity: .75, ease: Elastic.easeOut }", this, &ListenerClass::vuiEventHandler);
+
 
 // add listener - method B
 Tween* tweenPtr = elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotation: -135, opacity: .75, ease: Elastic.easeOut }");
 ofAddListener( tweenPtr->onStep, this, &ListenerClass::vuiEventHandler );
 ofAddListener( tweenPtr->onComplete, this, &ListenerClass::vuiEventHandler );
 
+
 // can also set/reset animation properties:
 elementPtr->Set("{x: 0, width: 100, height: 100, scale: 1, rotation: 0, opacity: 1}");
+
 
 // eventHandler
 ListenerClass::vuiEventHandler(vuiEventArgs& evt){
@@ -166,6 +170,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
     }
   }
 }
+
 
 /* -------------------------------------------- easing functions
 
@@ -215,6 +220,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 // add listener
 ofAddListener( elementPtr->onMouseClick, this, &ListenerClass::vuiEventHandler );
 
+
 // eventHandler
 ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   if ( evt.element == elementPtr ){
@@ -223,6 +229,7 @@ ListenerClass::vuiEventHandler(vuiEventArgs& evt){
     };
   }
 }
+
 
 /* -------------------------------------------- vuiEventArgs
   
@@ -285,7 +292,9 @@ Element* buttonA;
 Element* buttonB;
 Text* label;
 
+
 // --------------------------------------------
+
 void setup(){
   string styles = R"(
     [Images>
@@ -321,6 +330,8 @@ void setup(){
     ]
   )";
 
+  //
+
   ss = new StyleSheet( styles );
   
   /*
@@ -332,9 +343,12 @@ void setup(){
     
   */
 
+
   label = new Text( 20, 20, ss, ".text" );
+  
   // true = automatically set width/height to text
   label->SetText( "Stuff", true );
+  
   
   // Element(x, y, StyleSheet*, primarySelector, secondarySelector );
   buttonA = new Element( 20, 40, ss, ".button" );
@@ -342,7 +356,9 @@ void setup(){
   
 }
 
+
 // --------------------------------------------
+
 void draw(){
   label->Render();
   buttonA->Render();
@@ -357,12 +373,15 @@ void draw(){
 
 ```c++
 // ---------------------------------------- main.cpp
+
 VUI::SetResolution(1080,1920,.6);
 // VUI::RotateView( VUI_ROTATE_90_CCW );
+
 ofSetupOpenGL(VUI::GetWindowWidth(),VUI::GetWindowHeight(),OF_WINDOW);
 
 
 // ---------------------------------------- create View
+
 #include "ofxVui.h"
 using namespace VUI;
 
@@ -402,6 +421,7 @@ class MyView : public View {
 
 
 // ---------------------------------------- ofApp.cpp
+
 #include "MyView.h"
 #include "MyOtherView.h"
 
@@ -411,6 +431,7 @@ void setup(){
   
   VUI::AddView( "view-name", new MyView() );
   VUI::AddView( "my-other-view", new MyOtherView() );
+  
   
   // can call from anywhere
   VUI::SetView( "view-name" );
