@@ -28,6 +28,10 @@ So everything works! 🎉 Although, the code under the hood is a little bit of s
 Also, ofxVui uses *Pascal Case (UpperCamelCase)* for methods because I've grown fond of it in C#/Unity - it just seems more legible IMO :)
 
 ***
+###### *[VIDEO OVERVIEW](#video)*
+[![ofxVui Video](https://i.imgur.com/Pwox7Xa.jpg)](https://vimeo.com/242682198 "ofxVui - View + UI System for openFrameworks")
+
+***
 # **[ofxVui Features](#ofxvui)**
 ### View Manager
 * *Easily add/set views from anywhere*
