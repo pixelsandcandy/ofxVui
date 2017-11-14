@@ -7,21 +7,21 @@ void ofApp::setup(){
     string styles = R"(
         [#square>
          
-         width: 400;
-         height: 400;
-         background-color: #ff0000;
-         anchorPoint: center-center;
+             width: 400;
+             height: 400;
+             background-color: #ff0000;
+             anchorPoint: center-center;
          
-         &:over {
-            background-color: #00ff00;
-         }
+             &:over {
+                background-color: #00ff00;
+             }
          
-         &:down {
-            background-color: #0000ff;
-         }
+             &:down {
+                background-color: #0000ff;
+             }
         ]
     
-        [#rectangle>
+        [.rectangle>
          
              width: 200;
              height: 60;
@@ -35,6 +35,14 @@ void ofApp::setup(){
              &:down {
                  background-color: #0000ff;
              }
+         ]
+    
+        [#rectangleB>
+             
+            width: 60;
+            height: 200;
+            background-color: #dddddd;
+             
          ]
     
         [#textField>
@@ -73,24 +81,34 @@ void ofApp::setup(){
              }
          ]
     
-    
     )";
     
+    //
+    
     ss = new StyleSheet( styles );
-    text = new Text( 50, 50, ss, "#text" );
+    
+    
+    //
+    
+    square = new Element( 220, ofGetHeight()*.4, ss, "#square" );
+    rectangle = new Element( 220, ofGetHeight()*.4, ss, ".rectangle" );
+    rectangleB = new Element( 260, ofGetHeight()*.4, ss, ".rectangle", "#rectangleB" );
+    
+    
+    //
+    
+    text = new Text( 640, 50, ss, "#text" );
     text->SetText("text");
     
-    textField = new TextField( 50, 100, ss, "#textField" );
+    textField = new TextField( 640, 100, ss, "#textField" );
     textField->SetText("omg textfield");
     
-    square = new Element( 760, ofGetHeight()*.5, ss, "#square" );
-    rectangle = new Element( 760, ofGetHeight()*.5, ss, "#rectangle" );
     
+    //
     
+    preToggle = new Element( 640, 160, ss, ".toggle" );
     
-    preToggle = new Element( 50, 160, ss, ".toggle" );
-    
-    postToggle = new Element( 50, 200, ss, ".toggle" );
+    postToggle = new Element( 640, 200, ss, ".toggle" );
     postToggle->MakeToggle();
     
     
@@ -136,6 +154,15 @@ void ofApp::setup(){
     ofAddListener( rectangle->onMouseClick, this, &ofApp::vuiEventHandler );
     ofAddListener( rectangle->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
     
+    ofAddListener( rectangleB->onMouseOver, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMouseOut, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMousePressed, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMouseMoved, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMouseDragged, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMouseReleased, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMouseClick, this, &ofApp::vuiEventHandler );
+    ofAddListener( rectangleB->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
+    
     /*
         ofAddListener( textField->onMouseOver, this, &ofApp::vuiEventHandler );
         ofAddListener( textField->onMouseOut, this, &ofApp::vuiEventHandler );
@@ -158,27 +185,32 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
     switch( evt.eventType ){
         case VUI_EVENT_FOCUS:
             s += "VUI_EVENT_FOCUS";
-            ofLog() << s;
+            StoreLog(s);
+            //ofLog() << s;
             return;
             break;
         case VUI_EVENT_UNFOCUS:
             s += "VUI_EVENT_UNFOCUS";
-            ofLog() << s;
+            StoreLog(s);
+            //ofLog() << s;
             return;
             break;
         case VUI_EVENT_TEXT_CHANGE:
             s += "VUI_EVENT_TEXT_CHANGE  text:" + evt.text;
-            ofLog() << s;
+            StoreLog(s);
+            //ofLog() << s;
             return;
             break;
         case VUI_EVENT_VALUE_CHANGE:
             s += "VUI_EVENT_VALUE_CHANGE  value:" + ofToString(evt.value);
-            ofLog() << s;
+            StoreLog(s);
+            //ofLog() << s;
             return;
             break;
         case VUI_EVENT_SUBMIT:
             s += "VUI_EVENT_SUBMIT   text:" + evt.text;
-            ofLog() << s;
+            StoreLog(s);
+            //ofLog() << s;
             return;
             break;
         case VUI_EVENT_MOUSE_OVER:
@@ -207,7 +239,11 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
             break;
     }
     
-    ofLog() << s << "  local:" << evt.localMousePos.x << "," << evt.localMousePos.y << "  global:" << evt.globalMousePos.x << "," << evt.globalMousePos.y;
+    s += "  local:" + ofToString(evt.localMousePos.x) + "," + ofToString(evt.localMousePos.y) + "  global:" + ofToString(evt.globalMousePos.x) + "," + ofToString(evt.globalMousePos.y);
+    
+    StoreLog(s);
+    
+    //ofLog() << s << "  local:" << evt.localMousePos.x << "," << evt.localMousePos.y << "  global:" << evt.globalMousePos.x << "," << evt.globalMousePos.y;
 }
 
 //--------------------------------------------------------------
@@ -217,13 +253,38 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    ofSetColor(255,255,255,255);
+    
+    //
+    
     square->Render();
     rectangle->Render();
+    rectangleB->Render();
     textField->Render();
     text->Render();
     
     preToggle->Render();
     postToggle->Render();
+    
+    
+    // logs
+    
+    int i = 0;
+    int gray = 0;
+    int g2 = 255;
+    ofColor c;
+    ofColor t;
+    
+    for ( vector<string>::iterator it = logs.begin(); it != logs.end(); it++){
+        c.set(gray, gray, gray);
+        t.set(g2, g2, g2);
+        
+        if ( i == 0 ) ofDrawBitmapStringHighlight( (*it), 20, 590 + i*20, c, t );
+        else ofDrawBitmapStringHighlight( (*it), 20, 610 + i*20, c, t );
+        i++;
+        gray += 48;
+        g2 -= 10;
+    }
 }
 
 //--------------------------------------------------------------

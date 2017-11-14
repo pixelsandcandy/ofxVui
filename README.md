@@ -66,7 +66,7 @@ Rotation
   
   
 ### UI System
-* *Mouse/Touch events on top Element only, even when overlapping Elements*
+* *Mouse/Touch events respect Element render order*
   * *Event sends local and global Mouse/Touch positions*
 * *Easily animate Elements using one call*
   * *Tween has START, STEP, COMPLETE events*

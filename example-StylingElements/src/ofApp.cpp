@@ -5,6 +5,7 @@ void ofApp::setup(){
 	ofSetFrameRate(60);
 
     string styles = R"(
+    
         [Images>
              grunge: img/grunge.jpg;
              illustration: img/union.jpg;

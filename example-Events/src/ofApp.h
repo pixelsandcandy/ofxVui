@@ -28,14 +28,32 @@ class ofApp : public ofBaseApp{
     
     void vuiEventHandler(vuiEventArgs& evt);
     
+    //
+    
     Element* square;
     Element* rectangle;
+    Element* rectangleB;
+    
+    //
     
     Element* preToggle;
     Element* postToggle;
     
+    //
+    
     TextField* textField;
     Text* text;
     StyleSheet* ss;
+    
+    //
+    
+    vector<string> logs;
+    
+    void StoreLog(string log){
+        vector<string>::iterator it = logs.begin();
+        logs.insert( it, log );
+        
+        if ( logs.size() > 5 ) logs.pop_back();
+    }
 		
 };
