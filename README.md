@@ -1,12 +1,12 @@
-# ✨ View + UI System for openFrameworks ✨
+# ✨ View + GUI System for openFrameworks ✨
 ###### *TELEPORT*
 * **<a href='#watch-examples-video' class='anchor'>Watch Examples Video</a>**
 * **<a href='#ofxvui-features' class='anchor'>ofxVui Features</a>**
 * **<a href='#code-examples' class='anchor'>Code Examples</a>**
   * **<a href='#view-manager-1' class='anchor'>View Manager</a>**
-  * **<a href='#ui-animation' class='anchor'>UI Animation</a>**
-  * **<a href='#ui-events' class='anchor'>UI Events</a>**
-  * **<a href='#ui-styling' class='anchor'>UI Styling</a>**
+  * **<a href='#ui-animation' class='anchor'>GUI Animation</a>**
+  * **<a href='#ui-events' class='anchor'>GUI Events</a>**
+  * **<a href='#ui-styling' class='anchor'>GUI Styling</a>**
 * **<a href='#feature-requests--in-progress' class='anchor'>Features Requests / In Progress</a>**
 
 ***
@@ -47,7 +47,7 @@ Rotation
 ```
   
   
-### UI System
+### GUI System
 * *Mouse/Touch events respect Element render order*
   * *Event sends local and global Mouse/Touch positions*
 * *Easily animate Elements using one call*
@@ -103,12 +103,12 @@ Other Events
   ∟ FOCUS <TextField>
   ∟ UNFOCUS <TextField>
     
-UI States
+GUI States
   ∟ STATE_UP
   ∟ STATE_OVER
   ∟ STATE_DOWN
   
-UI StyleSheet: Styles
+GUI StyleSheet: Styles
   ∟ width
   ∟ height
   ∟ scale
@@ -123,7 +123,7 @@ UI StyleSheet: Styles
   ∟ textAlign <Text/TextField>
   ∟ font <Text/TextField>
   
-UI Alignments for anchorPoint/textAlign
+GUI Alignments for anchorPoint/textAlign
   ∟ LEFT_TOP
   ∟ LEFT_CENTER
   ∟ LEFT_BOTTOM
@@ -138,7 +138,7 @@ UI Alignments for anchorPoint/textAlign
 # **[Code Examples](#code-examples)**
 There are a bunch of example projects/code in the repo but here are some basics.
 
-# [UI Animation](#ui-animation)
+# [GUI Animation](#ui-animation)
 *For more info checkout the **example-Animation** project/code*
 * *Animate( Float seconds, String params );*
 
@@ -207,7 +207,7 @@ void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   
 ```
 
-# [UI Events](#ui-events)
+# [GUI Events](#ui-events)
 *For more info checkout the **example-Events** project/code*
 
 ```c++
@@ -290,7 +290,7 @@ void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 
 ```
 
-# [UI Styling](#ui-styling)
+# [GUI Styling](#ui-styling)
 *For more info checkout the **example-StylingElements** project/code*
 ```c++
 #include "ofxVui.h"
