@@ -96,6 +96,10 @@ void ofApp::setup(){
              }
          ]
     
+        [#preToggle>
+             border: 1, #ffffff, ALL;
+         ]
+    
     )";
     
     //
@@ -116,6 +120,7 @@ void ofApp::setup(){
     text->SetText("Text / Button");
     
     ofAddListener( text->onMouseClick, this, &ofApp::vuiEventHandler );
+    ofAddListener( text->onMouseDoubleClick, this, &ofApp::vuiEventHandler );
     
     textField = new TextField( 640, 100, ss, "#textField" );
     textField->SetText("omg textfield");
@@ -123,7 +128,8 @@ void ofApp::setup(){
     
     //
     
-    preToggle = new Element( 640, 160, ss, ".toggle" );
+    preToggle = new Element( 640, 160, ss, ".toggle", "#preToggle" );
+    ofAddListener( preToggle->onStateChange, this, &ofApp::vuiEventHandler );
     
     postToggle = new Element( 640, 200, ss, ".toggle" );
     postToggle->MakeToggle();
@@ -200,6 +206,20 @@ void ofApp::vuiEventHandler(vuiEventArgs& evt){
     
     
     switch( evt.eventType ){
+        case VUI_EVENT_STATE_CHANGE:
+            /*
+             
+                 So virtual state is the state that it should be in: UP, OVER, DOWN
+                 But if you don't style the OVER or DOWN state manually, it won't be rendered.
+                 Like if you use elementPtr->MakeToggle() it doesn't automatically style an OVER/DOWN
+                 state for you, you need to do that yourself bc you should get in the habit of doing so.
+
+             */
+            
+            s += "VUI_EVENT_STATE_CHANGE  renderState:" + ofToString(evt.renderState) + "  virtualState:" + ofToString(evt.virtualState);
+            StoreLog(s);
+            //ofLog() << s;
+            return;
         case VUI_EVENT_FOCUS:
             s += "VUI_EVENT_FOCUS";
             StoreLog(s);
