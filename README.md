@@ -1,4 +1,4 @@
-# ✨ View + GUI System for openFrameworks ✨
+# ✨ Much Easy! View + GUI System for openFrameworks ✨
 ###### *TELEPORT*
 * **<a href='#watch-examples-video' class='anchor'>Watch Examples Video</a>**
 * **<a href='#ofxvui-features' class='anchor'>ofxVui Features</a>**
