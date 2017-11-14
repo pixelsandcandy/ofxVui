@@ -5,6 +5,9 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     
     string styles = R"(
+        [Images>
+             btn-sprite: button-spritesheet.png;
+         ]
         [#square>
          
              width: 400;
@@ -64,7 +67,19 @@ void ofApp::setup(){
          ]
     
         [#text>
+             width: 180;
+             height: 40;
+             color: #ffffff;
+             textAlign: center-center;
              font: Gotham-Medium.otf,13;
+             bgImage: btn-sprite;
+         
+             &:over{
+                 bgImage: btn-sprite,0, 40;
+             }
+             &:down{
+                 bgImage: btn-sprite, 0, 80;
+             }
          ]
     
         [.toggle>
@@ -98,7 +113,7 @@ void ofApp::setup(){
     //
     
     text = new Text( 640, 50, ss, "#text" );
-    text->SetText("text");
+    text->SetText("Text / Button");
     
     textField = new TextField( 640, 100, ss, "#textField" );
     textField->SetText("omg textfield");
