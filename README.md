@@ -165,7 +165,7 @@ elementPtr->Set("{x: 0, width: 100, height: 100, scale: 1, rotation: 0, opacity:
 
 
 // eventHandler
-ListenerClass::vuiEventHandler(vuiEventArgs& evt){
+void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   if ( evt.element == elementPtr ){
     if ( evt.eventType == VUI_EVENT_ANIMATE_COMPLETE ) /* do stuff */;
     else if ( evt.eventType == VUI_EVENT_ANIMATE_STEP ){
@@ -228,7 +228,7 @@ ofAddListener( elementPtr->onMouseClick, this, &ListenerClass::vuiEventHandler )
 
 
 // eventHandler
-ListenerClass::vuiEventHandler(vuiEventArgs& evt){
+void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   if ( evt.element == elementPtr ){
     if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ) {
       ofLog() << evt.localMousePos;
