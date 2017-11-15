@@ -22,7 +22,16 @@ namespace VUI {
     public:
         
         ~Text(){};
-        Text( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+        Text( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ){
+            Setup(x,y,ss,primarySelector,secondarySelector);
+        };
+        
+        virtual void Setup( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ){
+            SetupText(x,y,ss,primarySelector,secondarySelector);
+        }
+        
+        void SetupText( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ){
+            SetupElement(x,y,ss,primarySelector,secondarySelector);
             
             VUI::Init();
             
@@ -45,15 +54,15 @@ namespace VUI {
             //if ( font != nullptr ) textOffset.y = font->getSize();
             
             /*vector<string> split = SplitStyles( unparsedStyle );
-            
-            vector<string> tempSplit;
-            
-            for (vector<string>::iterator it = split.begin(); it != split.end(); it++) {
-                tempSplit = ofSplitString((*it), ":");
-                if (tempSplit.size() == 2) {
-                    ParsePropValue( tempSplit[0], tempSplit[1] );
-                }
-            }*/
+             
+             vector<string> tempSplit;
+             
+             for (vector<string>::iterator it = split.begin(); it != split.end(); it++) {
+             tempSplit = ofSplitString((*it), ":");
+             if (tempSplit.size() == 2) {
+             ParsePropValue( tempSplit[0], tempSplit[1] );
+             }
+             }*/
             
             for ( map<string,string>::iterator it = propValue.begin(); it != propValue.end(); it++){
                 ParsePropValue( (*it).first, (*it).second );
@@ -61,8 +70,8 @@ namespace VUI {
             
             
             //ofAddListener(onMouseClick, this, &TextBox::_vuiEventHandler );
+        }
         
-        };
         
         void ParsePropValue( string prop, string value ){
             //ofLog() << prop << ":" << value;

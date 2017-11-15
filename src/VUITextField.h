@@ -22,14 +22,23 @@ namespace VUI {
     public:
         
         ~TextField(){};
-        TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
+        TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ){
+            Setup( x, y, ss, primarySelector, secondarySelector );
+        };
+        
+        virtual void Setup( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ){
+            SetupTextField(x,y,ss,primarySelector,secondarySelector);
+        }
+        
+        void SetupTextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ){
+            SetupText(x,y,ss,primarySelector,secondarySelector);
             
             MakeToggle();
             isTextField = true;
             
             ofAddListener( ofEvents().keyPressed, this, &TextField::keyPressed );
             ofAddListener( onValueChange, this, &TextField::_vuiEventHandler );
-        };
+        }
         
         ofEvent<vuiEventArgs> onSubmit;
         

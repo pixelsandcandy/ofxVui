@@ -8,11 +8,19 @@ namespace VUI {
     }
 
 	Element::Element(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
-		VUI::Init();
-        
-		SetDefaultStyles(x, y);
-        ParseStyleSheet(ss, primarySelector, secondarySelector );
+        Setup(x,y,ss,primarySelector,secondarySelector);
 	}
+    
+    virtual void Element::Setup(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        SetupElement(x,y,ss,primarySelector,secondarySelector);
+    }
+    
+    void Element::SetupElement(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        VUI::Init();
+        
+        SetDefaultStyles(x, y);
+        ParseStyleSheet(ss, primarySelector, secondarySelector );
+    }
     
     void Element::ParseStyleSheet(StyleSheet *ss, string primarySelector, string secondarySelector){
         if (ss != nullptr) {

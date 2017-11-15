@@ -86,6 +86,8 @@ namespace VUI {
 	public:
 		virtual ~Element();
 		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        virtual void Setup( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        void SetupElement( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
 
 		ofEvent<vuiEventArgs> onMouseOver;
         ofEvent<vuiEventArgs> onMouseOut;
