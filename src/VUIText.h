@@ -20,49 +20,28 @@ namespace VUI {
         friend Element;
         
     public:
-        
+        Text(){};
         ~Text(){};
-        Text( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            
-            VUI::Init();
-            
-            textColor.setHex(stoul("0x000000", nullptr, 16), 255.0 );
-            
-            for (int i = 0; i < 3; i++) {
-                style[i]["background-color"] = "clear";
-            }
-            
-            this->setPosition(x, y, 0);
-            
-            hasStyle = false;
-            
-            ParseStyle();
-            
-            ParseStyleSheet(ss, primarySelector, secondarySelector );
-            
-            
-            //textOffset.y = VUI::fontSize;
-            //if ( font != nullptr ) textOffset.y = font->getSize();
-            
-            /*vector<string> split = SplitStyles( unparsedStyle );
-            
-            vector<string> tempSplit;
-            
-            for (vector<string>::iterator it = split.begin(); it != split.end(); it++) {
-                tempSplit = ofSplitString((*it), ":");
-                if (tempSplit.size() == 2) {
-                    ParsePropValue( tempSplit[0], tempSplit[1] );
-                }
-            }*/
-            
-            for ( map<string,string>::iterator it = propValue.begin(); it != propValue.end(); it++){
-                ParsePropValue( (*it).first, (*it).second );
-            }
-            
-            
-            //ofAddListener(onMouseClick, this, &TextBox::_vuiEventHandler );
         
-        };
+        
+        
+        Text( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+            _Setup(ss,primarySelector,secondarySelector);
+        }
+        
+        Text( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+            _Setup(ss,primarySelector,secondarySelector);
+        }
+        
+        Text( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+            _Setup(ss,primarySelector,secondarySelector);
+        }
+        
+        Text( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+            _Setup(ss,primarySelector,secondarySelector);
+        }
+        
+        
         
         void ParsePropValue( string prop, string value ){
             //ofLog() << prop << ":" << value;
@@ -260,6 +239,41 @@ namespace VUI {
             
             textOffset.set(0,rect.height - font->getSize()*.3333 );
             _typingIndicatorOffset = font->getSize()*.3333;
+        }
+        
+        
+        
+        void _Setup(StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
+            textColor.setHex(stoul("0x000000", nullptr, 16), 255.0 );
+            
+            for (int i = 0; i < 3; i++) {
+                style[i]["background-color"] = "clear";
+            }
+            
+            hasStyle = false;
+            
+            ParseStyle();
+            
+            ParseStyleSheet(ss, primarySelector, secondarySelector );
+            
+            
+            //textOffset.y = VUI::fontSize;
+            //if ( font != nullptr ) textOffset.y = font->getSize();
+            
+            /*vector<string> split = SplitStyles( unparsedStyle );
+             
+             vector<string> tempSplit;
+             
+             for (vector<string>::iterator it = split.begin(); it != split.end(); it++) {
+             tempSplit = ofSplitString((*it), ":");
+             if (tempSplit.size() == 2) {
+             ParsePropValue( tempSplit[0], tempSplit[1] );
+             }
+             }*/
+            
+            for ( map<string,string>::iterator it = propValue.begin(); it != propValue.end(); it++){
+                ParsePropValue( (*it).first, (*it).second );
+            }
         }
     };
     

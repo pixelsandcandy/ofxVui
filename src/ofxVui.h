@@ -82,30 +82,30 @@ namespace VUI {
 	
     extern Rotate uiRotation;
     extern Rotate viewRotation;
-	extern ofPixels vuiGlobalPixels;
-	extern ofImage vuiGlobalImage;
-    extern map<string, map<int, ofTrueTypeFont*>> fonts;
+    
+    extern map<string, map<int, map< float, ofTrueTypeFont*>>> fonts;
     extern int fontSize;
     
     static void SetFontSize( int size ){
         fontSize = size;
     }
     
-    static bool HasFont( string filename, int fontSize ){
-        if ( fonts[filename][fontSize] != nullptr ) return true;
+    static bool HasFont( string filename, int fontSize, float letterSpacing ){
+        if ( fonts[filename][fontSize][letterSpacing] != nullptr ) return true;
         return false;
     }
     
-    static ofTrueTypeFont* GetFont( string filename, int fontSize){
-        return fonts[filename][fontSize];
+    static ofTrueTypeFont* GetFont( string filename, int fontSize, float letterSpacing ){
+        return fonts[filename][fontSize][letterSpacing];
     }
     
-    static ofTrueTypeFont* AddFont( string filename, int fontSize ){
+    static ofTrueTypeFont* AddFont( string filename, int fontSize, float letterSpacing = 1.0 ){
         ofTrueTypeFont* tf = new ofTrueTypeFont();
         tf->load(filename, fontSize);
+        tf->setLetterSpacing(letterSpacing);
         
-        fonts[filename][fontSize] = tf;
-        return fonts[filename][fontSize];
+        fonts[filename][fontSize][letterSpacing] = tf;
+        return fonts[filename][fontSize][letterSpacing];
     }
 
     
@@ -488,11 +488,94 @@ namespace VUI {
 			ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
 			ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
 		}
+        
+        shared_ptr<ofAppBaseWindow> targetWindow = NULL;
+        ofCoreEvents* events = NULL;
+        
+        void ListenToWindow( ofCoreEvents & events ){
+            VUI::EventManager.Disable();
+            
+            Unlisten();
+            this->events = &events;
+            
+            ofAddListener(events.update, this, &ViewManagerBridge::update);
+            //ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
+            
+            ofAddListener(events.windowResized, this, &ViewManagerBridge::windowResized);
+            
+            ofAddListener(events.keyPressed, this, &ViewManagerBridge::keyPressed);
+            ofAddListener(events.keyReleased, this, &ViewManagerBridge::keyReleased);
+            
+            ofAddListener(events.mouseMoved, this, &ViewManagerBridge::mouseMoved);
+            ofAddListener(events.mouseDragged, this, &ViewManagerBridge::mouseDragged);
+            ofAddListener(events.mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
+            ofAddListener(events.mouseReleased, this, &ViewManagerBridge::mouseReleased);
+            
+            ofAddListener(events.mouseEntered, this, &ViewManagerBridge::mouseEntered);
+            ofAddListener(events.mouseExited, this, &ViewManagerBridge::mouseExited);
+            
+            ofAddListener(events.messageEvent, this, &ViewManagerBridge::messageReceived);
+            
+            ofAddListener(events.fileDragEvent, this, &ViewManagerBridge::dragged);
+        }
+        
+        void ListenToMainWindow(){
+            VUI::EventManager.Enable();
+            
+            Unlisten();
+            Listen();
+        }
+        
+        void Unlisten(){
+            if ( events != NULL ) {
+                ofRemoveListener(events->update, this, &ViewManagerBridge::update);
+                //ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
+                
+                ofRemoveListener(events->windowResized, this, &ViewManagerBridge::windowResized);
+                
+                ofRemoveListener(events->keyPressed, this, &ViewManagerBridge::keyPressed);
+                ofRemoveListener(events->keyReleased, this, &ViewManagerBridge::keyReleased);
+                
+                ofRemoveListener(events->mouseMoved, this, &ViewManagerBridge::mouseMoved);
+                ofRemoveListener(events->mouseDragged, this, &ViewManagerBridge::mouseDragged);
+                ofRemoveListener(events->mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
+                ofRemoveListener(events->mouseReleased, this, &ViewManagerBridge::mouseReleased);
+                
+                ofRemoveListener(events->mouseEntered, this, &ViewManagerBridge::mouseEntered);
+                ofRemoveListener(events->mouseExited, this, &ViewManagerBridge::mouseExited);
+                
+                ofRemoveListener(events->messageEvent, this, &ViewManagerBridge::messageReceived);
+                
+                ofRemoveListener(events->fileDragEvent, this, &ViewManagerBridge::dragged);
+                events = NULL;
+            } else {
+                ofRemoveListener(ofEvents().update, this, &ViewManagerBridge::update);
+                //ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
+                
+                ofRemoveListener(ofEvents().windowResized, this, &ViewManagerBridge::windowResized);
+                
+                ofRemoveListener(ofEvents().keyPressed, this, &ViewManagerBridge::keyPressed);
+                ofRemoveListener(ofEvents().keyReleased, this, &ViewManagerBridge::keyReleased);
+                
+                ofRemoveListener(ofEvents().mouseMoved, this, &ViewManagerBridge::mouseMoved);
+                ofRemoveListener(ofEvents().mouseDragged, this, &ViewManagerBridge::mouseDragged);
+                ofRemoveListener(ofEvents().mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
+                ofRemoveListener(ofEvents().mouseReleased, this, &ViewManagerBridge::mouseReleased);
+                
+                ofRemoveListener(ofEvents().mouseEntered, this, &ViewManagerBridge::mouseEntered);
+                ofRemoveListener(ofEvents().mouseExited, this, &ViewManagerBridge::mouseExited);
+                
+                ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
+                
+                ofRemoveListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
+            }
+            
+            
+            
+        }
 
 
 		void Listen() {
-            if ( VUI::isListening ) return;
-            VUI::isListening = true;
             
 			ofAddListener(ofEvents().update, this, &ViewManagerBridge::update);
 			//ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
@@ -510,7 +593,6 @@ namespace VUI {
 			ofAddListener(ofEvents().mouseEntered, this, &ViewManagerBridge::mouseEntered);
 			ofAddListener(ofEvents().mouseExited, this, &ViewManagerBridge::mouseExited);
 
-			ofAddListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
 			ofAddListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
 
 			ofAddListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
@@ -569,6 +651,16 @@ namespace VUI {
     static void EnableTouch() {
         useTouch = true;
         VUI::PRIVATE.EnableTouchEvents();
+    }
+    
+    
+    
+    static void ListenToWindowEvents( ofCoreEvents & events ){
+        VUI::PRIVATE.ListenToWindow(events);
+    }
+    
+    static void ListenToMainWindowEvents(){
+        VUI::PRIVATE.ListenToMainWindow();
     }
     
     static bool IsTouchEnabled() {

@@ -20,16 +20,25 @@ namespace VUI {
         friend Text;
         
     public:
-        
+        TextField(){};
         ~TextField(){};
-        TextField( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
-            
-            MakeToggle();
-            isTextField = true;
-            
-            ofAddListener( ofEvents().keyPressed, this, &TextField::keyPressed );
-            ofAddListener( onValueChange, this, &TextField::_vuiEventHandler );
-        };
+        
+        
+        TextField( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
+            _Setup();
+        }
+        
+        TextField( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
+            _Setup();
+        }
+        
+        TextField( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
+            _Setup();
+        }
+        
+        TextField( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Text(x,y,ss,primarySelector,secondarySelector){
+            _Setup();
+        }
         
         ofEvent<vuiEventArgs> onSubmit;
         
@@ -162,6 +171,14 @@ namespace VUI {
                 if ( evt.value == 1 ) TriggerEvent( VUI_EVENT_FOCUS );
                 else if ( evt.value == 0 ) TriggerEvent( VUI_EVENT_UNFOCUS );
             }
+        }
+        
+        void _Setup(){
+            MakeToggle();
+            isTextField = true;
+            
+            ofAddListener( ofEvents().keyPressed, this, &TextField::keyPressed );
+            ofAddListener( onValueChange, this, &TextField::_vuiEventHandler );
         }
     };
     

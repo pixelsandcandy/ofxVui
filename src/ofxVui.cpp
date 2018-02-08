@@ -177,6 +177,7 @@ namespace VUI {
 			VUI::GetCurrentView()->mousePressed(VUI::mouseX, VUI::mouseY, mouse.button);
 		}
 	}
+    
 	void ViewManagerBridge::mouseReleased(ofMouseEventArgs & mouse) {
 		//mouseX = mouse.x;
 		//mouseY = mouse.y;
@@ -313,9 +314,7 @@ namespace VUI {
     
     bool useViewManager = true;
     
-	ofPixels vuiGlobalPixels;
-	ofImage vuiGlobalImage;
-    map<string, map<int, ofTrueTypeFont*>> fonts;
+    map<string, map<int, map<float,ofTrueTypeFont*>>> fonts;
     int fontSize = 16;
     
     bool useTouch = false;

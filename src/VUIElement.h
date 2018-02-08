@@ -167,7 +167,17 @@ namespace VUI {
         
 	public:
 		virtual ~Element();
-		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        Element(){};
+        
+        void Setup( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        
+        void Setup( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        
+        void Setup( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        void Setup( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        
+        
+		Element( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
         Element( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
         Element( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
         Element( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
@@ -319,6 +329,17 @@ namespace VUI {
         vector<Element*> children;
         Element* parent = nullptr;
         
+        VUI::EM* EventManager = NULL;
+        
+        VUI::EM* GetEventManager(){
+            if ( EventManager == NULL ) return &VUI::EventManager;
+            else return EventManager;
+        }
+        
+        void SetEventManager(VUI::EM* eventManager){
+            EventManager = eventManager;
+        }
+        
         bool HasParent(){
             if ( parent == nullptr || parent == NULL ) return false;
             return true;
@@ -327,6 +348,7 @@ namespace VUI {
         void AddChild( Element* el){
             if ( !el->HasParent() ) {
                 el->SetParent( this );
+                el->SetEventManager( EventManager );
                 children.push_back(el);
             }
         }

@@ -7,14 +7,14 @@ namespace VUI {
         VUI::Init();
     }
 
-	Element::Element(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
-		VUI::Init();
+    void Element::Setup(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        VUI::Init();
         
-		SetDefaultStyles(x, y);
+        SetDefaultStyles(x, y);
         ParseStyleSheet(ss, primarySelector, secondarySelector );
-	}
+    }
     
-    Element::Element(int x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+    void Element::Setup(int x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
         VUI::Init();
         
         SetDefaultStyles(x, 0);
@@ -22,7 +22,7 @@ namespace VUI {
         ParseStyleSheet(ss, primarySelector, secondarySelector );
     }
     
-    Element::Element(string x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+    void Element::Setup(string x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
         VUI::Init();
         
         SetDefaultStyles(0, y);
@@ -30,13 +30,33 @@ namespace VUI {
         ParseStyleSheet(ss, primarySelector, secondarySelector );
     }
     
-    Element::Element(string x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+    void Element::Setup(string x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
         VUI::Init();
         
         SetDefaultStyles(0, 0);
         percentCalcValues.parseValue("x", x);
         percentCalcValues.parseValue("y", y);
         ParseStyleSheet(ss, primarySelector, secondarySelector );
+    }
+    
+    
+    
+    
+    
+    Element::Element(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        Setup(x,y,ss,primarySelector,secondarySelector);
+	}
+    
+    Element::Element(int x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        Setup(x,y,ss,primarySelector,secondarySelector);
+    }
+    
+    Element::Element(string x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        Setup(x,y,ss,primarySelector,secondarySelector);
+    }
+    
+    Element::Element(string x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        Setup(x,y,ss,primarySelector,secondarySelector);
     }
     
     
@@ -68,6 +88,7 @@ namespace VUI {
 		for (int i = 0; i < 3; i++) {
 			style[i]["opacity"] = "1";
 			style[i]["background-color"] = "clear";
+            style[i]["background-opacity"] = "1.0";
 		}
 
 		SetPosition(x, y);
@@ -135,7 +156,7 @@ namespace VUI {
 		if (mouseX != -1 && mouseY != -1) {
 			if (mouseX > globalMinPosition.x && mouseX < globalMaxPosition.x) {
 				if (mouseY > globalMinPosition.y && mouseY < globalMaxPosition.y) {
-                    VUI::EventManager.StoreOverElement( this );
+                    GetEventManager()->StoreOverElement( this );
 					if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
 					else UpdateState(VUI_STATE_OVER);
 					return;
@@ -158,7 +179,7 @@ namespace VUI {
 				if (p.x > globalMinPosition.x && p.x < globalMaxPosition.x) {
 					if (p.y > globalMinPosition.y && p.y < globalMaxPosition.y) {
 						//ofLog() << VUI::GetTouchDown() << " - " << ofGetMousePressed();
-                        VUI::EventManager.StoreOverElement( this );
+                        GetEventManager()->StoreOverElement( this );
 						if (VUI::GetTouchDown()) {
 							UpdateState(VUI_STATE_DOWN);
 						}
@@ -181,7 +202,7 @@ namespace VUI {
 		else {
 			if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
 				if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
-					VUI::EventManager.StoreOverElement(this);
+					GetEventManager()->StoreOverElement(this);
 					if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
 					else UpdateState(VUI_STATE_OVER);
 					return;
@@ -196,7 +217,7 @@ namespace VUI {
 
 		if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
 			if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
-                VUI::EventManager.StoreOverElement( this );
+                GetEventManager()->StoreOverElement( this );
 				if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
 				else UpdateState(VUI_STATE_OVER);
 				return;
@@ -264,7 +285,7 @@ namespace VUI {
 				isMouseDown = false;
 			}
 
-			if ( touchDownOnElement ) VUI::EventManager.StoreOverElement(this);
+			if ( touchDownOnElement ) GetEventManager()->StoreOverElement(this);
 
 
 			/*if (VUI::GetPrevOverElement() == this) {
@@ -298,7 +319,7 @@ namespace VUI {
 			}
 
 
-			if (VUI::GetOverElement() != this) VUI::EventManager.StoreOverElement(this);
+			if (VUI::GetOverElement() != this) GetEventManager()->StoreOverElement(this);
 			//ofLog() << "touchDown:" << VUI::GetTouchDown() << "  -" << ofRandomf();
 			return;
             
@@ -353,7 +374,7 @@ namespace VUI {
                         isMouseDown = false;
                     }
                     
-                    if ( VUI::GetOverElement() != this ) VUI::EventManager.StoreOverElement(this);
+                    if ( VUI::GetOverElement() != this ) GetEventManager()->StoreOverElement(this);
                     return;
                 }
             }
@@ -374,7 +395,7 @@ namespace VUI {
 	void Element::UpdateState(int toState, bool isInside, bool isMouseDown ) {
         //ofLog() << "UpdateState => " << toState;
         
-        if ( !VUI::EventManager.IsActive() ) return;
+        if ( !GetEventManager()->IsActive() ) return;
         if ( !isInteractive ) return;
         
         int oldState(renderState);
@@ -389,19 +410,19 @@ namespace VUI {
             if ( !isMouseDown ) {
                 
                 if ( toState == VUI_STATE_UP ) {
-                    VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OUT );
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
                     if ( virtualState != VUI_STATE_DOWN ) SetState( (VUI::State)toState );
                     return;
                 }
             } else {
                 if ( toState == VUI_STATE_OVER ) {
-                    VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
-                    VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
                 }
             }
             
             if ( !isInside && virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ){
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OVER );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OVER );
             }
             
         }
@@ -437,8 +458,8 @@ namespace VUI {
             if ( !isMouseDown || (isInside && isMouseDown) ) {
                 //ofLog() << ofRandomf();
                 if ( virtualState != VUI_STATE_OVER && toState == VUI_STATE_OVER ){
-                    VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OVER );
-                    VUI::EventManager.StoreState( this, (VUI::State)toState );
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OVER );
+                    GetEventManager()->StoreState( this, (VUI::State)toState );
                     return;
                 }
             }
@@ -457,23 +478,23 @@ namespace VUI {
             }
             
             if ( virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ) {
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
             } else if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_DOWN ){
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
             }
             
             
-            VUI::EventManager.StoreState( this, (VUI::State)toState );
+            GetEventManager()->StoreState( this, (VUI::State)toState );
             
             
         } else {
             
             /*if (virtualState == VUI_STATE_DOWN && (toState == VUI_STATE_UP || toState == VUI_STATE_OVER)) {
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
             }*/
             
             if ( renderState == VUI_STATE_UP && toState == VUI_STATE_OVER ){
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OVER );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OVER );
             }
             
             //int evt = -1;
@@ -481,20 +502,20 @@ namespace VUI {
             if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_DOWN ) {
                 if ( DEBUG_MODE ) ofLog() << "PRESSED";
                 //evt = VUI_EVENT_MOUSE_PRESSED;
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
             } else if (virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ){
                 if ( DEBUG_MODE ) ofLog() << "RELEASED";
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
                 //evt = VUI_EVENT_MOUSE_RELEASED;
             }
             
             if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_UP ) {
                 renderState = toState;
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_OUT );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
             } else if (update) {
                 if ( DEBUG_MODE ) ofLog() << "virtualState:" << virtualState << "  state:" << toState << "  " << ofRandomf();
-                VUI::EventManager.StoreState( this, (VUI::State)toState );
+                GetEventManager()->StoreState( this, (VUI::State)toState );
             } else {
                 renderState = VUI_STATE_UP;
             }
@@ -512,7 +533,7 @@ namespace VUI {
             if ( virtualState == VUI_STATE_DOWN && (toState == VUI_STATE_UP )) return;
             
             if ( virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ) {
-                VUI::EventManager.StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
                 return;
             }
             
@@ -785,7 +806,7 @@ namespace VUI {
 
 		if (style[renderState]["background-color"] != "clear") {
 			//ofSetHexColor(styleFloat[state]["background-color"]);
-			color.setHex(styleFloat[renderState]["background-color"], styleFloat[renderState]["opacity"]*parentSumOpacity);
+			color.setHex(styleFloat[renderState]["background-color"], styleFloat[renderState]["background-opacity"]*styleFloat[renderState]["opacity"]*parentSumOpacity);
 			ofSetColor(color);
 			//cout << state << endl;
 			//ofSetColor( )
@@ -869,6 +890,8 @@ namespace VUI {
             }
             if ( property == "background-color" ) return;
 		}
+        
+        styleFloat[toState]["background-opacity"] = ofToFloat(style[toState]["background-opacity"]);
 		
 		//styleFloat[toState]["width"] = ofToFloat(style[toState]["width"]);
 		//styleFloat[toState]["height"] = ofToFloat(style[toState]["height"]);
@@ -1158,13 +1181,17 @@ namespace VUI {
                 else if (tempSplit[0] == "font" ){
                     vector<string> fontProps = ofSplitString(tempSplit[1], "," );
                     int size = VUI::fontSize;
+                    float spacing = 1.0;
                     
                     if ( fontProps.size() == 2 ) size = ofToInt(fontProps[1]);
-                    
-                    if ( VUI::HasFont( fontProps[0], size ) ) {
-                        font = VUI::GetFont( fontProps[0], size );
+                    else if ( fontProps.size() == 3) {
+                        size = ofToInt(fontProps[1]);
+                        spacing = ofToFloat(fontProps[2]);
+                    }
+                    if ( VUI::HasFont( fontProps[0], size, spacing ) ) {
+                        font = VUI::GetFont( fontProps[0], size, spacing );
                     } else {
-                        font = VUI::AddFont( fontProps[0], size );
+                        font = VUI::AddFont( fontProps[0], size, spacing );
                     }
                 }
                 else if (tempSplit[0] == "border" ){
@@ -1243,6 +1270,9 @@ namespace VUI {
                             this->style[i][tempSplit[0]] = props[0];
                         }
                     }
+                } else if (tempSplit[0] == "bgOpacity" || tempSplit[0] == "background-opacity" || tempSplit[0] == "bg-opacity" ) {
+                    tempSplit[0] = "background-opacity";
+                    this->style[state][tempSplit[0]] = tempSplit[1];
                 } else {
                     if ( tempSplit[0] == "bg" || tempSplit[0] == "bgColor" || tempSplit[0] == "backgroundColor" ) tempSplit[0] = "background-color";
                     

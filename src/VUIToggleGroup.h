@@ -14,16 +14,23 @@
 
 namespace VUI {
     
-    
     class ToggleGroup : public Element
     {
     public:
-        ~ToggleGroup(){}
-        ToggleGroup( const int x = 0, const int y = 0, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            
+        ToggleGroup(){};
+        ~ToggleGroup(){};
+        
+        ToggleGroup( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
         }
         
-        vector<Element*> toggles;
+        ToggleGroup( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+        }
+        
+        ToggleGroup( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+        }
+        
+        ToggleGroup( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
+        }
         
         ofEvent<vuiEventArgs> onToggleChange;
         
@@ -33,11 +40,15 @@ namespace VUI {
             AddChild( toggle );
             toggle->MakeToggle();
             toggles.push_back( toggle );
-            ofAddListener( toggle->onValueChange, this, &ToggleGroup::vuiEventHandler );
-            ofAddListener( toggle->onMouseClick, this, &ToggleGroup::vuiEventHandler );
+            ofAddListener( toggle->onValueChange, this, &ToggleGroup::_vuiEventHandler );
+            ofAddListener( toggle->onMouseClick, this, &ToggleGroup::_vuiEventHandler );
         }
         
-        void vuiEventHandler(vuiEventArgs& evt){
+    private:
+        
+        vector<Element*> toggles;
+        
+        void _vuiEventHandler(vuiEventArgs& evt){
             if ( evt.eventType == VUI_EVENT_VALUE_CHANGE ){
                 if ( evt.value == 1 ){
                     for ( vector<Element*>::iterator it= toggles.begin(); it != toggles.end(); it++){
