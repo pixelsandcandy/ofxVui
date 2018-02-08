@@ -95,6 +95,8 @@ namespace VUI {
 
 	void ViewManagerBridge::windowResized(ofResizeEventArgs & resize) {
 		//windowResized(resize.width, resize.height);
+        VUI::vw = resize.width;
+        VUI::vh = resize.height;
 		if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(resize.width, resize.height);
 	}
 
@@ -116,7 +118,7 @@ namespace VUI {
 		//mouseX = mouse.x;
 		//mouseY = mouse.y;
 		//mouseMoved(mouse.x, mouse.y);
-		//cout << multCoords.x << "x" << multCoords.y << endl;
+		//
 		VUI::mouseX = mouse.x*multCoords.x;
 		VUI::mouseY = mouse.y*multCoords.y;
 
@@ -124,6 +126,13 @@ namespace VUI {
 			/*#ifdef USING_ofxSupervui
              if ( !VUI::EventManager.active ) return;
 			#endif*/
+            
+            //cout << VUI::mouseX << "x" << VUI::mouseY << endl;
+            
+            if ( mouse.x < 0 || mouse.y < 0 ) VUI::GetCurrentView()->_SetIsMouseInside(false);
+            else if (mouse.x > VUI::GetWindowWidth() || mouse.y > VUI::GetWindowHeight() ) VUI::GetCurrentView()->_SetIsMouseInside(false);
+            else VUI::GetCurrentView()->_SetIsMouseInside(true);
+            
 			ofMouseEventArgs args(ofMouseEventArgs::Moved, VUI::mouseX, VUI::mouseY);
 			ofNotifyEvent(onMouseMoved, args, this);
 
@@ -158,6 +167,8 @@ namespace VUI {
 
 		if (!VUI::currView.empty()) {
 			if (!VUI::EventManager.active) return;
+            
+            VUI::GetCurrentView()->_SetIsMouseInside(true);
 
 			ofMouseEventArgs args(ofMouseEventArgs::Pressed, VUI::mouseX, VUI::mouseY, mouse.button);
 			ofNotifyEvent(onMousePressed, args, this);
@@ -218,9 +229,12 @@ namespace VUI {
 			/*#ifdef USING_ofxSupervui
 			if ( !VUI::EventManager.active ) return;
 			#endif*/
+            
+            VUI::GetCurrentView()->_SetIsMouseInside(true);
+            
 			ofMouseEventArgs args(ofMouseEventArgs::Entered, VUI::mouseX, VUI::mouseY);
 			ofNotifyEvent(onMouseEntered, args, this);
-
+            
 			VUI::GetCurrentView()->mouseEntered(VUI::mouseX, VUI::mouseY);
 		}
 	}
@@ -233,9 +247,11 @@ namespace VUI {
 			/*#ifdef USING_ofxSupervui
 			if ( !VUI::EventManager.active ) return;
 			#endif*/
+            VUI::GetCurrentView()->_SetIsMouseInside(false);
+            
 			ofMouseEventArgs args(ofMouseEventArgs::Exited, VUI::mouseX, VUI::mouseY);
 			ofNotifyEvent(onMouseExited, args, this);
-
+            
 			VUI::GetCurrentView()->mouseExited(VUI::mouseX, VUI::mouseY);
 		}
 	}

@@ -428,7 +428,7 @@ namespace VUI {
 	public:
 		~ViewManagerBridge() {};
 		ViewManagerBridge() {};
-
+        
 		void StartView(string name);
 
 		bool isReady = false;
@@ -441,10 +441,13 @@ namespace VUI {
                     VUI::SetResolution( ofGetWidth(), ofGetHeight() );
                 }
                 ofLog() << VUI::vw << "x" << VUI::vh;
-				VUI::fbo.allocate(VUI::vw, VUI::vh, GL_RGBA);
-				VUI::fbo.begin();
-				ofClear(0);
-				VUI::fbo.end();
+                if ( VUI::vscale != 1 ) {
+                    VUI::fbo.allocate(VUI::vw, VUI::vh, GL_RGBA);
+                    VUI::fbo.begin();
+                    ofClear(0);
+                    VUI::fbo.end();
+                }
+				
 			}
 
 			isReady = true;
@@ -705,8 +708,11 @@ namespace VUI {
         
         PRIVATE.Init();
         
-        fbo.begin();
-        ofClear(0);
+        if ( VUI::vscale != 1 ){
+            fbo.begin();
+            ofClear(0);
+        }
+        
         ofSetColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, 255.0*backgroundOpacity);
         ofDrawRectangle(0, 0, vw, vh);
         ofSetColor(255, 255, 255, 255);
@@ -726,7 +732,7 @@ namespace VUI {
     }
     
     static void RenderEnd(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
-        if (currView.empty() || views[currView] == nullptr) return;
+        if (currView.empty() || views[currView] == nullptr || VUI::vscale != 1 ) return;
         
         fbo.end();
         ofSetColor(255, 255, 255, 255);

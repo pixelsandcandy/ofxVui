@@ -7,7 +7,10 @@
 
 namespace VUI {
 	class View {
+        friend class ViewManagerBridge;
+        
 	public:
+        
 		virtual ~View();
 		View();
 
@@ -22,6 +25,10 @@ namespace VUI {
          */
 		virtual void BeforeExitView() {
             ExitView();
+        };
+        
+        bool IsMouseInside(){
+            return _isMouseInside;
         };
         
         // -------------------------------------------------------- the usual suspects
@@ -58,15 +65,14 @@ namespace VUI {
         void Render() {
             draw();
         };
-        
-        //
+    
+    protected:
         
         void UpdateMousePos(int x, int y) {
             mouseX = x;
             mouseY = y;
         }
         
-        //
         bool _didSetup = false;
         void _Setup(){
             if (_didSetup) return;
@@ -79,8 +85,13 @@ namespace VUI {
         void _TriggerExitView(){
             ExitView();
         }
-	protected:
+        
+        void _SetIsMouseInside(bool b){
+            _isMouseInside = b;
+        }
+	
 		void ExitView();
+        bool _isMouseInside = false;
 	};
 }
 
