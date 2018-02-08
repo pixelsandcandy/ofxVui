@@ -15,8 +15,90 @@ namespace VUI {
         
         friend class VUI::EM;
         
+        class PercentCalcValues {
+        public:
+            PercentCalcValues(){};
+            ~PercentCalcValues(){};
+            
+            class PCV {
+            public:
+                PCV(){};
+                ~PCV(){};
+                
+                float perc = 1.0;
+                int offset = 0;
+                int val = 1;
+                
+                bool pxValue = false;
+                
+                float getValue( float parentValue ){
+                    //ofLog() << "pxValue:" << pxValue << "  val:" << val << "  parentValue:" << parentValue << "  perc:" << perc << "  offset:" << offset;
+                    if ( pxValue ) return val;
+                    else return (parentValue*perc)+offset;
+                }
+                
+                void parse(int value){
+                    val = value;
+                    pxValue = true;
+                }
+                
+                void parse(string value){
+                    if ( value.find( "calc" ) != -1 && value.find( "%" ) != -1 && value.find("(") != -1 && value.find(")") != -1 && (value.find("-") != -1 || value.find("+") != -1 ) ) {
+                        
+                        int start, end;
+                        start = value.find( "(" ) + 1;
+                        end = value.find( "%" );
+                        string per = value.substr( start, end - start );
+                        
+                        perc = ofToInt( per ) * .01;
+                        
+                        if ( value.find("-") != -1 ) {
+                            start = value.find("-")+1;
+                            offset = -1;
+                        } else {
+                            start = value.find("+")+1;
+                            offset = 1;
+                        }
+                            
+                        end = value.find(")")+1;
+                        
+                        string diff = value.substr( start, end - start);
+                        
+                        offset = ofToInt( diff )*offset;
+                        pxValue = false;
+                        
+                    } else if ( value.find("%") != -1 ){
+                        ofLog() << "perc:" << perc;
+                        perc = ofToInt( value )*.01;
+                        pxValue = false;
+                        ofLog() << "perc:" << perc << "   " << value;
+                    } else {
+                        val = ofToInt(value);
+                        pxValue = true;
+                    }
+                }
+            };
+            
+            map< string, PCV > values;
+            
+            void parseValue( string name, string value ){
+                values[name].parse(value);
+            }
+            
+            void parseValue( string name, int value ){
+                values[name].parse(value);
+            }
+            
+            int getValue(string name, float parentValue ){
+                //ofLog() << name << "  -  " << parentValue << "  = " << values[name].getValue(parentValue);
+                return values[name].getValue(parentValue);
+            }
+            
+        };
+        
 	protected:
-
+        PercentCalcValues percentCalcValues;
+        
         struct Image {
             ofRectangle bounds;
             ofImage *image;
@@ -86,6 +168,9 @@ namespace VUI {
 	public:
 		virtual ~Element();
 		Element( int x = 0, int y = 0, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        Element( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        Element( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
+        Element( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" );
 
 		ofEvent<vuiEventArgs> onMouseOver;
         ofEvent<vuiEventArgs> onMouseOut;
@@ -144,18 +229,6 @@ namespace VUI {
         float width = 60;
         float height = 60;
         float rotation = 0.0;
-        
-        float GetWidth( bool scaled = true ){
-            if ( scaled ) return width*scale;
-            else return width;
-            //return styleFloat[state]["width"];
-        }
-        
-        float GetHeight( bool scaled = true){
-            if ( scaled ) return height*scale;
-            else return height;
-            //return styleFloat[state]["height"];
-        }
         
         int GetState(){
             return renderState;
@@ -269,6 +342,10 @@ namespace VUI {
 		Element* SetSize(float w, float h);
         void SetHeight( float h );
         void SetWidth( float w );
+        
+        int GetHeight( bool scaled = true);
+        int GetWidth(bool scaled = true);
+        
         ofVec2f GetPosition();
 		Element* SetPosition(float x, float y);
         void SetPositionX( float x );

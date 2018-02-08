@@ -14,6 +14,33 @@ namespace VUI {
         ParseStyleSheet(ss, primarySelector, secondarySelector );
 	}
     
+    Element::Element(int x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        VUI::Init();
+        
+        SetDefaultStyles(x, 0);
+        percentCalcValues.parseValue("y", y);
+        ParseStyleSheet(ss, primarySelector, secondarySelector );
+    }
+    
+    Element::Element(string x, int y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        VUI::Init();
+        
+        SetDefaultStyles(0, y);
+        percentCalcValues.parseValue("x", x);
+        ParseStyleSheet(ss, primarySelector, secondarySelector );
+    }
+    
+    Element::Element(string x, string y, StyleSheet *ss, string primarySelector, string secondarySelector ) {
+        VUI::Init();
+        
+        SetDefaultStyles(0, 0);
+        percentCalcValues.parseValue("x", x);
+        percentCalcValues.parseValue("y", y);
+        ParseStyleSheet(ss, primarySelector, secondarySelector );
+    }
+    
+    
+    
     void Element::ParseStyleSheet(StyleSheet *ss, string primarySelector, string secondarySelector){
         if (ss != nullptr) {
             SetStyleSheet(ss);
@@ -43,7 +70,7 @@ namespace VUI {
 			style[i]["background-color"] = "clear";
 		}
 
-		this->setPosition(x, y, 0);
+		SetPosition(x, y);
 
 		ParseStyle();
 	}
@@ -51,11 +78,11 @@ namespace VUI {
 	void Element::UpdatePosition() {
 		UpdateAnchorOffset();
 
-        localMinPosition.x = getPosition().x;
-        localMinPosition.y = getPosition().y;
+        localMinPosition.x = GetPosition().x;
+        localMinPosition.y = GetPosition().y;
         
-		localMaxPosition.x = getPosition().x + (width*scale);
-		localMaxPosition.y = getPosition().y + (height*scale);
+		localMaxPosition.x = GetPosition().x + GetWidth();
+		localMaxPosition.y = GetPosition().y + GetHeight();
 
 		localMaxPosition.x += styleFloat[renderState]["offset-x"];
 		localMinPosition.x += styleFloat[renderState]["offset-x"];
@@ -84,9 +111,9 @@ namespace VUI {
             localMinPosition.x = savedLocal.y;
             
             globalMinPosition.x = savedGlobalMin.y;
-            globalMinPosition.y = VUI::GetWindowHeight(false) - savedGlobalMin.x - (width*scale);
+            globalMinPosition.y = VUI::GetWindowHeight(false) - savedGlobalMin.x - GetWidth();
             
-            globalMaxPosition.x = savedGlobalMin.y + (height*scale);
+            globalMaxPosition.x = savedGlobalMin.y + GetHeight();
             globalMaxPosition.y = VUI::GetWindowHeight(false) - savedGlobalMin.x;
         }
             
@@ -303,6 +330,12 @@ namespace VUI {
                             }
                             
                             UpdateState(VUI_STATE_DOWN, true, true);
+                            
+                            /*if ( hasState[VUI_STATE_DOWN] ) UpdateState(VUI_STATE_DOWN, true, true);
+                            else {
+                                if ( hasState[VUI_STATE_OVER] ) UpdateState(VUI_STATE_OVER, true, true);
+                                else UpdateState(VUI_STATE_UP, true, true);
+                            }*/
                         } else {
                             if ( !isMouseInside || isMouseDown ) UpdateState(VUI_STATE_OVER, isMouseInside, isMouseDown);
                             isMouseDown = false;
@@ -686,45 +719,45 @@ namespace VUI {
 			break;
 		case VUI_ALIGN_RIGHT_TOP:
 			//anchorOffset.x = -styleFloat[state]["width"];
-                anchorOffset.x = -(width*scale);
+                anchorOffset.x = -GetWidth();
 			anchorOffset.y = 0;
 			break;
 		case VUI_ALIGN_CENTER_TOP:
 			//anchorOffset.x = -0.5*styleFloat[state]["width"];
-                anchorOffset.x = -0.5*(width*scale);
+                anchorOffset.x = -0.5*GetWidth();
 			anchorOffset.y = 0;
 			break;
 		case VUI_ALIGN_LEFT_CENTER:
 			anchorOffset.x = 0;
 			//anchorOffset.y = -0.5*styleFloat[state]["height"];
-                anchorOffset.y = -0.5*(height*scale);
+                anchorOffset.y = -0.5*GetHeight();
 			break;
 		case VUI_ALIGN_RIGHT_CENTER:
 			//anchorOffset.x = -styleFloat[state]["width"];
 			//anchorOffset.y = -0.5*styleFloat[state]["height"];
-                anchorOffset.x = -(width*scale);
-                anchorOffset.y = -0.5*(height*scale);
+                anchorOffset.x = -GetWidth();
+                anchorOffset.y = -0.5*GetHeight();
 			break;
 		case VUI_ALIGN_CENTER_CENTER:
 			//anchorOffset.x = -0.5*styleFloat[state]["width"];
 			//anchorOffset.y = -0.5*styleFloat[state]["height"];
-                anchorOffset.x = -0.5*(width*scale);
-                anchorOffset.y = -0.5*(height*scale);
+                anchorOffset.x = -0.5*GetWidth();
+                anchorOffset.y = -0.5*GetHeight();
 			break;
 		case VUI_ALIGN_LEFT_BOTTOM:
 			anchorOffset.x = 0;
 			//anchorOffset.y = -styleFloat[state]["height"];
-            anchorOffset.y = -(height*scale);
+            anchorOffset.y = -GetHeight();
 			break;
 		case VUI_ALIGN_RIGHT_BOTTOM:
 			//anchorOffset.x = -styleFloat[state]["width"];
 			//anchorOffset.y = -styleFloat[state]["height"];
-            anchorOffset.x = -(width*scale);
-            anchorOffset.y = -(height*scale);
+            anchorOffset.x = -GetWidth();
+            anchorOffset.y = -GetHeight();
 			break;
 		case VUI_ALIGN_CENTER_BOTTOM:
-			anchorOffset.x = -0.5*(width*scale);
-			anchorOffset.y = -(height*scale);
+			anchorOffset.x = -0.5*GetWidth();
+			anchorOffset.y = -GetHeight();
 			break;
 		}
 	}
@@ -748,7 +781,7 @@ namespace VUI {
 
 		if (maskTex != nullptr && fbo != nullptr) fbo->begin();
         
-        ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, width*scale, height*scale);
+        ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, GetWidth(), GetHeight());
 
 		if (style[renderState]["background-color"] != "clear") {
 			//ofSetHexColor(styleFloat[state]["background-color"]);
@@ -766,16 +799,16 @@ namespace VUI {
 		ofSetColor(color);
 
 		for (vector<string>::iterator it = imageIDs[renderState].begin(); it != imageIDs[renderState].end(); it++) {
-			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, 0, 0, width, height);
+			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), 0, 0, GetWidth(false), GetHeight(false));
 		}
         
         Image &img = bgImage[renderState];
         if ( img.active ) {
             if ( img.size == VUI_IMAGE_FILL ){
-                img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, 0, 0, img.bounds.width, img.bounds.height);
+                img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), 0, 0, img.bounds.width, img.bounds.height);
             } else {
-                if ( img.bounds.width == -1 ) img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, img.bounds.x, img.bounds.y, width, height);
-                else img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, width*scale, height*scale, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
+                if ( img.bounds.width == -1 ) img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), img.bounds.x, img.bounds.y, GetHeight(false), GetHeight(false));
+                else img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
             }
             
         }
@@ -876,35 +909,72 @@ namespace VUI {
 
 	Element* Element::SetPosition(float x, float y) {
 		this->setPosition(x, y, 0);
-
+        percentCalcValues.parseValue("x", x);
+        percentCalcValues.parseValue("y", y);
+        
 		return this;
 	}
     
     ofVec2f Element::GetPosition(){
-        return this->getPosition();
+        ofVec2f pos;
+        
+        if ( HasParent() ) {
+            pos.x = percentCalcValues.getValue("x", parent->GetWidth() );
+            pos.y = percentCalcValues.getValue("y", parent->GetHeight() );
+        } else {
+            pos.x = percentCalcValues.getValue("x", ofGetWidth() );
+            pos.y = percentCalcValues.getValue("y", ofGetHeight() );
+        }
+        
+        return pos;
     }
     
     void Element::SetPositionX(float x) {
         this->setPosition(x, GetPosition().y, 0);
+        percentCalcValues.parseValue("x", x);
     }
     
     void Element::SetPositionY(float y) {
         this->setPosition(GetPosition().x, y, 0);
+        percentCalcValues.parseValue("y", y);
     }
 
 
 	Element* Element::SetSize(float w, float h ) {
+        percentCalcValues.parseValue("width", w);
+        percentCalcValues.parseValue("height", h);
+        
         width = w;
         height = h;
         return this;
 	}
     
     void Element::SetWidth( float w ){
+        percentCalcValues.parseValue("width", w);
         width = w;
     }
     
     void Element::SetHeight( float h ){
+        percentCalcValues.parseValue("height", h);
         height = h;
+    }
+    
+    int Element::GetWidth(bool scaled){
+        int w;
+        if ( HasParent() ) w = percentCalcValues.getValue("width", parent->GetWidth() );
+        else w = percentCalcValues.getValue("width", ofGetWidth() );
+        
+        if ( scaled ) return w*scale;
+        else return w;
+    }
+    
+    int Element::GetHeight(bool scaled){
+        int h;
+        if ( HasParent() ) h = percentCalcValues.getValue("height", parent->GetHeight() );
+        else h = percentCalcValues.getValue("height", ofGetHeight() );
+        
+        if ( scaled ) return h*scale;
+        else return h;
     }
     
 	void Element::UseStyleClass(string name) {
@@ -1184,8 +1254,13 @@ namespace VUI {
                              this->style[i][tempSplit[0]] = tempSplit[1];
                              }*/
                             
-                            if ( tempSplit[0] == "width" ) width = ofToFloat( tempSplit[1] );
-                            else if ( tempSplit[0] == "height" ) height = ofToFloat( tempSplit[1] );
+                            if ( tempSplit[0] == "width" ) {
+                                width = ofToFloat( tempSplit[1] );
+                                percentCalcValues.parseValue("width", tempSplit[1] );
+                            } else if ( tempSplit[0] == "height" ) {
+                                height = ofToFloat( tempSplit[1] );
+                                percentCalcValues.parseValue("height", tempSplit[1] );
+                            }
                             
                             //ofLog() << "w:" << width << " x h:" << height;
                         }
