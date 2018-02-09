@@ -15,6 +15,7 @@
 
 namespace VUI {
 	class Element;
+    class Slider;
 
 	enum State {
 		VUI_STATE_UP,
@@ -58,7 +59,6 @@ namespace VUI {
         VUI_EVENT_MOUSE_RELEASED,
 		VUI_EVENT_MOUSE_CLICK,
         VUI_EVENT_MOUSE_DOUBLE_CLICK,
-		
 
 		VUI_EVENT_TOUCH_DOWN,
 		VUI_EVENT_TOUCH_UP,
@@ -68,6 +68,7 @@ namespace VUI {
         VUI_EVENT_STATE_CHANGE,
         VUI_EVENT_TEXT_CHANGE,
         VUI_EVENT_VALUE_CHANGE,
+        VUI_EVENT_SLIDER_VALUE_CHANGE,
         VUI_EVENT_TOGGLE_CHANGE,
         VUI_EVENT_SUBMIT,
         
@@ -110,6 +111,22 @@ namespace VUI {
 
     
     struct vuiEventArgs;
+    
+    //
+    
+    struct Padding {
+        int top = 0;
+        int right = 0;
+        int bottom = 0;
+        int left = 0;
+        
+        void Set(int top, int right, int bottom, int left ){
+            this->top = top;
+            this->right = right;
+            this->bottom = bottom;
+            this->left = left;
+        }
+    };
     
     // Tweening
     
@@ -185,12 +202,13 @@ namespace VUI {
     };
     
     struct vuiEventArgs {
-        Element* element;
+        Element* element = NULL;
         int eventType;
         int renderState;
         int virtualState;
         
         int value = -1;
+        float percValue = -1.0;
         string text = "";
         
         ofVec2f localMousePos;
@@ -199,7 +217,8 @@ namespace VUI {
         
         ofVec2f globalMousePos;
         
-        Tween* tween;
+        Tween* tween = NULL;
+        Slider* slider = NULL;
     };
     
     extern vector<Tween*> tweens;
@@ -427,6 +446,7 @@ namespace VUI {
 #include "VUIText.h"
 #include "VUITextField.h"
 #include "VUIToggleGroup.h"
+#include "VUISlider.h"
 
 
 // ViewManager
@@ -1044,9 +1064,23 @@ namespace VUI {
 	}
     
     extern bool _didInit;
+    extern StyleSheet* _vuiStyleSheet;
     static void Init(){
         if ( _didInit ) return;
         _didInit = true;
+        
+        string styles = R"(
+            [.slider-bar-bg>
+                 bgColor: #000000;
+                 bgOpacity: .2;
+             ]
+            
+        )";
+        
+        //
+        
+        VUI::_vuiStyleSheet = new StyleSheet( styles, "VUIStyleSheet" );
+        
         VUI::EventManager.name = "og";
         VUI::EventManager.Init(ofGetWidth(),ofGetHeight());
         VUI::TweenManager.Init();

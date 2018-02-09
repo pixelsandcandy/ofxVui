@@ -117,7 +117,6 @@ namespace VUI {
 		localMaxPosition.y += anchorOffset.y;
 		localMinPosition.y += anchorOffset.y;
         
-        
         globalMinPosition.set( localMinPosition.x + parentSumOffset.x, localMinPosition.y + parentSumOffset.y );
         globalMaxPosition.set( localMaxPosition.x + parentSumOffset.x, localMaxPosition.y + parentSumOffset.y );
         
@@ -150,12 +149,10 @@ namespace VUI {
 		UpdatePosition();
         
         if ( !isInteractive )return;
-        
-        
 
 		if (mouseX != -1 && mouseY != -1) {
 			if (mouseX > globalMinPosition.x && mouseX < globalMaxPosition.x) {
-				if (mouseY > globalMinPosition.y && mouseY < globalMaxPosition.y) {
+				if (mouseY > globalMinPosition.y && mouseY - fixMouseY < globalMaxPosition.y) {
                     GetEventManager()->StoreOverElement( this );
 					if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
 					else UpdateState(VUI_STATE_OVER);
@@ -332,9 +329,10 @@ namespace VUI {
         }
         else {
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
-                if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
+                if (VUI::mouseY > globalMinPosition.y && VUI::mouseY - fixMouseY < globalMaxPosition.y) {
                     
                     if ( GetEventManager()->prevOverElement == this ){
+                        
                         //bool dragged = false;
                         
                         //if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) dragged = true;
@@ -379,6 +377,7 @@ namespace VUI {
             }
 
 			if (isMouseInside) {
+                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
 				UpdateState(VUI_STATE_UP);
 				isMouseInside = false;
 			}
@@ -504,8 +503,12 @@ namespace VUI {
                 GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
             } else if (virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ){
                 if ( DEBUG_MODE ) ofLog() << "RELEASED";
-                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
-                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+                
+                if ( isInside ){
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_RELEASED );
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_CLICK );
+                }
+                
                 //evt = VUI_EVENT_MOUSE_RELEASED;
             }
             
@@ -793,7 +796,18 @@ namespace VUI {
         //ofLog() << "Element::Render - [" << userUpdating << "] - " << ofRandomf();
         ofPushView();
         VUI::_PrivateRotateUI();
-        ofTranslate( drawPosition.x + parentSumOffset.x, drawPosition.y + parentSumOffset.y );
+        
+        size.x = GetWidth();
+        size.y = GetHeight();
+        
+        globalPos.set(drawPosition.x + parentSumOffset.x, drawPosition.y + parentSumOffset.y, 0, 0 );
+        globalPos.z = globalPos.x + size.x;
+        globalPos.w = globalPos.y + size.y;
+        
+        ofTranslate( globalPos.x, globalPos.y );
+        
+        
+        
         ofRotate( rotation );
         
 		ofFill();
@@ -801,7 +815,7 @@ namespace VUI {
 
 		if (maskTex != nullptr && fbo != nullptr) fbo->begin();
         
-        ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, GetWidth(), GetHeight());
+        ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, size.x, size.y );
 
 		if (style[renderState]["background-color"] != "clear") {
 			//ofSetHexColor(styleFloat[state]["background-color"]);
@@ -819,16 +833,16 @@ namespace VUI {
 		ofSetColor(color);
 
 		for (vector<string>::iterator it = imageIDs[renderState].begin(); it != imageIDs[renderState].end(); it++) {
-			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), 0, 0, GetWidth(false), GetHeight(false));
+			images[(*it)]->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, 0, 0, GetWidth(false), GetHeight(false));
 		}
         
         Image &img = bgImage[renderState];
         if ( img.active ) {
             if ( img.size == VUI_IMAGE_FILL ){
-                img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), 0, 0, img.bounds.width, img.bounds.height);
+                img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, 0, 0, img.bounds.width, img.bounds.height);
             } else {
-                if ( img.bounds.width == -1 ) img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), img.bounds.x, img.bounds.y, GetHeight(false), GetHeight(false));
-                else img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, GetWidth(), GetHeight(), img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
+                if ( img.bounds.width == -1 ) img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, GetHeight(false), GetHeight(false));
+                else img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
             }
             
         }
@@ -852,7 +866,7 @@ namespace VUI {
         
         
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
-            (*it)->Render(localMinPosition.x, localMinPosition.y, parentSumOpacity, anchorOffset);
+            (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
         }
 
 
@@ -931,6 +945,7 @@ namespace VUI {
 
 	Element* Element::SetPosition(float x, float y) {
 		this->setPosition(x, y, 0);
+        
         percentCalcValues.parseValue("x", x);
         percentCalcValues.parseValue("y", y);
         
@@ -971,6 +986,13 @@ namespace VUI {
         return this;
 	}
     
+    Element* Element::SetSize(string w, string h ) {
+        percentCalcValues.parseValue("width", w);
+        percentCalcValues.parseValue("height", h);
+        
+        return this;
+    }
+    
     void Element::SetWidth( float w ){
         percentCalcValues.parseValue("width", w);
         width = w;
@@ -979,6 +1001,14 @@ namespace VUI {
     void Element::SetHeight( float h ){
         percentCalcValues.parseValue("height", h);
         height = h;
+    }
+    
+    void Element::SetWidth( string w ){
+        percentCalcValues.parseValue("width", w);
+    }
+    
+    void Element::SetHeight( string h ){
+        percentCalcValues.parseValue("height", h);
     }
     
     int Element::GetWidth(bool scaled){

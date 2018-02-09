@@ -4,6 +4,8 @@
 
 namespace VUI {
 
+    StyleSheet* _vuiStyleSheet;
+    
 	map< string, View*> views;
 
 	map< int, ofPoint> touches;

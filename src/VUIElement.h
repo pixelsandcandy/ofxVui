@@ -33,7 +33,7 @@ namespace VUI {
                 
                 float getValue( float parentValue ){
                     //ofLog() << "pxValue:" << pxValue << "  val:" << val << "  parentValue:" << parentValue << "  perc:" << perc << "  offset:" << offset;
-                    if ( pxValue ) return val;
+                    if ( pxValue == true ) return val;
                     else return (parentValue*perc)+offset;
                 }
                 
@@ -360,8 +360,11 @@ namespace VUI {
         }
 
 		Element* SetSize(float w, float h);
+        Element* SetSize(string w, string h);
         void SetHeight( float h );
         void SetWidth( float w );
+        void SetHeight( string h );
+        void SetWidth( string w );
         
         int GetHeight( bool scaled = true);
         int GetWidth(bool scaled = true);
@@ -461,7 +464,7 @@ namespace VUI {
         float GetOpacity(){
             return opacity;
         }
-
+				
     protected:
         ofTrueTypeFont* font = nullptr;
         vector<string> SplitStyles(string s);
@@ -474,6 +477,9 @@ namespace VUI {
         
         ofVec3f globalMinPosition;
         ofVec3f globalMaxPosition;
+        
+        ofVec4f globalPos;
+        ofVec2f size;
         
         ofVec3f drawPosition;
         
@@ -494,7 +500,7 @@ namespace VUI {
         
         bool isToggle = false;
         int lastTimeMouseDown;
-        
+        int fixMouseY = 3;
         
 	};
 }
