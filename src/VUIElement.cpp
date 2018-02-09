@@ -944,8 +944,8 @@ namespace VUI {
             pos.x = percentCalcValues.getValue("x", parent->GetWidth() );
             pos.y = percentCalcValues.getValue("y", parent->GetHeight() );
         } else {
-            pos.x = percentCalcValues.getValue("x", ofGetWidth() );
-            pos.y = percentCalcValues.getValue("y", ofGetHeight() );
+            pos.x = percentCalcValues.getValue("x", VUI::GetCurrentEventManager()->vw );
+            pos.y = percentCalcValues.getValue("y", VUI::GetCurrentEventManager()->vh );
         }
         
         return pos;
@@ -984,7 +984,7 @@ namespace VUI {
     int Element::GetWidth(bool scaled){
         int w;
         if ( HasParent() ) w = percentCalcValues.getValue("width", parent->GetWidth() );
-        else w = percentCalcValues.getValue("width", ofGetWidth() );
+        else w = percentCalcValues.getValue("width", GetEventManager()->vw);
         
         if ( scaled ) return w*scale;
         else return w;
@@ -993,7 +993,7 @@ namespace VUI {
     int Element::GetHeight(bool scaled){
         int h;
         if ( HasParent() ) h = percentCalcValues.getValue("height", parent->GetHeight() );
-        else h = percentCalcValues.getValue("height", ofGetHeight() );
+        else h = percentCalcValues.getValue("height", GetEventManager()->vh );
         
         if ( scaled ) return h*scale;
         else return h;

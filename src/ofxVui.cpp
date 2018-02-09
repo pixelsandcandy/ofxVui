@@ -97,6 +97,10 @@ namespace VUI {
 		//windowResized(resize.width, resize.height);
         VUI::vw = resize.width;
         VUI::vh = resize.height;
+        
+        VUI::GetCurrentEventManager()->vw = resize.width;
+        VUI::GetCurrentEventManager()->vh = resize.height;
+        
 		if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(resize.width, resize.height);
 	}
 
@@ -589,8 +593,10 @@ namespace VUI {
         tweensToDestroy.clear();
     }
     
-    void EM::Init(){
+    void EM::Init(int windowW, int windowH){
         ofAddListener(ofEvents().update, this, &EM::update);
+        vw = windowW;
+        vh = windowH;
         VUI::PRIVATE.Listen();
     }
     

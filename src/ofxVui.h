@@ -321,6 +321,9 @@ namespace VUI {
         Element* overElement = nullptr;
         Element* prevOverElement = nullptr;
         
+        int vw = 0;
+        int vh = 0;
+        
         void StoreOverElement( Element *el);
 		
         Element* GetOverElement(){
@@ -346,7 +349,7 @@ namespace VUI {
         
         void Purge();
         
-        void Init();
+        void Init(int windowW, int windowH);
         
         /*void ShouldDestroyTween( Tween* t ){
             tweensToDestroy.push_back( t );
@@ -506,7 +509,11 @@ namespace VUI {
                 if ( VUI::vw == -1 || VUI::vh == -1 ){
                     VUI::SetResolution( ofGetWidth(), ofGetHeight() );
                 }
-                ofLog() << VUI::vw << "x" << VUI::vh;
+                //ofLog() << VUI::vw << "x" << VUI::vh;
+                
+                VUI::GetCurrentEventManager()->vw = VUI::vw;
+                VUI::GetCurrentEventManager()->vh = VUI::vh;
+                
                 if ( VUI::vscale != 1 ) {
                     VUI::fbo.allocate(VUI::vw, VUI::vh, GL_RGBA);
                     VUI::fbo.begin();
@@ -749,7 +756,9 @@ namespace VUI {
     
     
     
-    static void ListenToWindowEvents( ofCoreEvents & events, EM* eventManager ){
+    static void ListenToWindowEvents( ofCoreEvents & events, EM* eventManager, int windowW, int windowH ){
+        eventManager->vw = windowW;
+        eventManager->vh = windowH;
         VUI::PRIVATE.ListenToWindow(events, eventManager);
         currEventManager = eventManager;
     }
@@ -1039,7 +1048,7 @@ namespace VUI {
         if ( _didInit ) return;
         _didInit = true;
         VUI::EventManager.name = "og";
-        VUI::EventManager.Init();
+        VUI::EventManager.Init(ofGetWidth(),ofGetHeight());
         VUI::TweenManager.Init();
     };
     
