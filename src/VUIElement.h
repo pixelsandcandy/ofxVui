@@ -332,12 +332,12 @@ namespace VUI {
         VUI::EM* EventManager = NULL;
         
         VUI::EM* GetEventManager(){
-            if ( EventManager == NULL ) return &VUI::EventManager;
-            else return EventManager;
+            if ( this->EventManager == NULL ) return &VUI::EventManager;
+            else return this->EventManager;
         }
         
         void SetEventManager(VUI::EM* eventManager){
-            EventManager = eventManager;
+            this->EventManager = eventManager;
         }
         
         bool HasParent(){

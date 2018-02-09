@@ -230,11 +230,28 @@ namespace VUI {
     
     // EventManager
     
-    extern map<vuiEvent, vector<Element*>> events;
-    extern map<State, vector<Element*>> states;
+    //extern map<vuiEvent, vector<Element*>> events;
+    //extern map<State, vector<Element*>> states;
+    extern vector<Tween*> tweensToDestroy;
     
+    static void ShouldDestroyTween( Tween* t ){
+        tweensToDestroy.push_back( t );
+    }
     
-    class EMBridge {
+    static void DestroyTween(Tween* t){
+        int index = 0;
+        for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
+            if ( (*it) == t ){
+                //ofLog() << "found tween - destroying...";
+                t = nullptr;
+                tweens.erase( tweens.begin() + index );
+                return;
+            }
+            index++;
+        }
+    }
+    
+    /*class EMBridge {
     public:
         ~EMBridge(){};
         EMBridge(){};
@@ -271,7 +288,7 @@ namespace VUI {
         
         void update(ofEventArgs & args);
         
-    };
+    };*/
     
     //
     
@@ -291,8 +308,15 @@ namespace VUI {
     
     class EM {
     public:
-        ~EM(){};
         EM(){};
+        ~EM(){
+            ofRemoveListener(ofEvents().update, this, &EM::update);
+        };
+        
+        string name = "";
+        
+        map<vuiEvent, vector<Element*>> events;
+        map<State, vector<Element*>> states;
         
         Element* overElement = nullptr;
         Element* prevOverElement = nullptr;
@@ -321,32 +345,74 @@ namespace VUI {
         }
         
         void Purge();
+        
+        void Init();
+        
+        /*void ShouldDestroyTween( Tween* t ){
+            tweensToDestroy.push_back( t );
+        }
+        
+        void DestroyTween(Tween* t){
+            int index = 0;
+            for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
+                if ( (*it) == t ){
+                    //ofLog() << "found tween - destroying...";
+                    t = nullptr;
+                    tweens.erase( tweens.begin() + index );
+                    return;
+                }
+                index++;
+            }
+        }*/
+        
+    private:
+        //vector<Tween*> tweensToDestroy;
+        
+        bool EventHasElement( vuiEvent eventType ){
+            return !events[eventType].empty();
+        }
+        
+        Element* GetLatestElement( vuiEvent eventType ){
+            return events[eventType].back();
+        }
+        
+        void update(ofEventArgs & args);
     };
     
-    extern EM EventManager;
-    extern EMBridge PRIVATE_EM;
+    class TM {
+    public:
+        TM(){};
+        ~TM(){};
+        
+        void Init();
+        void update(ofEventArgs& args);
+    };
     
-
+    extern TM TweenManager;
+    extern EM EventManager;
+    //extern EMBridge PRIVATE_EM;
+    
+    extern EM* currEventManager;
+    
+    static EM* GetCurrentEventManager(){
+        if ( currEventManager == NULL ) return &EventManager;
+        return currEventManager;
+    }
+    
 	static Element* GetOverElement() {
-		return EventManager.overElement;
+		return GetCurrentEventManager()->overElement;
 	}
     
     static Element* GetPrevOverElement() {
-        return EventManager.prevOverElement;
+        return GetCurrentEventManager()->prevOverElement;
     }
 
 	static void ClearOverElement() {
-        EventManager.prevOverElement = EventManager.overElement;
-		EventManager.overElement = nullptr;
+        GetCurrentEventManager()->prevOverElement = GetCurrentEventManager()->overElement;
+		//GetCurrentEventManager()->overElement = nullptr;
 	}
     
-    extern bool _didInit;
-    static void Init(){
-        if ( _didInit ) return;
-        _didInit = true;
-        
-        PRIVATE_EM.Init();
-    };
+    
     
     
 
@@ -490,12 +556,35 @@ namespace VUI {
 		}
         
         shared_ptr<ofAppBaseWindow> targetWindow = NULL;
+        EM* eventManager = NULL;
         ofCoreEvents* events = NULL;
         
-        void ListenToWindow( ofCoreEvents & events ){
-            VUI::EventManager.Disable();
+        void ClearWindowEventRef(EM* eventManager = NULL){
+            if ( eventManager == NULL || this->eventManager == eventManager ){
+                this->eventManager = NULL;
+                VUI::EventManager.Enable();
+                VUI::currEventManager = NULL;
+            }
             
+            ListenToMainWindow();
+        }
+        
+        void ClearWindowEventRef(bool disableCurrent){
+            if ( disableCurrent ) {
+                this->eventManager->Disable();
+                this->eventManager = NULL;
+            }
+            
+            ListenToMainWindow();
+        }
+        
+        void ListenToWindow( ofCoreEvents & events, EM* eventManager ){
+            VUI::EventManager.Disable();
             Unlisten();
+            
+            eventManager->Enable();
+            this->eventManager = eventManager;
+            
             this->events = &events;
             
             ofAddListener(events.update, this, &ViewManagerBridge::update);
@@ -520,10 +609,10 @@ namespace VUI {
         }
         
         void ListenToMainWindow(){
-            VUI::EventManager.Enable();
-            
             Unlisten();
             Listen();
+            VUI::currEventManager = NULL;
+            VUI::EventManager.Enable();
         }
         
         void Unlisten(){
@@ -548,7 +637,12 @@ namespace VUI {
                 
                 ofRemoveListener(events->fileDragEvent, this, &ViewManagerBridge::dragged);
                 events = NULL;
-            } else {
+                
+                if ( eventManager != NULL ) {
+                    eventManager->Disable();
+                    eventManager = NULL;
+                }
+            }/* else {
                 ofRemoveListener(ofEvents().update, this, &ViewManagerBridge::update);
                 //ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
                 
@@ -568,7 +662,7 @@ namespace VUI {
                 ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
                 
                 ofRemoveListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
-            }
+            }*/
             
             
             
@@ -655,11 +749,17 @@ namespace VUI {
     
     
     
-    static void ListenToWindowEvents( ofCoreEvents & events ){
-        VUI::PRIVATE.ListenToWindow(events);
+    static void ListenToWindowEvents( ofCoreEvents & events, EM* eventManager ){
+        VUI::PRIVATE.ListenToWindow(events, eventManager);
+        currEventManager = eventManager;
     }
     
-    static void ListenToMainWindowEvents(){
+    static void ClearWindowEventRef(EM* eventManager = NULL){
+        VUI::PRIVATE.ClearWindowEventRef(eventManager);
+    }
+    
+    static void ListenToMainWindowEvents(bool disableCurrent = false){
+        VUI::PRIVATE.ClearWindowEventRef(disableCurrent);
         VUI::PRIVATE.ListenToMainWindow();
     }
     
@@ -934,6 +1034,15 @@ namespace VUI {
         else Next();
 	}
     
+    extern bool _didInit;
+    static void Init(){
+        if ( _didInit ) return;
+        _didInit = true;
+        VUI::EventManager.name = "og";
+        VUI::EventManager.Init();
+        VUI::TweenManager.Init();
+    };
+    
     static void AddView(string name, View *view, bool setView = false ) {
         VUI::Init();
         
@@ -948,6 +1057,8 @@ namespace VUI {
 	static string GetViewName() {
 		return currView;
 	}
+    
+    
 
 
 }

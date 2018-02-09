@@ -53,10 +53,10 @@ namespace VUI {
 
 
         if (VUI::IsTouchEnabled()) {
-            if (!VUI::GetTouchDown()) VUI::EventManager.Enable();
+            if (!VUI::GetTouchDown()) VUI::GetCurrentEventManager()->Enable();
         }
         else {
-            if (!ofGetMousePressed()) VUI::EventManager.Enable();
+            if (!ofGetMousePressed()) VUI::GetCurrentEventManager()->Enable();
         }
 
 		//ofLog() << "mousePressed: " << ofGetMousePressed();
@@ -121,7 +121,9 @@ namespace VUI {
 		//
 		VUI::mouseX = mouse.x*multCoords.x;
 		VUI::mouseY = mouse.y*multCoords.y;
-
+        
+        
+        
 		if (!VUI::currView.empty()) {
 			/*#ifdef USING_ofxSupervui
              if ( !VUI::EventManager.active ) return;
@@ -148,7 +150,7 @@ namespace VUI {
 		VUI::mouseY = mouse.y*multCoords.y;
 
 		if (!VUI::currView.empty()) {
-			if (!VUI::EventManager.active) return;
+			if (!VUI::GetCurrentEventManager()->active) return;
 
 			ofMouseEventArgs args(ofMouseEventArgs::Dragged, VUI::mouseX, VUI::mouseY, mouse.button);
 			ofNotifyEvent(onMouseDragged, args, this);
@@ -166,7 +168,7 @@ namespace VUI {
 		VUI::mouseY = mouse.y*multCoords.y;
 
 		if (!VUI::currView.empty()) {
-			if (!VUI::EventManager.active) return;
+			if (!VUI::GetCurrentEventManager()->active) return;
             
             VUI::GetCurrentView()->_SetIsMouseInside(true);
 
@@ -187,8 +189,8 @@ namespace VUI {
 
 		if (!VUI::currView.empty()) {
 
-			if (!VUI::EventManager.active) {
-				if (VUI::EventManager.enableOnMouseUp) VUI::EventManager.DelayEnable(50);
+			if (!VUI::GetCurrentEventManager()->active) {
+				if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
 				return;
 			}
 
@@ -199,7 +201,7 @@ namespace VUI {
 			VUI::GetCurrentView()->mouseReleased(VUI::mouseX, VUI::mouseY, mouse.button);
 		}
 
-		if (VUI::EventManager.enableOnMouseUp) VUI::EventManager.DelayEnable(50);
+		if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
 
 	}
 
@@ -210,7 +212,7 @@ namespace VUI {
 		VUI::mouseY = mouse.y*multCoords.y;
 
 		if (!VUI::currView.empty()) {
-			if (!VUI::EventManager.active) return;
+			if (!VUI::GetCurrentEventManager()->active) return;
 
 			ofMouseEventArgs args(ofMouseEventArgs::Scrolled, VUI::mouseX, VUI::mouseY);
 			args.scrollX = mouse.scrollX;
@@ -269,7 +271,7 @@ namespace VUI {
 		touches[touch.id].x = touch.x*multCoords.x;
 		touches[touch.id].y = touch.y*multCoords.y;
 
-		if (!VUI::EventManager.active) return;
+		if (!VUI::GetCurrentEventManager()->active) return;
 
 		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchDown(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
 	};
@@ -278,7 +280,7 @@ namespace VUI {
 		touches[touch.id].x = touch.x*multCoords.x;
 		touches[touch.id].y = touch.y*multCoords.y;
 
-		if (!VUI::EventManager.active) return;
+		if (!VUI::GetCurrentEventManager()->active) return;
 
 		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchMoved(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
 	};
@@ -289,8 +291,8 @@ namespace VUI {
 		if (it != touches.end()) touches.erase(it);
 
 
-		if (!VUI::EventManager.active) {
-			if (VUI::EventManager.enableOnMouseUp) VUI::EventManager.DelayEnable(50);
+		if (!VUI::GetCurrentEventManager()->active) {
+			if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
 			return;
 		}
 
@@ -475,7 +477,7 @@ namespace VUI {
             
             ofNotifyEvent( onComplete, args, this );
             
-            VUI::PRIVATE_EM.ShouldDestroyTween(this);
+            VUI::ShouldDestroyTween(this);
         }
     }
     
@@ -515,17 +517,16 @@ namespace VUI {
     
     // EventManager
     EM EventManager;
-    EMBridge PRIVATE_EM;
-    map<vuiEvent, vector<Element*>> events;
-    map<State, vector<Element*>> states;
+    EM* currEventManager = NULL;
     
+    vector<Tween*> tweensToDestroy;
     vector<Tween*> tweens;
 
     void EM::StoreEvent(Element* el, vuiEvent eventType ){
 		//ofLog() << "StoreEvent[" << eventType << "]  active:" << active;
         if ( !active ) return;
         
-        events[ eventType ].push_back( el );
+        this->events[ eventType ].push_back( el );
     }
     
     void EM::StoreOverElement( Element *el){
@@ -534,16 +535,16 @@ namespace VUI {
     
     void EM::StoreState( Element *el, State state ){
         if ( !active ) return;
-        states[ state ].push_back( el );
+        this->states[ state ].push_back( el );
     }
     
     void EM::Purge(){
-        for( vector<vuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
-            events[ (*it) ].clear();
+        for( vector<vuiEvent>::iterator it = VUI::evtlist.begin(); it != VUI::evtlist.end(); it++ ){
+            this->events[ (*it) ].clear();
         }
         
         for( vector<State>::iterator it = statelist.begin(); it != statelist.end(); it++ ){
-            states[ (*it) ].clear();
+            this->states[ (*it) ].clear();
         }
         
         VUI::ClearOverElement();
@@ -566,12 +567,13 @@ namespace VUI {
         shouldEnable = -1;
     }
 
-    void EMBridge::Init(){
-        ofAddListener(ofEvents().update, this, &EMBridge::update);
-        VUI::PRIVATE.Listen();
+    TM TweenManager;
+    
+    void TM::Init(){
+        ofAddListener(ofEvents().update, this, &TM::update);
     }
     
-    void EMBridge::update(ofEventArgs & args){
+    void TM::update(ofEventArgs& args){
         float currTime = ofGetElapsedTimeMillis();
         
         //ofLog() << "# tweens: " << tweens.size();
@@ -581,18 +583,25 @@ namespace VUI {
         }
         
         for (vector<Tween*>::iterator it = tweensToDestroy.begin(); it !=  tweensToDestroy.end(); it++){
-            DestroyTween( (*it) );
+            VUI::DestroyTween( (*it) );
         }
         
         tweensToDestroy.clear();
+    }
+    
+    void EM::Init(){
+        ofAddListener(ofEvents().update, this, &EM::update);
+        VUI::PRIVATE.Listen();
+    }
+    
+    void EM::update(ofEventArgs & args){
         
-        
-        if ( EventManager.shouldEnable != -1 ) {
-            if ( ofGetElapsedTimeMillis() > EventManager.shouldEnable ) EventManager.Enable();
+        if ( shouldEnable != -1 ) {
+            if ( ofGetElapsedTimeMillis() > shouldEnable ) Enable();
         }
         
-        if ( !EventManager.active ) {
-            EventManager.Purge();
+        if ( !active ) {
+            Purge();
             return;
         }
         
@@ -606,7 +615,7 @@ namespace VUI {
             Element* last = nullptr;
             for ( vector<Element*>::iterator eit = states[(*it)].begin(); eit != states[(*it)].end(); eit++){
                 //if ( (*eit) == EventManager.overElement ) (*eit)->SetState( (*it) );
-                if ( (*eit) == EventManager.overElement ) (*eit)->SetState( (*it) );
+                if ( (*eit) == overElement ) (*eit)->SetState( (*it) );
                 //ofLog() << "[" << (*it) << "]" << (*eit)->GetName();
             }
             
@@ -614,7 +623,7 @@ namespace VUI {
         
         //if ( EventManager.overElement != nullptr ) EventManager.overElement->SetState( VUI_STATE_OVER );
         
-        EventManager.Purge();
+        Purge();
         
     }
     

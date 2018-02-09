@@ -142,8 +142,8 @@ namespace VUI {
 	}
 
 	void Element::Update(int mouseX, int mouseY, bool internalUpdate) {
-        //ofLog() << "Update - " << VUI::mouseX << "x" << VUI::mouseY << "  - " << ofRandomf();
-        
+        if ( !GetEventManager()->active ) return;
+        //ofLog() << name << " (update)#" << vuiUID << " - " << VUI::mouseX << "x" << VUI::mouseY << "  - " << ofRandomf();
         
         if ( !internalUpdate ) userUpdating = true;
         
@@ -248,7 +248,7 @@ namespace VUI {
                 }
             }
 			
-			if (VUI::GetPrevOverElement() == this) {
+			if ( GetEventManager()->prevOverElement == this) {
 				if (touchDownOnElement) {
 					if (!isMouseDown) {
 						if (isToggle) {
@@ -334,8 +334,7 @@ namespace VUI {
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY < globalMaxPosition.y) {
                     
-                    
-                    if ( VUI::GetPrevOverElement() == this ){
+                    if ( GetEventManager()->prevOverElement == this ){
                         //bool dragged = false;
                         
                         //if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) dragged = true;
@@ -374,7 +373,7 @@ namespace VUI {
                         isMouseDown = false;
                     }
                     
-                    if ( VUI::GetOverElement() != this ) GetEventManager()->StoreOverElement(this);
+                    if (  GetEventManager()->overElement != this ) GetEventManager()->StoreOverElement(this);
                     return;
                 }
             }
