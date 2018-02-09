@@ -68,10 +68,8 @@ namespace VUI {
                         pxValue = false;
                         
                     } else if ( value.find("%") != -1 ){
-                        ofLog() << "perc:" << perc;
                         perc = ofToInt( value )*.01;
                         pxValue = false;
-                        ofLog() << "perc:" << perc << "   " << value;
                     } else {
                         val = ofToInt(value);
                         pxValue = true;
