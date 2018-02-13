@@ -342,6 +342,8 @@ namespace VUI {
         
         int vw = 0;
         int vh = 0;
+        int mouseX = 0;
+        int mouseY = 0;
         
         void StoreOverElement( Element *el);
 		
@@ -429,10 +431,7 @@ namespace VUI {
         return GetCurrentEventManager()->prevOverElement;
     }
 
-	static void ClearOverElement() {
-        GetCurrentEventManager()->prevOverElement = GetCurrentEventManager()->overElement;
-		//GetCurrentEventManager()->overElement = nullptr;
-	}
+    static void ClearOverElement();
     
     
     
@@ -669,7 +668,7 @@ namespace VUI {
                     eventManager->Disable();
                     eventManager = NULL;
                 }
-            }/* else {
+            } else {
                 ofRemoveListener(ofEvents().update, this, &ViewManagerBridge::update);
                 //ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
                 
@@ -689,7 +688,7 @@ namespace VUI {
                 ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
                 
                 ofRemoveListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
-            }*/
+            }
             
             
             

@@ -602,6 +602,12 @@ namespace VUI {
         VUI::PRIVATE.Listen();
     }
     
+    void ClearOverElement() {
+        GetCurrentEventManager()->prevOverElement = GetCurrentEventManager()->overElement;
+        //GetCurrentEventManager()->overElement = nullptr;
+        //if ( GetCurrentEventManager()->prevOverElement != nullptr ) ofLog() << GetCurrentEventManager()->overElement->GetName();
+    }
+    
     void EM::update(ofEventArgs & args){
         
         if ( shouldEnable != -1 ) {

@@ -117,6 +117,9 @@ namespace VUI {
 		localMaxPosition.y += anchorOffset.y;
 		localMinPosition.y += anchorOffset.y;
         
+        //globalMinPosition.set( localMinPosition.x + parentSumOffset.x, localMinPosition.y + parentSumOffset.y );
+        //globalMaxPosition.set( localMaxPosition.x + parentSumOffset.x, localMaxPosition.y + parentSumOffset.y );
+        
         globalMinPosition.set( localMinPosition.x + parentSumOffset.x, localMinPosition.y + parentSumOffset.y );
         globalMaxPosition.set( localMaxPosition.x + parentSumOffset.x, localMaxPosition.y + parentSumOffset.y );
         
@@ -328,6 +331,7 @@ namespace VUI {
 			
         }
         else {
+            
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY - fixMouseY < globalMaxPosition.y) {
                     
@@ -785,7 +789,8 @@ namespace VUI {
 		}
 	}
 
-	void Element::Render(float parentOffsetX, float parentOffsetY, float parentOpacity, ofVec2f _anchorOffset ) {
+	void Element::Render(float parentOffsetX, float parentOffsetY, float parentOpacity, ofVec2f _anchorOffset, ofVec2f _parentOffsetPos ) {
+        
         
         parentSumOpacity = parentOpacity * opacity;
         parentSumOffset.set( parentOffsetX, parentOffsetY );
@@ -800,11 +805,7 @@ namespace VUI {
         size.x = GetWidth();
         size.y = GetHeight();
         
-        globalPos.set(drawPosition.x + parentSumOffset.x, drawPosition.y + parentSumOffset.y, 0, 0 );
-        globalPos.z = globalPos.x + size.x;
-        globalPos.w = globalPos.y + size.y;
-        
-        ofTranslate( globalPos.x, globalPos.y );
+        ofTranslate( localMinPosition.x - anchorOffset.x, localMinPosition.y - anchorOffset.y );
         
         
         
@@ -866,7 +867,29 @@ namespace VUI {
         
         
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
+            //(*it)->Render(localMinPosition.x,localMinPosition.y, parentSumOpacity, anchorOffset, ofVec2f(parentOffsetPos.x + parentOffsetX, parentOffsetPos.y + parentOffsetY) );
+            
+            //(*it)->Render(globalPos.x, globalPos.y, parentSumOpacity, anchorOffset  );
+            
+            
+            
+            //(*it)->Render(0, 0, parentSumOpacity, anchorOffset, ofVec2f(drawPosition.x, drawPosition.y)  );
+            
+            //(*it)->Render(0, 0 );
+            
+            //drawPosition.x + parentSumOffset.x
+            
+            //(*it)->Render(localMinPosition.x,localMinPosition.y, parentSumOpacity, anchorOffset, ofVec2f(parentOffsetPos.x + parentOffsetX, parentOffsetPos.y + parentOffsetY) );
+            
+            // ORIGINAL - works
+            //(*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
+            
             (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
+            
+            // works-ish
+            //(*it)->Render(0, 0, parentSumOpacity, anchorOffset, globalPos  );
+            
+            //(*it)->Render(parentOffsetX, parentOffsetY, parentSumOpacity, anchorOffset, globalPos  );
         }
 
 

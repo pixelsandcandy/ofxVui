@@ -62,10 +62,20 @@ namespace VUI {
             return sliderVal;
         }
         
-    private:
         void Setup(){
-            padding.Set(1,1,1,1);
+            SetPadding(1);
         }
+        
+        Padding& GetPadding(){
+            return padding;
+        }
+        
+        Element* GetBarContainer(){
+            return barContainer;
+        }
+        
+    private:
+        
         
         Padding padding;
         float sliderPerc = 1.0;
@@ -118,6 +128,8 @@ namespace VUI {
             args.percValue = sliderPerc;
             
             ofNotifyEvent(onSliderValueChange, args, this);
+            
+            ofLog() << bar->GetWidth();
         }
         
         

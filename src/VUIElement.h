@@ -313,7 +313,7 @@ namespace VUI {
 
 		Element* SetStyle(string style, int renderState = VUI_STATE_UP, bool initState = true );
 
-        void Render(float parentOffsetX = 0, float parentOffsetY = 0, float parentOpacity = 1.0, ofVec2f _anchorOffset = ofVec2f::zero() );
+        void Render(float parentOffsetX = 0, float parentOffsetY = 0, float parentOpacity = 1.0, ofVec2f _anchorOffset = ofVec2f::zero(), ofVec2f _parentOffsetPos = ofVec2f::zero() );
 		void Update(int mouseX = -1, int mouseY = -1, bool internalUpdate = false);
 		void ParseStyle(string property = "", int renderState = VUI_STATE_UP);
         void ParseStyleSheet(StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
@@ -339,7 +339,7 @@ namespace VUI {
         }
         
         bool HasParent(){
-            if ( parent == nullptr || parent == NULL ) return false;
+            if ( parent == nullptr || parent == NULL ) return NULL;
             return true;
         }
         
@@ -474,6 +474,7 @@ namespace VUI {
         ofVec3f localMinPosition;
         ofVec3f localMaxPosition;
         ofVec3f posOffset;
+        ofVec2f parentOffsetPos;
         
         ofVec3f globalMinPosition;
         ofVec3f globalMaxPosition;

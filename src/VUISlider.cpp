@@ -5,7 +5,7 @@ namespace VUI {
     
     void Slider::SetBar( StyleSheet *ss, string styleBarSelector, string styleBarBgSelector){
         if ( bar == NULL ){
-            barContainer = new Element(0,0, ss, styleBarBgSelector );
+            barContainer = new Element(padding.left, padding.top, ss, styleBarBgSelector );
             barContainer->SetInteractive(false);
             AddChild(barContainer);
             
@@ -23,7 +23,7 @@ namespace VUI {
             
         } else {
             bar->Setup(0,0, ss, styleBarSelector );
-            barContainer->Setup(0,0, ss, styleBarBgSelector );
+            barContainer->Setup(padding.left,padding.top, ss, styleBarBgSelector );
         }
         UpdateBarStyle();
     }
