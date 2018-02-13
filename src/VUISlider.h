@@ -128,8 +128,6 @@ namespace VUI {
             args.percValue = sliderPerc;
             
             ofNotifyEvent(onSliderValueChange, args, this);
-            
-            ofLog() << bar->GetWidth();
         }
         
         
