@@ -27,6 +27,7 @@ namespace VUI {
         
         scrollbar = new Element("calc(100%-" + ofToString(scrollbarPadding+scrollbarWidth) + ")", scrollbarPadding, VUI::GetStyleSheet("VUIStyleSheet"), ".Container-scrollbar" );
         scrollbar->SetInteractive(false);
+        scrollbar->SetOpacity(0);
         Element::AddChild(scrollbar);
         
         UpdateContainerStyle();
