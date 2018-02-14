@@ -90,7 +90,9 @@ namespace VUI {
 			style[i]["background-color"] = "clear";
             style[i]["background-opacity"] = "1.0";
 		}
-
+        
+        hasStyle = false;
+        
 		SetPosition(x, y);
 
 		ParseStyle();
@@ -145,24 +147,31 @@ namespace VUI {
 
 	void Element::Update(int mouseX, int mouseY, bool internalUpdate) {
         if ( !GetEventManager()->active ) return;
-        //ofLog() << name << " (update)#" << vuiUID << " - " << VUI::mouseX << "x" << VUI::mouseY << "  - " << ofRandomf();
+        //if ( name == "#el5" ) ofLog() << name << " (update)#" << vuiUID << " - " << VUI::mouseX << "x" << VUI::mouseY << "  - " << ofRandomf();
         
         if ( !internalUpdate ) userUpdating = true;
         
 		UpdatePosition();
         
-        if ( !isInteractive )return;
+        //if ( !isInteractive )return;
+        
 
 		if (mouseX != -1 && mouseY != -1) {
 			if (mouseX > globalMinPosition.x && mouseX < globalMaxPosition.x) {
 				if (mouseY > globalMinPosition.y && mouseY - fixMouseY < globalMaxPosition.y) {
-                    GetEventManager()->StoreOverElement( this );
-					if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
-					else UpdateState(VUI_STATE_OVER);
+                    if ( isInteractive ){
+                        GetEventManager()->StoreOverElement( this );
+                        if (ofGetMousePressed()) UpdateState(VUI_STATE_DOWN);
+                        else UpdateState(VUI_STATE_OVER);
+                        _mInside = true;
+                    }
+                    isMouseInside = true;
 					return;
 				}
 			}
-			UpdateState(VUI_STATE_UP);
+            isMouseInside = false;
+            _mInside = false;
+			if ( isInteractive ) UpdateState(VUI_STATE_UP);
 			return;
 		}
 
@@ -227,7 +236,7 @@ namespace VUI {
 #endif*/
         
         if (VUI::IsTouchEnabled()) {
-            
+            if ( !isInteractive ) return;
             
             bool touchDownOnElement = false;
 			//if (VUI::GetPrevOverElement() == this) touchDownOnElement = true;
@@ -334,58 +343,66 @@ namespace VUI {
             
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY - fixMouseY < globalMaxPosition.y) {
-                    
-                    if ( GetEventManager()->prevOverElement == this ){
-                        
-                        //bool dragged = false;
-                        
-                        //if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) dragged = true;
-                        
-                        if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
-                        else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
-                        
-                        if (ofGetMousePressed()) {
-                            if ( !isMouseDown ) {
-                                isMouseDown = true;
-                                mouseDownPos.set( VUI::mouseX, VUI::mouseY );
-                                //ofLog() << VUI::mouseX << "," << VUI::mouseY;
+                    if ( isInteractive ){
+                        if ( GetEventManager()->prevOverElement == this ){
+                            
+                            //bool dragged = false;
+                            
+                            //if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) dragged = true;
+                            
+                            if ( ofGetMousePressed() && (mouseDownPos.x != VUI::mouseX || mouseDownPos.y != VUI::mouseY) ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
+                            else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
+                            
+                            if (ofGetMousePressed()) {
+                                if ( !isMouseDown ) {
+                                    isMouseDown = true;
+                                    mouseDownPos.set( VUI::mouseX, VUI::mouseY );
+                                    //ofLog() << VUI::mouseX << "," << VUI::mouseY;
+                                }
+                                
+                                UpdateState(VUI_STATE_DOWN, true, true);
+                                
+                                /*if ( hasState[VUI_STATE_DOWN] ) UpdateState(VUI_STATE_DOWN, true, true);
+                                 else {
+                                 if ( hasState[VUI_STATE_OVER] ) UpdateState(VUI_STATE_OVER, true, true);
+                                 else UpdateState(VUI_STATE_UP, true, true);
+                                 }*/
+                            } else {
+                                if ( !isMouseInside || isMouseDown ) UpdateState(VUI_STATE_OVER, isMouseInside, isMouseDown);
+                                isMouseDown = false;
                             }
                             
-                            UpdateState(VUI_STATE_DOWN, true, true);
+                            isMouseInside = true;
                             
-                            /*if ( hasState[VUI_STATE_DOWN] ) UpdateState(VUI_STATE_DOWN, true, true);
-                            else {
-                                if ( hasState[VUI_STATE_OVER] ) UpdateState(VUI_STATE_OVER, true, true);
-                                else UpdateState(VUI_STATE_UP, true, true);
-                            }*/
+                            //if ( dragged ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
+                            //else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
                         } else {
-                            if ( !isMouseInside || isMouseDown ) UpdateState(VUI_STATE_OVER, isMouseInside, isMouseDown);
+                            if ( isMouseInside ) {
+                                UpdateState(VUI_STATE_UP);
+                                isMouseInside = false;
+                            }
                             isMouseDown = false;
                         }
                         
-                        isMouseInside = true;
-                        
-                        //if ( dragged ) TriggerEvent( VUI_EVENT_MOUSE_DRAGGED );
-                        //else TriggerEvent( VUI_EVENT_MOUSE_MOVED );
+                        if (  GetEventManager()->overElement != this ) GetEventManager()->StoreOverElement(this);
+                        _mInside = true;
                     } else {
-                        if ( isMouseInside ) {
-                            UpdateState(VUI_STATE_UP);
-                            isMouseInside = false;
-                        }
-                        isMouseDown = false;
+                        isMouseInside = true;
                     }
                     
-                    if (  GetEventManager()->overElement != this ) GetEventManager()->StoreOverElement(this);
                     return;
                 }
             }
-
+            
 			if (isMouseInside) {
-                GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
-				UpdateState(VUI_STATE_UP);
+                if ( isInteractive ){
+                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
+                    UpdateState(VUI_STATE_UP);
+                }
 				isMouseInside = false;
 			}
-
+            
+            _mInside = false;
 			isMouseDown = false;
         }
 
@@ -593,11 +610,7 @@ namespace VUI {
     void Element::TriggerEvent(vuiEvent eventType){
         //ofLog() << "TriggerEvent[" << eventType << "]";
         
-        vuiEventArgs args;
-        args.element = this;
-        args.eventType = eventType;
-        args.localMousePos.set( VUI::mouseX - globalMinPosition.x, VUI::mouseY - globalMinPosition.y );
-        args.globalMousePos.set( VUI::mouseX, VUI::mouseY );
+        vuiEventArgs args = GetEventArgs(eventType);
         
         vuiEventArgs argsTouch;
         argsTouch.element = this;
@@ -814,7 +827,10 @@ namespace VUI {
 		ofFill();
 		ofEnableAlphaBlending();
 
-		if (maskTex != nullptr && fbo != nullptr) fbo->begin();
+        if (maskTex != nullptr && fbo != nullptr) {
+            fbo->begin();
+            ofClear(0);
+        }
         
         ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, size.x, size.y );
 
@@ -969,11 +985,26 @@ namespace VUI {
 	Element* Element::SetPosition(float x, float y) {
 		this->setPosition(x, y, 0);
         
-        percentCalcValues.parseValue("x", x);
-        percentCalcValues.parseValue("y", y);
+        SetPositionX(x);
+        SetPositionY(y);
         
 		return this;
 	}
+    
+    void Element::SetPosition(string x, string y) {
+        SetPositionX(x);
+        SetPositionY(y);
+    }
+    
+    void Element::SetPosition(float x, string y) {
+        SetPositionX(x);
+        SetPositionY(y);
+    }
+    
+    void Element::SetPosition(string x, float y) {
+        SetPositionX(x);
+        SetPositionY(y);
+    }
     
     ofVec2f Element::GetPosition(){
         ofVec2f pos;
@@ -996,6 +1027,14 @@ namespace VUI {
     
     void Element::SetPositionY(float y) {
         this->setPosition(GetPosition().x, y, 0);
+        percentCalcValues.parseValue("y", y);
+    }
+    
+    void Element::SetPositionX(string x) {
+        percentCalcValues.parseValue("x", x);
+    }
+    
+    void Element::SetPositionY(string y) {
         percentCalcValues.parseValue("y", y);
     }
 

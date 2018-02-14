@@ -60,6 +60,10 @@ namespace VUI {
 		virtual void touchDoubleTap(int x, int y, int id) {};
 		virtual void touchCancelled(int x, int y, int id) {};
         
+#ifdef USING_ofxTouchPadScroll
+        virtual void touchPadScroll(int x, int y, int vuiEvent){};
+#endif
+        
         // --------------------------------------------------------
         
         void Render() {

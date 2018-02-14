@@ -5,6 +5,7 @@
 namespace VUI {
 
     StyleSheet* _vuiStyleSheet;
+    ofxTouchPadScroll tps;
     
 	map< string, View*> views;
 
@@ -38,6 +39,14 @@ namespace VUI {
 	cout << "ViewManagerBridge - update - " << ofRandomf() << endl;
 	if ( !VUI::currView.empty() ) VUI::GetCurrentView()->update(e);
 	}*/
+    
+    Tween* Animate( Element* el, float timeSeconds, string params ){
+        Tween *t = new Tween();
+        t->Start( el, timeSeconds, params );
+        
+        tweens.push_back( t );
+        return t;
+    }
 
 	void ViewManagerBridge::StartView(string name) {
 		//ofLog() << "name:" << name << "  curr:" << VUI::currView << "  next:" << VUI::nextView;
@@ -312,6 +321,29 @@ namespace VUI {
 		//touchCancelled(touch.x, touch.y, touch.id);
 		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchCancelled(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
 	}
+    
+#ifdef USING_ofxTouchPadScroll
+    void ViewManagerBridge::touchPadScroll(TouchPadScrollEventArgs& args){
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL );
+        VUI::GetCurrentEventManager()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL );
+    }
+    
+    void ViewManagerBridge::touchPadScrollStart(TouchPadScrollEventArgs& args){
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL_START );
+        VUI::GetCurrentEventManager()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL_START );
+    }
+    
+    void ViewManagerBridge::touchPadScrollEnd(TouchPadScrollEventArgs& args){
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL_END );
+        VUI::GetCurrentEventManager()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL_END );
+    }
+    
+    void ViewManagerBridge::touchPadScrollInertia(TouchPadScrollEventArgs& args){
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL_INERTIA );
+        VUI::GetCurrentEventManager()->touchPadScroll(args.x, args.y, VUI_EVENT_TOUCHPAD_SCROLL_INERTIA );
+    }
+#endif
+    
 }
 
 
@@ -337,6 +369,8 @@ namespace VUI {
         firstStep = true;
         active = true;
         this->el = el;
+        el->StopTween();
+        el->StoreTween(this);
         duration = timeSeconds*1000;
         
         string s(params);
@@ -544,6 +578,30 @@ namespace VUI {
         this->states[ state ].push_back( el );
     }
     
+#ifdef USING_ofxTouchPadScroll
+    void EM::touchPadScroll(int x, int y, vuiEvent eventType){
+        if (!active) return;
+        
+#ifdef USING_ofxWindowManager
+        if ( this->window != NULL ){
+            if ( !this->window->isMouseInside() ) return;
+        }
+#endif
+        
+        //ofLog() << "EM::touchPadScroll  " << x << "," << y;
+        if ( prevOverElement != nullptr ) {
+            vuiEventArgs args = prevOverElement->GetEventArgs(eventType);
+            args.touchPadScroll.set(x,y);
+            ofNotifyEvent(prevOverElement->onTouchPadScroll, args, prevOverElement);
+        }
+        
+        vuiEventArgs args2;
+        args2.eventType = eventType;
+        args2.touchPadScroll.set(x,y);
+        ofNotifyEvent(onTouchPadScroll, args2, this);
+    }
+#endif
+    
     void EM::Purge(){
         for( vector<vuiEvent>::iterator it = VUI::evtlist.begin(); it != VUI::evtlist.end(); it++ ){
             this->events[ (*it) ].clear();
@@ -600,7 +658,16 @@ namespace VUI {
         vw = windowW;
         vh = windowH;
         VUI::PRIVATE.Listen();
+        
+        tps.init();
     }
+    
+#ifdef USING_ofxWindowManager
+    void EM::Init(ofxAppBaseNewWindow* window){
+        this->window = window;
+        Init(window->getWindowWidth(), window->getWindowHeight());
+    }
+#endif
     
     void ClearOverElement() {
         GetCurrentEventManager()->prevOverElement = GetCurrentEventManager()->overElement;
@@ -618,6 +685,15 @@ namespace VUI {
             Purge();
             return;
         }
+        
+#ifdef USING_ofxWindowManager
+        if ( this->window != NULL ){
+            if ( !this->window->isMouseInside() ) {
+                Purge();
+                return;
+            }
+        }
+#endif
         
         //ofLog() << "EMBridge::Update - " << ofRandomf();
         //if ( EventHasElement(VUI_EVENT_MOUSE_CLICK) ) ofLog() << GetLatestElement(VUI_EVENT_MOUSE_CLICK)->GetName();

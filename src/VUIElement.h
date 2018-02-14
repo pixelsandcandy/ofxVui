@@ -200,6 +200,10 @@ namespace VUI {
         
         ofEvent<vuiEventArgs> onFocus;
         ofEvent<vuiEventArgs> onUnfocus;
+        
+#ifdef USING_ofxTouchPadScroll
+        ofEvent<vuiEventArgs> onTouchPadScroll;
+#endif
 
 		ofFbo *fbo = nullptr;
 		ofTexture *maskTex = nullptr;
@@ -221,6 +225,15 @@ namespace VUI {
             borderProps[3] = d;
         };
         
+        void RemoveMask(){
+            maskTex = nullptr;
+            if ( fbo != nullptr ){
+                fbo->clear();
+                fbo = 0;
+                fbo = nullptr;
+            }
+        }
+        
 		void SetMask( ofTexture *maskTexture ) {
 			maskTex = maskTexture;
 
@@ -228,11 +241,20 @@ namespace VUI {
 
 			fbo = new ofFbo();
 			//fbo->allocate(styleFloat[state]["width"], styleFloat[state]["height"], GL_RGBA);
-            fbo->allocate(width*scale, height*scale, GL_RGBA);
+            fbo->allocate(GetWidth()*scale, GetHeight()*scale, GL_RGBA);
 			fbo->begin();
 			ofClear(255, 255, 255, 0);
 			fbo->end();
 		}
+        
+        bool HasMask(){
+            if ( maskTex != nullptr ) return true;
+            return false;
+        }
+        
+        ofTexture* GetMask(){
+            return maskTex;
+        }
         
         float width = 60;
         float height = 60;
@@ -334,7 +356,7 @@ namespace VUI {
             else return this->EventManager;
         }
         
-        void SetEventManager(VUI::EM* eventManager){
+        virtual void SetEventManager(VUI::EM* eventManager){
             this->EventManager = eventManager;
         }
         
@@ -343,7 +365,7 @@ namespace VUI {
             return true;
         }
         
-        void AddChild( Element* el){
+        virtual void AddChild( Element* el){
             if ( !el->HasParent() ) {
                 el->SetParent( this );
                 el->SetEventManager( EventManager );
@@ -371,8 +393,13 @@ namespace VUI {
         
         ofVec2f GetPosition();
 		Element* SetPosition(float x, float y);
+        void SetPosition(string x, string y);
+        void SetPosition(float x, string y);
+        void SetPosition(string x, float y);
         void SetPositionX( float x );
         void SetPositionY( float y );
+        void SetPositionX( string x );
+        void SetPositionY( string y );
 		void UseStyleClass(string name);
 		void UseStyleID(string name);
         void UseStyle(string style);
@@ -464,6 +491,23 @@ namespace VUI {
         float GetOpacity(){
             return opacity;
         }
+        
+        bool IsMouseInside(){
+            return _mInside;
+        }
+        
+        Tween* tween = NULL;
+        
+        void StopTween(){
+            if ( tween != NULL ) {
+                tween->Stop();
+                tween = NULL;
+            }
+        }
+        
+        void StoreTween(Tween* tween){
+            this->tween = tween;
+        }
 				
     protected:
         ofTrueTypeFont* font = nullptr;
@@ -490,6 +534,7 @@ namespace VUI {
         ofVec2f mouseDownPos;
         bool isMouseDown = false;
         bool isMouseInside = false;
+        bool _mInside = false;
         int lastClickTimeMS = 0;
 		int touchDownTimeMS = 0;
 

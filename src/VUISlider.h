@@ -123,7 +123,6 @@ namespace VUI {
             else bar->SetWidth( sliderVal );
             
             vuiEventArgs args = GetEventArgs(VUI_EVENT_SLIDER_VALUE_CHANGE);
-            args.slider = this;
             args.value = sliderVal;
             args.percValue = sliderPerc;
             

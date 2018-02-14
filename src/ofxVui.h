@@ -13,9 +13,16 @@
 #include "ofxWinTouchHook.h"
 #endif
 
+#ifdef USING_ofxTouchPadScroll
+#include "ofxTouchPadScroll.h"
+#endif
+
+#ifdef USING_ofxWindowManager
+#include "ofxWindowManager.h"
+#endif
+
 namespace VUI {
 	class Element;
-    class Slider;
 
 	enum State {
 		VUI_STATE_UP,
@@ -31,6 +38,11 @@ namespace VUI {
              VUI_ROTATE_90_CW,
              VUI_ROTATE_180
          */
+    };
+    
+    enum Stack {
+        VUI_STACK_HORZ,
+        VUI_STACK_VERT
     };
     
 	enum Align {
@@ -78,8 +90,18 @@ namespace VUI {
         VUI_EVENT_ANIMATE_COMPLETE,
         VUI_EVENT_ANIMATE_STEP,
         VUI_EVENT_ANIMATE_START
+        
+#ifdef USING_ofxTouchPadScroll
+        ,VUI_EVENT_TOUCHPAD_SCROLL_START
+        ,VUI_EVENT_TOUCHPAD_SCROLL
+        ,VUI_EVENT_TOUCHPAD_SCROLL_END
+        ,VUI_EVENT_TOUCHPAD_SCROLL_INERTIA
+#endif
 	};
 
+#ifdef USING_ofxTouchPadScroll
+    extern ofxTouchPadScroll tps;
+#endif
 	
     extern Rotate uiRotation;
     extern Rotate viewRotation;
@@ -218,18 +240,15 @@ namespace VUI {
         ofVec2f globalMousePos;
         
         Tween* tween = NULL;
-        Slider* slider = NULL;
+        
+#ifdef USING_ofxTouchPadScroll
+        ofVec2f touchPadScroll;
+#endif
     };
     
     extern vector<Tween*> tweens;
     
-    static Tween* Animate( Element* el, float timeSeconds, string params ){
-        Tween *t = new Tween();
-        t->Start( el, timeSeconds, params );
-        
-        tweens.push_back( t );
-        return t;
-    }
+    Tween* Animate( Element* el, float timeSeconds, string params );
     
     template <typename ArgumentsType, class ListenerClass>
     static Tween* Animate( Element* el, float timeSeconds, string params, ListenerClass* listener, void (ListenerClass::*listenerMethod)(ArgumentsType&) ){
@@ -372,6 +391,16 @@ namespace VUI {
         
         void Init(int windowW, int windowH);
         
+#ifdef USING_ofxWindowManager
+        ofxAppBaseNewWindow* window = NULL;
+        void Init(ofxAppBaseNewWindow* window);
+#endif
+        
+#ifdef USING_ofxTouchPadScroll
+        ofEvent<vuiEventArgs> onTouchPadScroll;
+        void touchPadScroll(int x, int y, vuiEvent eventType);
+#endif
+        
         /*void ShouldDestroyTween( Tween* t ){
             tweensToDestroy.push_back( t );
         }
@@ -446,6 +475,7 @@ namespace VUI {
 #include "VUITextField.h"
 #include "VUIToggleGroup.h"
 #include "VUISlider.h"
+#include "VUIContainer.h"
 
 
 // ViewManager
@@ -716,7 +746,15 @@ namespace VUI {
 			ofAddListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
 
 			ofAddListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
+            
+#ifdef USING_ofxTouchPadScroll
+            ofAddListener(tps.onScrollStart, this, &ViewManagerBridge::touchPadScrollStart);
+            ofAddListener(tps.onScroll, this, &ViewManagerBridge::touchPadScroll);
+            ofAddListener(tps.onScrollEnd, this, &ViewManagerBridge::touchPadScrollEnd);
+            ofAddListener(tps.onScrollInertia, this, &ViewManagerBridge::touchPadScrollInertia);
+#endif
 
+            
 		}
         
         void EnableTouchEvents(){
@@ -761,6 +799,12 @@ namespace VUI {
 		void touchUp(ofTouchEventArgs & touch);
 		void touchDoubleTap(ofTouchEventArgs & touch);
 		void touchCancelled(ofTouchEventArgs & touch);
+#ifdef USING_ofxTouchPadScroll
+        void touchPadScrollStart(TouchPadScrollEventArgs& args);
+        void touchPadScroll(TouchPadScrollEventArgs& args);
+        void touchPadScrollEnd(TouchPadScrollEventArgs& args);
+        void touchPadScrollInertia(TouchPadScrollEventArgs& args);
+#endif
 	};
 
 	extern ViewManagerBridge PRIVATE;
@@ -1069,11 +1113,26 @@ namespace VUI {
         _didInit = true;
         
         string styles = R"(
-            [.slider-bar-bg>
-                 bgColor: #000000;
-                 bgOpacity: .2;
+            [.Container-container>
+                 height: 100%;
+                 width: 100%;
              ]
-            
+        
+            [.Container-vertContainer>
+                 height: 100%;
+                 width: 100%;
+             ]
+        
+            [.Container-horzContainer>
+                 width: 100%;
+             ]
+        
+            [.Container-scrollbar>
+             bgColor: #000000;
+             bgOpacity: .85;
+             width: 10;
+             height: 30;
+             ]
         )";
         
         //
