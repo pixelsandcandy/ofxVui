@@ -66,6 +66,8 @@ Elements
   ∟ ToggleGroup
   ∟ Text
   ∟ TextField
+  ∟ Slider
+  ∟ Container
     
 Animation Tween
   ∟ x
@@ -113,8 +115,8 @@ GUI States
   ∟ STATE_DOWN
   
 GUI StyleSheet: Styles
-  ∟ width
-  ∟ height
+  ∟ width (px/%/calc)
+  ∟ height (px/%/calc)
   ∟ scale
   ∟ opacity
   ∟ rotation
@@ -317,8 +319,8 @@ void setup(){
     ]
     
     [.button>
-      width: 120;
-      height: 36;
+      width: calc(40%-20);
+      height: 10%;
       bgImage: btn-up, FIT;
       
       &:over{
@@ -336,9 +338,13 @@ void setup(){
     ]
     
     [.text>
+      width: 160;
+      height: 32;
       font: path/to/fontfile.ttf,16;
       color: #dddddd;
       padding: 10;
+      anchorPoint: center-center;
+      textAlign: center-center;
       bg: #ffffff;
     ]
   )";
@@ -357,15 +363,15 @@ void setup(){
   */
 
 
-  label = new Text( 20, 20, ss, ".text" );
+  label = new Text( "50%", "50%", ss, ".text" );
   
   // true = automatically set width/height to text
   label->SetText( "Stuff", true );
   
   
   // Element(x, y, StyleSheet*, primarySelector, secondarySelector );
-  buttonA = new Element( 20, 40, ss, ".button" );
-  buttonB = new Element( 20, 80, ss, ".button", "#buttonB" );
+  buttonA = new Element( 20, "calc(50%+30)", ss, ".button" );
+  buttonB = new Element( "10%", "calc(50%+70)", ss, ".button", "#buttonB" );
   
 }
 
@@ -489,12 +495,13 @@ void draw(){
       + Add - VUI_EVENT_TOUCH_DRAG
       
   ⭐️ UI Elements
-      + Add - Slider
+      ✔️ Add - Container - scrollable
+      ✔️ Add - Slider
       + Add - Slider2D
       
   ⭐️ StyleSheet
-      + width/height - percentage based values
-      + width/height - calc() based values
+      ✔️ width/height - percentage based values
+      ✔️ width/height - calc() based values
       
   ⭐️ VUI::SetRotation()
       + Add option - VUI_ROTATE_90_CW
