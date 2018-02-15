@@ -33,4 +33,38 @@ namespace VUI {
         UpdateContainerStyle();
     }
     
+    void Container::_vuiEventHandler(vuiEventArgs& evt){
+#ifdef USING_ofxTouchPadScroll
+        if ( !IsMouseInside() ) return;
+        
+        if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_END ){
+            scrollbar->Animate(.3,"{delay:.4,opacity:0}");
+            return;
+        }
+        
+        if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_START ){
+            scrollbar->StopTween();
+            startScrollPos = container->GetPosition();
+            scrollbar->SetOpacity(1.0);
+        } else if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_INERTIA || evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL ) {
+            if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_INERTIA ) startScrollPos = container->GetPosition();
+            tempScrollPos.set(startScrollPos);
+            
+            tempScrollPos.y += evt.touchPadScroll.y*VUI::divideDpi;
+            
+            if ( tempScrollPos.y < -scrollDist.y ) tempScrollPos.y = -scrollDist.y;
+            else if ( tempScrollPos.y > padding.top*VUI::dpi ) tempScrollPos.y = padding.top*VUI::dpi;
+            
+            container->SetPositionY(tempScrollPos.y*VUI::divideDpi);
+            
+            float perc = ((tempScrollPos.y)/(-scrollDist.y+padding.top*VUI::dpi));
+            if ( perc < 0.0 ) perc = 0.0;
+            
+            scrollbar->SetPositionY( (perc*scrollbarDist) + scrollbarPadding );
+            
+        }
+#endif
+        
+    }
+    
 };

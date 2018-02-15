@@ -5,7 +5,10 @@
 namespace VUI {
 
     StyleSheet* _vuiStyleSheet;
+    
+#ifdef USING_ofxTouchPadScroll
     ofxTouchPadScroll tps;
+#endif
     
 	map< string, View*> views;
 
@@ -439,9 +442,9 @@ namespace VUI {
     void Tween::StoreStartValues(){
         for ( vector<string>::iterator it = valueNames.begin(); it != valueNames.end(); it++ ){
             if ( (*it) == "x" ){
-                startValues[ (*it) ] = el->getPosition().x;
+                startValues[ (*it) ] = el->GetPosition().x;
             } else if ( (*it) == "y" ){
-                startValues[ (*it) ] = el->getPosition().y;
+                startValues[ (*it) ] = el->GetPosition().y;
             } else if ( (*it) == "width" ){
                 //ofLog() << "width:" << el->GetWidth();
                 startValues[ (*it) ] = el->GetWidth(false);
@@ -660,8 +663,9 @@ namespace VUI {
         vw = windowW;
         vh = windowH;
         VUI::PRIVATE.Listen();
-        
+#ifdef USING_ofxTouchPadScroll
         tps.init();
+#endif
     }
     
 #ifdef USING_ofxWindowManager
