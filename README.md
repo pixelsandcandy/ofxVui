@@ -371,7 +371,7 @@ void setup(){
   
   // Element(x, y, StyleSheet*, primarySelector, secondarySelector );
   buttonA = new Element( 20, "calc(50%+30)", ss, ".button" );
-  buttonB = new Element( "10%", "calc(50%+70)", ss, ".button", "#buttonB" );
+  buttonB = new Element( "10%", 300, ss, ".button", "#buttonB" );
   
 }
 
