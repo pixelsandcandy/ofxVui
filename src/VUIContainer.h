@@ -71,7 +71,7 @@ namespace VUI {
                 AddChild(child);
                 child->SetPosition(0,stackPos.y);
                 
-                stackPos.y += child->GetHeight();
+                stackPos.y += child->GetOriginalHeight();
             } else {
                 // TODO: Test/Fix this
                 
@@ -86,14 +86,14 @@ namespace VUI {
                     stackPos.x += x;
                 } else if ( child->GetWidth() <= container->GetWidth() ) {
                     stackPos.x = 0;
-                    stackPos.y += child->GetHeight();
+                    stackPos.y += child->GetOriginalHeight();
                     
                     AddAndStackChild(child, stackDirection);
                 }
                 
             }
             
-            if ( stackPos.y > vertContainer->GetHeight() - padding.top ) CreateMask();
+            if ( stackPos.y > vertContainer->GetOriginalHeight() - padding.top ) CreateMask();
             UpdateScrollbarStyle();
             
         }
@@ -160,7 +160,7 @@ namespace VUI {
             container->SetHeight(stackPos.y+padding.bottom);
             
             
-            scrollDist.y = (stackPos.y - vertContainer->GetHeight()) + padding.bottom;
+            scrollDist.y = (stackPos.y*VUI::dpi - vertContainer->GetHeight()) + padding.bottom*VUI::dpi;
 
             
             if ( create ) {
@@ -182,18 +182,18 @@ namespace VUI {
         }
         
         void UpdateScrollbarStyle(){
-            minScrollbarHeight = vertContainer->GetHeight()*.1;
+            minScrollbarHeight = vertContainer->GetOriginalHeight()*.1;
             if ( minScrollbarHeight < 50 ) minScrollbarHeight = 50;
             
             scrollbar->SetPosition("calc(100%-" + ofToString(scrollbarPadding+scrollbarWidth) + ")", scrollbarPadding);
             
-            int h = (vertContainer->GetHeight() / (stackPos.y*.8)) * vertContainer->GetHeight();
+            int h = (vertContainer->GetOriginalHeight() / (stackPos.y*.8)) * vertContainer->GetOriginalHeight();
             if ( h < minScrollbarHeight ) h = minScrollbarHeight;
             
             scrollbar->SetHeight(h);
             scrollbar->SetWidth(scrollbarWidth);
             
-            scrollbarDist = vertContainer->GetHeight() - (scrollbarPadding*2) - h;
+            scrollbarDist = vertContainer->GetOriginalHeight() - (scrollbarPadding*2) - h;
             
             scrollbar->SetOpacity(0);
         }
@@ -225,14 +225,16 @@ namespace VUI {
                 if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_INERTIA ) startScrollPos = container->GetPosition();
                 tempScrollPos.set(startScrollPos);
                 
-                tempScrollPos.y += evt.touchPadScroll.y;
+                tempScrollPos.y += evt.touchPadScroll.y*VUI::divideDpi;
                 
                 if ( tempScrollPos.y < -scrollDist.y ) tempScrollPos.y = -scrollDist.y;
-                else if ( tempScrollPos.y > padding.top ) tempScrollPos.y = padding.top;
+                else if ( tempScrollPos.y > padding.top*VUI::dpi ) tempScrollPos.y = padding.top*VUI::dpi;
                 
-                container->SetPositionY(tempScrollPos.y);
+                container->SetPositionY(tempScrollPos.y*VUI::divideDpi);
                 
-                float perc = ((tempScrollPos.y - padding.top)/(-scrollDist.y-padding.top));
+                float perc = ((tempScrollPos.y)/(-scrollDist.y+padding.top*VUI::dpi));
+                if ( perc < 0.0 ) perc = 0.0;
+                
                 scrollbar->SetPositionY( (perc*scrollbarDist) + scrollbarPadding );
                 
                 

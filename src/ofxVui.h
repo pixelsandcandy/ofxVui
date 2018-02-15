@@ -108,27 +108,38 @@ namespace VUI {
     
     extern map<string, map<int, map< float, ofTrueTypeFont*>>> fonts;
     extern int fontSize;
+    extern float dpi;
+    extern float divideDpi;
     
     static void SetFontSize( int size ){
         fontSize = size;
     }
     
+    static void SetDpi( float _dpi ){
+        dpi = _dpi;
+        divideDpi = 1.0 / _dpi;
+    }
+    
+    static float GetDpi(){
+        return dpi;
+    }
+    
     static bool HasFont( string filename, int fontSize, float letterSpacing ){
-        if ( fonts[filename][fontSize][letterSpacing] != nullptr ) return true;
+        if ( fonts[filename][fontSize*VUI::dpi][letterSpacing] != nullptr ) return true;
         return false;
     }
     
     static ofTrueTypeFont* GetFont( string filename, int fontSize, float letterSpacing ){
-        return fonts[filename][fontSize][letterSpacing];
+        return fonts[filename][fontSize*VUI::dpi][letterSpacing];
     }
     
     static ofTrueTypeFont* AddFont( string filename, int fontSize, float letterSpacing = 1.0 ){
         ofTrueTypeFont* tf = new ofTrueTypeFont();
-        tf->load(filename, fontSize);
+        tf->load(filename, fontSize*VUI::dpi);
         tf->setLetterSpacing(letterSpacing);
         
-        fonts[filename][fontSize][letterSpacing] = tf;
-        return fonts[filename][fontSize][letterSpacing];
+        fonts[filename][fontSize*VUI::dpi][letterSpacing] = tf;
+        return fonts[filename][fontSize*VUI::dpi][letterSpacing];
     }
 
     

@@ -26,8 +26,8 @@ namespace VUI {
                 ~PCV(){};
                 
                 float perc = 1.0;
-                int offset = 0;
-                int val = 1;
+                float offset = 0;
+                float val = 1.0;
                 
                 bool pxValue = false;
                 
@@ -38,7 +38,7 @@ namespace VUI {
                 }
                 
                 void parse(int value){
-                    val = value;
+                    val = (float)value*VUI::dpi;
                     pxValue = true;
                 }
                 
@@ -50,7 +50,7 @@ namespace VUI {
                         end = value.find( "%" );
                         string per = value.substr( start, end - start );
                         
-                        perc = ofToInt( per ) * .01;
+                        perc = ofToFloat( per )*.01;
                         
                         if ( value.find("-") != -1 ) {
                             start = value.find("-")+1;
@@ -64,14 +64,14 @@ namespace VUI {
                         
                         string diff = value.substr( start, end - start);
                         
-                        offset = ofToInt( diff )*offset;
+                        offset = (ofToFloat( diff )*offset)*VUI::dpi;
                         pxValue = false;
                         
                     } else if ( value.find("%") != -1 ){
-                        perc = ofToInt( value )*.01;
+                        perc = ofToFloat( value )*.01;
                         pxValue = false;
                     } else {
-                        val = ofToInt(value);
+                        val = ofToFloat(value)*VUI::dpi;
                         pxValue = true;
                     }
                 }
@@ -390,6 +390,8 @@ namespace VUI {
         
         int GetHeight( bool scaled = true);
         int GetWidth(bool scaled = true);
+        int GetOriginalHeight( bool scaled = true);
+        int GetOriginalWidth(bool scaled = true);
         
         ofVec2f GetPosition();
 		Element* SetPosition(float x, float y);

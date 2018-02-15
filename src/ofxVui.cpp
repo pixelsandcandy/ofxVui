@@ -23,6 +23,8 @@ namespace VUI {
 
 	int mouseX;
 	int mouseY;
+    float dpi = 1.0;
+    float divideDpi = 1.0;
 
 	int vw = -1;
 	int vh = -1;

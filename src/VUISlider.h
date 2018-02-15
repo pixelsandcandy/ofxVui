@@ -120,7 +120,7 @@ namespace VUI {
             sliderPerc = sliderVal / w;
             
             if ( evt.eventType == VUI_EVENT_MOUSE_CLICK || evt.eventType == VUI_EVENT_MOUSE_RELEASED || evt.eventType == VUI_EVENT_MOUSE_PRESSED ) bar->SetWidth( ofToString(sliderPerc*100.0) + "%" );
-            else bar->SetWidth( sliderVal );
+            else bar->SetWidth( sliderVal*VUI::divideDpi );
             
             vuiEventArgs args = GetEventArgs(VUI_EVENT_SLIDER_VALUE_CHANGE);
             args.value = sliderVal;

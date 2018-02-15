@@ -11,6 +11,7 @@ namespace VUI {
         VUI::Init();
         
         SetDefaultStyles(x, y);
+        SetPosition(x,y);
         ParseStyleSheet(ss, primarySelector, secondarySelector );
     }
     
@@ -18,7 +19,7 @@ namespace VUI {
         VUI::Init();
         
         SetDefaultStyles(x, 0);
-        percentCalcValues.parseValue("y", y);
+        SetPosition(x,y);
         ParseStyleSheet(ss, primarySelector, secondarySelector );
     }
     
@@ -26,7 +27,7 @@ namespace VUI {
         VUI::Init();
         
         SetDefaultStyles(0, y);
-        percentCalcValues.parseValue("x", x);
+        SetPosition(x,y);
         ParseStyleSheet(ss, primarySelector, secondarySelector );
     }
     
@@ -34,8 +35,7 @@ namespace VUI {
         VUI::Init();
         
         SetDefaultStyles(0, 0);
-        percentCalcValues.parseValue("x", x);
-        percentCalcValues.parseValue("y", y);
+        SetPosition(x,y);
         ParseStyleSheet(ss, primarySelector, secondarySelector );
     }
     
@@ -1021,12 +1021,10 @@ namespace VUI {
     }
     
     void Element::SetPositionX(float x) {
-        this->setPosition(x, GetPosition().y, 0);
         percentCalcValues.parseValue("x", x);
     }
     
     void Element::SetPositionY(float y) {
-        this->setPosition(GetPosition().x, y, 0);
         percentCalcValues.parseValue("y", y);
     }
     
@@ -1042,9 +1040,6 @@ namespace VUI {
 	Element* Element::SetSize(float w, float h ) {
         percentCalcValues.parseValue("width", w);
         percentCalcValues.parseValue("height", h);
-        
-        width = w;
-        height = h;
         return this;
 	}
     
@@ -1057,12 +1052,10 @@ namespace VUI {
     
     void Element::SetWidth( float w ){
         percentCalcValues.parseValue("width", w);
-        width = w;
     }
     
     void Element::SetHeight( float h ){
         percentCalcValues.parseValue("height", h);
-        height = h;
     }
     
     void Element::SetWidth( string w ){
@@ -1089,6 +1082,14 @@ namespace VUI {
         
         if ( scaled ) return h*scale;
         else return h;
+    }
+    
+    int Element::GetOriginalWidth(bool scaled){
+        return GetWidth(scaled)*VUI::divideDpi;
+    }
+    
+    int Element::GetOriginalHeight(bool scaled){
+        return GetHeight(scaled)*VUI::divideDpi;
     }
     
 	void Element::UseStyleClass(string name) {
@@ -1376,10 +1377,8 @@ namespace VUI {
                              }*/
                             
                             if ( tempSplit[0] == "width" ) {
-                                width = ofToFloat( tempSplit[1] );
                                 percentCalcValues.parseValue("width", tempSplit[1] );
                             } else if ( tempSplit[0] == "height" ) {
-                                height = ofToFloat( tempSplit[1] );
                                 percentCalcValues.parseValue("height", tempSplit[1] );
                             }
                             
