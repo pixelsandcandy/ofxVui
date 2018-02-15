@@ -546,8 +546,8 @@ namespace VUI {
     extern bool useViewManager;
     
     static void SetResolution(int w, int h, float scale = 1.0, bool enableViewManager = true ) {
-        vw = w;
-        vh = h;
+        vw = w*VUI::dpi;
+        vh = h*VUI::dpi;
         
         ScaleView(scale);
         useViewManager = enableViewManager;
@@ -906,11 +906,11 @@ namespace VUI {
 	}
     
     static int GetResolutionX(){
-        return vw;
+        return vw*VUI::divideDpi;
     }
     
     static int GetResolutionY(){
-        return vh;
+        return vh*VUI::divideDpi;
     }
     
     static float GetScale(bool inverse = false){
