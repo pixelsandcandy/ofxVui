@@ -324,14 +324,14 @@ void setup(){
     [.button>
       width: calc(40%-20);
       height: 10%;
-      bgImage: btn-up, FIT;
+      bgImage: btn-up, FILL;
       
       &:over{
-        bgImage: btn-over, FIT;
+        bgImage: btn-over, FILL;
       }
       
       &:down{
-        bgImage: btn-down, FIT;
+        bgImage: btn-down, FILL;
       }
     ]
     
