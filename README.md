@@ -22,6 +22,10 @@
   * macOS High Sierra (10.13) » Xcode 9
   * Windows 10 » Visual Studio 2017 
 ***
+###### *[HIGH RESOLUTION / DPI](#high-res)*
+  * Xcode Project » openFrameworks-Info.plist » right-click » Add Row » High Resolution Capable » YES
+    * in main.cpp » first line in main() » VUI::SetDpi(2.0);
+***
 ###### *[QUICK NOTE](#quick-note)*
 
 So everything works! 🎉 Although, the code under the hood is a little bit of spaghetti at the moment, uncommented, and there's a lot of legacy/debug stuff 😅. I was originally working on two different addons but decided to merge them together. Cleaning up the code is on my TODO list but first wanted to make this addon usable, tested, and make enough project/code examples. I have to get back to other projects though so yea... please feel free to enjoy this as-is 😋 and I'll continue to make improvements/add features whenever I get the chance 😊
