@@ -451,7 +451,7 @@ void setup(){
 
 void draw(){
   /*
-      VUI::Render() is VUI::RenderBefore() + VUI::RenderAfter()
+      VUI::Render() is VUI::RenderBegin() + VUI::RenderEnd()
   */
   VUI::Render();
   
@@ -461,9 +461,9 @@ void draw(){
       If you still want to scale/rotate your view without using the
       View Manager (via AddView()/SetView() you can like this:
 
-          VUI::RenderBefore();
+          VUI::RenderBegin();
             // draw your stuff here
-          VUI::RenderAfter();
+          VUI::RenderEnd();
 
 
       But you MUST set the 4th arg in VUI::SetResolution() to false (main.cpp):
