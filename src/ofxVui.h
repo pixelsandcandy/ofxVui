@@ -1007,9 +1007,14 @@ namespace VUI {
     }
     
     static void RenderEnd(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
-        if (currView.empty() || views[currView] == nullptr || VUI::vscale != 1 ) return;
         
-        fbo.end();
+        if ( VUI::vscale != 1 ){
+            fbo.end();
+        }
+        
+        if (currView.empty() || views[currView] == nullptr ) return;
+        
+        
         ofSetColor(255, 255, 255, 255);
         ofEnableAlphaBlending();
         
