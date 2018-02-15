@@ -856,10 +856,10 @@ namespace VUI {
         Image &img = bgImage[renderState];
         if ( img.active ) {
             if ( img.size == VUI_IMAGE_FILL ){
-                img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, 0, 0, img.bounds.width, img.bounds.height);
+                img.image->draw(rect.x, rect.y, rect.width, rect.height);
             } else {
-                if ( img.bounds.width == -1 ) img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, GetHeight(false), GetHeight(false));
-                else img.image->drawSubsection(anchorOffset.x, anchorOffset.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
+                if ( img.bounds.width == -1 ) img.image->drawSubsection(rect.x, rect.y, size.x, size.y, img.bounds.x, img.bounds.y);
+                else img.image->drawSubsection(rect.x, rect.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
             }
             
         }
@@ -900,7 +900,7 @@ namespace VUI {
             // ORIGINAL - works
             //(*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
             
-            (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
+            (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, ofVec2f(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y));
             
             // works-ish
             //(*it)->Render(0, 0, parentSumOpacity, anchorOffset, globalPos  );

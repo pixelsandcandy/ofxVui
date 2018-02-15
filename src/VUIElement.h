@@ -373,7 +373,7 @@ namespace VUI {
             }
         }
         
-        vector<Element*> GetChildren(){
+        virtual vector<Element*> GetChildren(){
             return children;
         }
         

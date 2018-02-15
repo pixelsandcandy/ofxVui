@@ -70,8 +70,10 @@ namespace VUI {
             if ( stackDirection == VUI_STACK_VERT ) {
                 AddChild(child);
                 child->SetPosition(0,stackPos.y);
-                
+                ofLog() << stackPos.y;
                 stackPos.y += child->GetOriginalHeight();
+                ofLog() << stackPos.y;
+                
             } else {
                 // TODO: Test/Fix this
                 
@@ -96,6 +98,10 @@ namespace VUI {
             if ( stackPos.y > vertContainer->GetOriginalHeight() - padding.top ) CreateMask();
             UpdateScrollbarStyle();
             
+        }
+        
+        vector<Element*> GetChildren(){
+            return container->children;
         }
         
         void SetEventManager(VUI::EM* eventManager){
