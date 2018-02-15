@@ -23,8 +23,8 @@
   * Windows 10 » Visual Studio 2017 
 ***
 ###### *[HIGH RESOLUTION / DPI](#high-res)*
-  * Xcode Project » openFrameworks-Info.plist » right-click » Add Row » High Resolution Capable » YES
-    * in main.cpp » first line in main() » VUI::SetDpi(2.0);
+  * ***Xcode*** » openFrameworks-Info.plist » right-click » Add Row » High Resolution Capable » YES
+    * in main.cpp » first line in main() » VUI::SetDpi(2.0)
 ***
 ###### *[QUICK NOTE](#quick-note)*
 
