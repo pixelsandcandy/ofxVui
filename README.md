@@ -68,6 +68,8 @@ Elements
   ∟ TextField
   ∟ Slider
   ∟ Container
+  
+  (x/y position » px/%/calc)
     
 Animation Tween
   ∟ x
@@ -115,8 +117,8 @@ GUI States
   ∟ STATE_DOWN
   
 GUI StyleSheet: Styles
-  ∟ width (px/%/calc)
-  ∟ height (px/%/calc)
+  ∟ width » px/%/calc
+  ∟ height » px/%/calc
   ∟ scale
   ∟ opacity
   ∟ rotation
