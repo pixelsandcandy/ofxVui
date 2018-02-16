@@ -421,7 +421,7 @@ namespace VUI {
         int oldState(renderState);
         
 		bool update = renderState != toState ? true : false;
-        if ( isToggle ) {
+        if ( isToggle || isSelection ) {
             //ofLog() << "virtual:" << virtualState << " -> to:" << toState;
             
             update = virtualState != toState ? true : false;
@@ -467,7 +467,7 @@ namespace VUI {
         
         if ( !update ) return;
         
-        if ( isToggle ){
+        if ( isToggle || isSelection ){
             
             bool isDown = virtualState == VUI_STATE_DOWN ? true : false;
             
@@ -492,7 +492,7 @@ namespace VUI {
                 
                 lastTimeMouseDown = ofGetElapsedTimeMillis() + 500;
                 
-                if ( isDown ){
+                if ( isDown && !isSelection ){
                     toState = VUI_STATE_OVER;
                 }
             }
@@ -1253,8 +1253,6 @@ namespace VUI {
                     else if (tempSplit[1] == "right-top") SetAnchorPoint(VUI_ALIGN_RIGHT_TOP);
                     else if (tempSplit[1] == "right-center") SetAnchorPoint(VUI_ALIGN_RIGHT_CENTER);
                     else if (tempSplit[1] == "right-bottom") SetAnchorPoint(VUI_ALIGN_RIGHT_BOTTOM);
-                    
-                    ofLog() << tempSplit[0] << "/" << tempSplit[1];
                 }
                 else if (tempSplit[0] == "font" ){
                     vector<string> fontProps = ofSplitString(tempSplit[1], "," );

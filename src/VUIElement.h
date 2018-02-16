@@ -327,6 +327,13 @@ namespace VUI {
         void MakeToggle(){
             SetToggle();
         }
+        
+        void SetSelection(bool doSelection = true){
+            isSelection = doSelection;
+        }
+        void MakeSelection(){
+            SetSelection();
+        }
 
 		//
 
@@ -460,7 +467,6 @@ namespace VUI {
 		}
 		void SetAnchorPoint(Align alignment) {
 			anchorPoint = alignment;
-            ofLog() << anchorPoint;
 		}
         
         void TriggerEvent(vuiEvent eventType);
@@ -552,6 +558,7 @@ namespace VUI {
         ofVec3f parentSumOffset;
         
         bool isToggle = false;
+        bool isSelection = false;
         int lastTimeMouseDown;
         int fixMouseY = 3;
         
