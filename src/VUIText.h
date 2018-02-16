@@ -103,7 +103,16 @@ namespace VUI {
         
         void SizeToText(){
             ofRectangle rect = font->getStringBoundingBox(text, 0,0);
+            rect.width*=VUI::divideDpi;
+            rect.height*=VUI::divideDpi;
             SetSize( rect.width + padding.x*2, rect.height + padding.y*2 );
+        }
+        
+        void SizeWidthToText(){
+            ofRectangle rect = font->getStringBoundingBox(text, 0,0);
+            rect.width*=VUI::divideDpi;
+            rect.height*=VUI::divideDpi;
+            SetWidth( rect.width + padding.x*2 );
         }
         
         bool IsFocused(){
@@ -120,19 +129,19 @@ namespace VUI {
         }
         
         void SetPadding( int x, int y ){
-            padding.set( x, y );
+            padding.set( x*VUI::dpi, y*VUI::dpi );
         }
         
         void SetPadding( int xy ){
-            SetPadding( xy, xy );
+            SetPadding( xy*VUI::dpi, xy*VUI::dpi );
         }
         
         void SetPaddingX( int x ){
-            padding.x = x;
+            padding.x = x*VUI::dpi;
         }
         
         void SetPaddingY( int y ){
-            padding.y = y;
+            padding.y = y*VUI::dpi;
         }
         
         ofVec2f textOffset;
@@ -179,30 +188,32 @@ namespace VUI {
                         y = (GetHeight() - textOffset.y);
                         break;
                     case VUI_ALIGN_CENTER_TOP:
-                        x = ((GetWidth() - rect.width)*0.5) + padding.x;
+                        x = ((GetOriginalWidth() - rect.width)*0.5) + padding.x;
                         y = 0;
                         break;
                     case VUI_ALIGN_CENTER_CENTER:
-                        x = ((GetWidth() - rect.width)*0.5) + padding.x;
+                        x = ((GetOriginalWidth() - rect.width)*0.5) + padding.x;
                         y = ((GetHeight() - textOffset.y)*0.5) + padding.y;
                         break;
                     case VUI_ALIGN_CENTER_BOTTOM:
-                        x = ((GetWidth() - rect.width)*0.5) + padding.x;
+                        x = ((GetOriginalWidth() - rect.width)*0.5) + padding.x;
                         y = (GetHeight() - textOffset.y);
                         break;
                     case VUI_ALIGN_RIGHT_TOP:
-                        x = GetWidth() - rect.width;
+                        x = GetOriginalWidth() - rect.width;
                         y = 0;
                         break;
                     case VUI_ALIGN_RIGHT_CENTER:
-                        x = GetWidth() - rect.width;
+                        x = GetOriginalWidth() - rect.width;
                         y = ((GetHeight() - textOffset.y)*0.5) + padding.y;
                         break;
                     case VUI_ALIGN_RIGHT_BOTTOM:
-                        x = GetWidth() - rect.width;
+                        x = GetOriginalWidth() - rect.width;
                         y = (GetHeight() - textOffset.y);
                         break;
                 }
+                
+                x-=1*VUI::dpi;
                 
                 
                 if ( hasTextShadow ) {
@@ -224,6 +235,8 @@ namespace VUI {
         
         void UpdateRect(){
             rect = font->getStringBoundingBox(text, 0,0);
+            //rect.width *= VUI::divideDpi;
+            //rect.height *= VUI::divideDpi;
         }
         
     private:

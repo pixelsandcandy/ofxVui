@@ -874,6 +874,7 @@ namespace VUI {
             }
         }
         
+        ofSetColor(255,255,255,255);
         RenderAfter(0,0);
         
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
@@ -881,13 +882,15 @@ namespace VUI {
             (*it)->Render(localMinPosition.x + rect.x + parentSumOffset.x + anchorOffset.x, localMinPosition.y + rect.y + parentSumOffset.y + anchorOffset.y, parentSumOpacity);
         }
 
+        ofSetColor(255,255,255,255);
 
 		if (maskTex != nullptr && fbo != nullptr) {
 
 			fbo->end();
             fbo->getTexture().setAlphaMask(*maskTex);
 
-			ofEnableAlphaBlending();
+			//ofEnableAlphaBlending();
+            ofDisableAlphaBlending();
             fbo->draw(rect.x, rect.y);
 		}
         
