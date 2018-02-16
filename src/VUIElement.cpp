@@ -122,7 +122,9 @@ namespace VUI {
         //globalMinPosition.set( localMinPosition.x + parentSumOffset.x, localMinPosition.y + parentSumOffset.y );
         //globalMaxPosition.set( localMaxPosition.x + parentSumOffset.x, localMaxPosition.y + parentSumOffset.y );
         
-        globalMinPosition.set( localMinPosition.x + parentSumOffset.x + anchorOffset.x, localMinPosition.y + parentSumOffset.y + anchorOffset.y );
+        globalMinPosition.set( localMinPosition.x + parentSumOffset.x + anchorOffset.x + parentOffsetPos.x, localMinPosition.y + parentSumOffset.y + anchorOffset.y + parentOffsetPos.y);
+        
+        
         globalMaxPosition.set( globalMinPosition.x + GetWidth(), globalMinPosition.y + GetHeight() );
         
         drawPosition.x = localMinPosition.x - anchorOffset.x - parentSumOffset.x;
@@ -340,7 +342,6 @@ namespace VUI {
 			
         }
         else {
-            
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY - fixMouseY < globalMaxPosition.y) {
                     if ( isInteractive ){
@@ -807,22 +808,21 @@ namespace VUI {
         
         parentSumOpacity = parentOpacity * opacity;
         parentSumOffset.set( parentOffsetX, parentOffsetY );
+        //parentAnchorOffset.set(_anchorOffset);
+        //parentOffsetPos.set(_parentOffsetPos);
         
         if ( !userUpdating ) Update(-1, -1, true);
         
-        
-        //ofLog() << "Element::Render - [" << userUpdating << "] - " << ofRandomf();
         ofPushView();
         VUI::_PrivateRotateUI();
         
         size.x = GetWidth();
         size.y = GetHeight();
         
-        ofTranslate( localMinPosition.x + _anchorOffset.x, localMinPosition.y + _anchorOffset.y );
-        
-        
+        ofTranslate( localMinPosition.x, localMinPosition.y);
         
         ofRotate( rotation );
+        ofTranslate( anchorOffset.x, anchorOffset.y );
         
 		ofFill();
 		ofEnableAlphaBlending();
@@ -832,20 +832,14 @@ namespace VUI {
             ofClear(0);
         }
         
-        ofRectangle rect(anchorOffset.x, anchorOffset.y, size.x, size.y );
+        ofRectangle rect(0, 0, size.x, size.y );
 
 		if (style[renderState]["background-color"] != "clear") {
-			//ofSetHexColor(styleFloat[state]["background-color"]);
 			color.setHex(styleFloat[renderState]["background-color"], styleFloat[renderState]["background-opacity"]*styleFloat[renderState]["opacity"]*parentSumOpacity);
 			ofSetColor(color);
-			//cout << state << endl;
-			//ofSetColor( )
-            
-            //if ( name == "comfortBar" ) ofLog() << style[renderState]["background-color"] << " -> " << styleFloat[renderState]["background-color"];
 			ofDrawRectangle(rect.x, rect.y, rect.width, rect.height);
 		}
 		
-		//ofSetColor(ofColor::white);
 		color.setHex(0xffffff, styleFloat[renderState]["opacity"]*parentSumOpacity);
 		ofSetColor(color);
 
@@ -879,42 +873,17 @@ namespace VUI {
             }
         }
         
-        //RenderAfter( _anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y );
-        
         RenderAfter(0,0);
         
-        
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
-            //(*it)->Render(localMinPosition.x,localMinPosition.y, parentSumOpacity, anchorOffset, ofVec2f(parentOffsetPos.x + parentOffsetX, parentOffsetPos.y + parentOffsetY) );
-            
-            //(*it)->Render(globalPos.x, globalPos.y, parentSumOpacity, anchorOffset  );
-            
-            
-            
-            //(*it)->Render(0, 0, parentSumOpacity, anchorOffset, ofVec2f(drawPosition.x, drawPosition.y)  );
-            
-            //(*it)->Render(0, 0 );
-            
-            //drawPosition.x + parentSumOffset.x
-            
-            //(*it)->Render(localMinPosition.x,localMinPosition.y, parentSumOpacity, anchorOffset, ofVec2f(parentOffsetPos.x + parentOffsetX, parentOffsetPos.y + parentOffsetY) );
-            
-            // ORIGINAL - works
-            //(*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
-            
-            (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, ofVec2f(rect.x, rect.y));
-            
-            // works-ish
-            //(*it)->Render(0, 0, parentSumOpacity, anchorOffset, globalPos  );
-            
-            //(*it)->Render(parentOffsetX, parentOffsetY, parentSumOpacity, anchorOffset, globalPos  );
+
+            (*it)->Render(localMinPosition.x + rect.x + parentSumOffset.x + anchorOffset.x, localMinPosition.y + rect.y + parentSumOffset.y + anchorOffset.y, parentSumOpacity);
         }
 
 
 		if (maskTex != nullptr && fbo != nullptr) {
 
 			fbo->end();
-
             fbo->getTexture().setAlphaMask(*maskTex);
 
 			ofEnableAlphaBlending();
@@ -1284,6 +1253,8 @@ namespace VUI {
                     else if (tempSplit[1] == "right-top") SetAnchorPoint(VUI_ALIGN_RIGHT_TOP);
                     else if (tempSplit[1] == "right-center") SetAnchorPoint(VUI_ALIGN_RIGHT_CENTER);
                     else if (tempSplit[1] == "right-bottom") SetAnchorPoint(VUI_ALIGN_RIGHT_BOTTOM);
+                    
+                    ofLog() << tempSplit[0] << "/" << tempSplit[1];
                 }
                 else if (tempSplit[0] == "font" ){
                     vector<string> fontProps = ofSplitString(tempSplit[1], "," );

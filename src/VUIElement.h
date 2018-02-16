@@ -460,6 +460,7 @@ namespace VUI {
 		}
 		void SetAnchorPoint(Align alignment) {
 			anchorPoint = alignment;
+            ofLog() << anchorPoint;
 		}
         
         void TriggerEvent(vuiEvent eventType);
@@ -524,6 +525,7 @@ namespace VUI {
         ofVec3f localMaxPosition;
         ofVec3f posOffset;
         ofVec2f parentOffsetPos;
+        ofVec2f parentAnchorOffset;
         
         ofVec3f globalMinPosition;
         ofVec3f globalMaxPosition;
