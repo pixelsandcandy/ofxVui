@@ -416,6 +416,15 @@ namespace VUI {
         float scale = 1.0;
         
         bool isInteractive = true;
+        bool isActive = true;
+        
+        bool Hide(){
+            isActive = false;
+        }
+        
+        bool Show(){
+            isActive = true;
+        }
         
         void SetInteractive( bool interactive ){
             isInteractive = interactive;

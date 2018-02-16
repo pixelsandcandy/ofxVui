@@ -150,7 +150,7 @@ namespace VUI {
 	void Element::Update(int mouseX, int mouseY, bool internalUpdate) {
         if ( !GetEventManager()->active ) return;
         //if ( name == "#el5" ) ofLog() << name << " (update)#" << vuiUID << " - " << VUI::mouseX << "x" << VUI::mouseY << "  - " << ofRandomf();
-        
+        if ( !isActive ) return;
         if ( !internalUpdate ) userUpdating = true;
         
 		UpdatePosition();
@@ -805,6 +805,7 @@ namespace VUI {
 
 	void Element::Render(float parentOffsetX, float parentOffsetY, float parentOpacity, ofVec2f _anchorOffset, ofVec2f _parentOffsetPos ) {
         
+        if ( !isActive ) return;
         
         parentSumOpacity = parentOpacity * opacity;
         parentSumOffset.set( parentOffsetX, parentOffsetY );

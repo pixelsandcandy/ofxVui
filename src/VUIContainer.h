@@ -124,6 +124,11 @@ namespace VUI {
             container->AddChild(el);
         }
         
+        void SetScrollPercentage(float perc){
+            if ( mask == NULL ) return;
+            if ( perc == 1.0 ) container->SetPositionY( (-scrollDist.y*VUI::divideDpi) );
+        }
+        
     //private:
         Padding padding;
         Element* scrollbar = NULL;
