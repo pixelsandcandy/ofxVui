@@ -510,6 +510,9 @@ namespace VUI {
         void StoreTween(Tween* tween){
             this->tween = tween;
         }
+        
+        void SetOffsetY(int offset);
+        void SetOffsetX(int offset);
 				
     protected:
         ofTrueTypeFont* font = nullptr;

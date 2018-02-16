@@ -70,9 +70,7 @@ namespace VUI {
             if ( stackDirection == VUI_STACK_VERT ) {
                 AddChild(child);
                 child->SetPosition(0,stackPos.y);
-                ofLog() << stackPos.y;
                 stackPos.y += child->GetOriginalHeight();
-                ofLog() << stackPos.y;
                 
             } else {
                 // TODO: Test/Fix this
@@ -136,7 +134,7 @@ namespace VUI {
         ofVec2f stackPos;
         ofVec2f prevMargin;
         ofVec2f margin;
-        ofTexture* mask;
+        ofTexture* mask = NULL;
         ofVec2f startScrollPos;
         ofVec2f tempScrollPos;
         ofVec2f scrollDist;
@@ -145,6 +143,7 @@ namespace VUI {
         int scrollbarPadding = 2;
         int scrollbarWidth = 8;
         int minScrollbarHeight = 60;
+        int maxScrollbarHeight;
         
     private:
         
@@ -163,7 +162,7 @@ namespace VUI {
                 if ( vertContainer->GetMask()->getWidth() != vertContainer->GetWidth() && vertContainer->GetMask()->getHeight() != vertContainer->GetHeight() ) create = true;
             }
             
-            container->SetHeight(stackPos.y+padding.bottom);
+            container->SetHeight(stackPos.y*VUI::dpi+padding.bottom);
             
             
             scrollDist.y = (stackPos.y*VUI::dpi - vertContainer->GetHeight()) + padding.bottom*VUI::dpi;
@@ -174,9 +173,14 @@ namespace VUI {
                 fbo.allocate( vertContainer->GetWidth(), vertContainer->GetHeight(), GL_RGBA );
                 fbo.begin();
                 ofClear(255, 255, 255, 0);
-                ofSetColor(255,255,255);
+                ofSetColor(255,255,255, 255);
                 ofDrawRectangle(0,0,vertContainer->GetWidth(), vertContainer->GetHeight() );
                 fbo.end();
+                
+                if ( mask != NULL ) {
+                    mask = 0;
+                    delete mask;
+                }
                 
                 mask = new ofTexture(fbo.getTexture());
                 vertContainer->SetMask(mask);
@@ -184,6 +188,7 @@ namespace VUI {
 #ifdef USING_ofxTouchPadScroll
                 ofAddListener( GetEventManager()->onTouchPadScroll, this, &Container::_vuiEventHandler );
 #endif
+                //container->SetOffsetY(container->GetOriginalHeight());
             }
         }
         
@@ -191,10 +196,13 @@ namespace VUI {
             minScrollbarHeight = vertContainer->GetOriginalHeight()*.1;
             if ( minScrollbarHeight < 50 ) minScrollbarHeight = 50;
             
+            maxScrollbarHeight = vertContainer->GetOriginalHeight()*.85;
+            
             scrollbar->SetPosition("calc(100%-" + ofToString(scrollbarPadding+scrollbarWidth) + ")", scrollbarPadding);
             
             int h = (vertContainer->GetOriginalHeight() / (stackPos.y*.8)) * vertContainer->GetOriginalHeight();
             if ( h < minScrollbarHeight ) h = minScrollbarHeight;
+            else if ( h > maxScrollbarHeight ) h = maxScrollbarHeight;
             
             scrollbar->SetHeight(h);
             scrollbar->SetWidth(scrollbarWidth);

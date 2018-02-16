@@ -46,6 +46,7 @@ namespace VUI {
             scrollbar->StopTween();
             startScrollPos = container->GetPosition();
             scrollbar->SetOpacity(1.0);
+            
         } else if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_INERTIA || evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL ) {
             if ( evt.eventType == VUI_EVENT_TOUCHPAD_SCROLL_INERTIA ) startScrollPos = container->GetPosition();
             tempScrollPos.set(startScrollPos);
@@ -55,7 +56,7 @@ namespace VUI {
             if ( tempScrollPos.y < -scrollDist.y ) tempScrollPos.y = -scrollDist.y;
             else if ( tempScrollPos.y > padding.top*VUI::dpi ) tempScrollPos.y = padding.top*VUI::dpi;
             
-            container->SetPositionY(tempScrollPos.y*VUI::divideDpi);
+            container->SetPositionY( (tempScrollPos.y*VUI::divideDpi) );
             
             float perc = ((tempScrollPos.y)/(-scrollDist.y+padding.top*VUI::dpi));
             if ( perc < 0.0 ) perc = 0.0;

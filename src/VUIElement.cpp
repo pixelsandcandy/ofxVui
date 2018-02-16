@@ -113,17 +113,17 @@ namespace VUI {
 		localMaxPosition.y += styleFloat[renderState]["offset-y"];
 		localMinPosition.y += styleFloat[renderState]["offset-y"];
 
-		localMaxPosition.x += anchorOffset.x;
+		/*localMaxPosition.x += anchorOffset.x;
 		localMinPosition.x += anchorOffset.x;
 
 		localMaxPosition.y += anchorOffset.y;
-		localMinPosition.y += anchorOffset.y;
+		localMinPosition.y += anchorOffset.y;*/
         
         //globalMinPosition.set( localMinPosition.x + parentSumOffset.x, localMinPosition.y + parentSumOffset.y );
         //globalMaxPosition.set( localMaxPosition.x + parentSumOffset.x, localMaxPosition.y + parentSumOffset.y );
         
-        globalMinPosition.set( localMinPosition.x + parentSumOffset.x, localMinPosition.y + parentSumOffset.y );
-        globalMaxPosition.set( localMaxPosition.x + parentSumOffset.x, localMaxPosition.y + parentSumOffset.y );
+        globalMinPosition.set( localMinPosition.x + parentSumOffset.x + anchorOffset.x, localMinPosition.y + parentSumOffset.y + anchorOffset.y );
+        globalMaxPosition.set( globalMinPosition.x + GetWidth(), globalMinPosition.y + GetHeight() );
         
         drawPosition.x = localMinPosition.x - anchorOffset.x - parentSumOffset.x;
         drawPosition.y = localMinPosition.y - anchorOffset.y - parentSumOffset.y;
@@ -818,7 +818,7 @@ namespace VUI {
         size.x = GetWidth();
         size.y = GetHeight();
         
-        ofTranslate( localMinPosition.x - anchorOffset.x, localMinPosition.y - anchorOffset.y );
+        ofTranslate( localMinPosition.x + _anchorOffset.x, localMinPosition.y + _anchorOffset.y );
         
         
         
@@ -832,7 +832,7 @@ namespace VUI {
             ofClear(0);
         }
         
-        ofRectangle rect(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y, size.x, size.y );
+        ofRectangle rect(anchorOffset.x, anchorOffset.y, size.x, size.y );
 
 		if (style[renderState]["background-color"] != "clear") {
 			//ofSetHexColor(styleFloat[state]["background-color"]);
@@ -879,7 +879,9 @@ namespace VUI {
             }
         }
         
-        RenderAfter( _anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y );
+        //RenderAfter( _anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y );
+        
+        RenderAfter(0,0);
         
         
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
@@ -900,7 +902,7 @@ namespace VUI {
             // ORIGINAL - works
             //(*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, anchorOffset);
             
-            (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, ofVec2f(_anchorOffset.x + anchorOffset.x, _anchorOffset.y + anchorOffset.y));
+            (*it)->Render(localMinPosition.x + parentOffsetX, localMinPosition.y + parentOffsetY, parentSumOpacity, ofVec2f(rect.x, rect.y));
             
             // works-ish
             //(*it)->Render(0, 0, parentSumOpacity, anchorOffset, globalPos  );
@@ -916,8 +918,7 @@ namespace VUI {
             fbo->getTexture().setAlphaMask(*maskTex);
 
 			ofEnableAlphaBlending();
-            fbo->draw(0,0);
-
+            fbo->draw(rect.x, rect.y);
 		}
         
 		ofSetColor(255, 255, 255, 255);
@@ -962,6 +963,20 @@ namespace VUI {
 		//SetSize(ofToFloat(style[toState]["width"]), ofToFloat(style[toState]["height"]), toState, false);
 
 	}
+    
+    void Element::SetOffsetY(int offset){
+        for (int i = 0; i < 3; i++) {
+            styleFloat[i]["offset-y"] = offset;
+            style[i]["offset-y"] = ofToString(offset);
+        }
+    }
+    
+    void Element::SetOffsetX(int offset){
+        for (int i = 0; i < 3; i++) {
+            styleFloat[i]["offset-x"] = offset;
+            style[i]["offset-x"] = ofToString(offset);
+        }
+    }
 
 	float Element::GetProperty(string property) {
 		return styleFloat[renderState][property];
