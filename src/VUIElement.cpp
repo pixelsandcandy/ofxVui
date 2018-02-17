@@ -127,6 +127,8 @@ namespace VUI {
         
         globalMaxPosition.set( globalMinPosition.x + GetWidth(), globalMinPosition.y + GetHeight() );
         
+        
+        
         drawPosition.x = localMinPosition.x - anchorOffset.x - parentSumOffset.x;
         drawPosition.y = localMinPosition.y - anchorOffset.y - parentSumOffset.y;
         
@@ -149,7 +151,6 @@ namespace VUI {
 
 	void Element::Update(int mouseX, int mouseY, bool internalUpdate) {
         if ( !GetEventManager()->active ) return;
-        //if ( name == "#el5" ) ofLog() << name << " (update)#" << vuiUID << " - " << VUI::mouseX << "x" << VUI::mouseY << "  - " << ofRandomf();
         if ( !isActive ) return;
         if ( !internalUpdate ) userUpdating = true;
         
@@ -157,7 +158,6 @@ namespace VUI {
         
         //if ( !isInteractive )return;
         
-
 		if (mouseX != -1 && mouseY != -1) {
 			if (mouseX > globalMinPosition.x && mouseX < globalMaxPosition.x) {
 				if (mouseY > globalMinPosition.y && mouseY - fixMouseY < globalMaxPosition.y) {
@@ -342,12 +342,6 @@ namespace VUI {
 			
         }
         else {
-            
-            /*if ( name == ".visibilityBtn" ){
-                if ( HasParent() ) ofLog() << parent->name;
-                ofLog() << globalMinPosition.x << " - " << VUI::mouseX << " - " << globalMaxPosition.x;
-                ofLog() << "     " << globalMinPosition.x << " - " << VUI::mouseX << " - " << globalMaxPosition.x;
-            }*/
             
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY - fixMouseY < globalMaxPosition.y) {

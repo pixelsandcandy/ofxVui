@@ -608,6 +608,8 @@ namespace VUI {
 #endif
     
     void EM::Purge(){
+        if ( !active ) return;
+        
         for( vector<vuiEvent>::iterator it = VUI::evtlist.begin(); it != VUI::evtlist.end(); it++ ){
             this->events[ (*it) ].clear();
         }

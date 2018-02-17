@@ -366,13 +366,13 @@ namespace VUI {
         virtual void SetEventManager(VUI::EM* eventManager){
             this->EventManager = eventManager;
             
-            for(vector<Element*>::iterator it = children.begin(); it != children.begin(); it++ ){
+            for(vector<Element*>::iterator it = children.begin(); it != children.end(); it++ ){
                 (*it)->SetEventManager( eventManager );
             }
         }
         
         bool HasParent(){
-            if ( parent == nullptr || parent == NULL ) return NULL;
+            if ( parent == nullptr || parent == NULL ) return false;
             return true;
         }
         
