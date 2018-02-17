@@ -365,6 +365,10 @@ namespace VUI {
         
         virtual void SetEventManager(VUI::EM* eventManager){
             this->EventManager = eventManager;
+            
+            for(vector<Element*>::iterator it = children.begin(); it != children.begin() + children.size(); ){
+                (*it)->SetEventManager( eventManager );
+            }
         }
         
         bool HasParent(){
@@ -378,6 +382,31 @@ namespace VUI {
                 el->SetEventManager( EventManager );
                 children.push_back(el);
             }
+        }
+        
+        virtual void RemoveChild(Element* child){
+            for(vector<Element*>::iterator it = children.begin(); it != children.begin() + children.size(); )
+            {
+                if ( (*it) == child ) {
+                    (*it)->RemoveChildren();
+                    it = children.erase( it );
+                } else {
+                    it++;
+                }
+            }
+        }
+        
+        virtual void RemoveChildren(){
+            parent = NULL;
+            for(vector<Element*>::reverse_iterator it = children.rbegin(); it != children.rend(); ++it )
+            {
+                
+                (*it)->RemoveChildren();
+                delete (*it);
+                children.erase( --(it.base()) );
+            };
+            
+            children = vector<Element*>();
         }
         
         virtual vector<Element*> GetChildren(){

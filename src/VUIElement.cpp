@@ -342,6 +342,13 @@ namespace VUI {
 			
         }
         else {
+            
+            if ( name == ".visibilityBtn" ){
+                if ( HasParent() ) ofLog() << parent->name;
+                ofLog() << globalMinPosition.x << " - " << VUI::mouseX << " - " << globalMaxPosition.x;
+                ofLog() << "     " << globalMinPosition.x << " - " << VUI::mouseX << " - " << globalMaxPosition.x;
+            }
+            
             if (VUI::mouseX > globalMinPosition.x && VUI::mouseX < globalMaxPosition.x) {
                 if (VUI::mouseY > globalMinPosition.y && VUI::mouseY - fixMouseY < globalMaxPosition.y) {
                     if ( isInteractive ){
@@ -889,8 +896,7 @@ namespace VUI {
 			fbo->end();
             fbo->getTexture().setAlphaMask(*maskTex);
 
-			//ofEnableAlphaBlending();
-            ofDisableAlphaBlending();
+			ofEnableAlphaBlending();
             fbo->draw(rect.x, rect.y);
 		}
         

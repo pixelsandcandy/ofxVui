@@ -98,6 +98,24 @@ namespace VUI {
             
         }
         
+        void Clear(){
+            container->RemoveChildren();
+            vertContainer->RemoveMask();
+            stackPos.x = 0;
+            stackPos.y = 0;
+            
+#ifdef USING_ofxTouchPadScroll
+            ofRemoveListener( GetEventManager()->onTouchPadScroll, this, &Container::_vuiEventHandler );
+#endif
+            
+            if ( scrollbar != NULL ){
+                scrollbar->StopTween();
+                scrollbar->SetOpacity(0.0);
+            }
+            
+        }
+        
+        
         vector<Element*> GetChildren(){
             return container->children;
         }
