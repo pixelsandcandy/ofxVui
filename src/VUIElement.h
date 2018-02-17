@@ -366,7 +366,7 @@ namespace VUI {
         virtual void SetEventManager(VUI::EM* eventManager){
             this->EventManager = eventManager;
             
-            for(vector<Element*>::iterator it = children.begin(); it != children.begin() + children.size(); ){
+            for(vector<Element*>::iterator it = children.begin(); it != children.begin(); it++ ){
                 (*it)->SetEventManager( eventManager );
             }
         }
