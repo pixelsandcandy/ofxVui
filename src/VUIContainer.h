@@ -98,6 +98,36 @@ namespace VUI {
             
         }
         
+        void RemoveStackedChild(Element* child){
+            for(vector<Element*>::iterator it = container->children.begin(); it != container->children.begin() + container->children.size(); )
+            {
+                if ( (*it) == child ) {
+                    (*it)->RemoveChildren();
+                    it = children.erase( it );
+                    
+                    UpdateStackedPositions();
+                    return;
+                } else {
+                    it++;
+                }
+            }
+        }
+        
+        void UpdateStackedPositions(){
+            vertContainer->RemoveMask();
+            
+            stackPos.y = 0;
+            
+            for (vector<Element*>::iterator it = container->children.begin(); it != container->children.end(); it++){
+                if ( stackPos.y != 0 ) stackPos.y += margin.y;
+                (*it)->SetPositionY(stackPos.y);
+                stackPos.y += (*it)->GetHeight();
+            }
+            
+            if ( stackPos.y > vertContainer->GetOriginalHeight() - padding.top ) CreateMask();
+            UpdateScrollbarStyle();
+        }
+        
         void Clear(){
             container->RemoveChildren();
             vertContainer->RemoveMask();

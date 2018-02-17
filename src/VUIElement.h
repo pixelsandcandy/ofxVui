@@ -101,6 +101,7 @@ namespace VUI {
             ofRectangle bounds;
             ofImage *image;
             ofVec2f scale;
+            ofPoint dimensions;
             
             bool active = false;
             
@@ -110,6 +111,7 @@ namespace VUI {
                 image = imagePtr;
                 bounds.set(x, y, width, height );
                 active = true;
+                dimensions.set(imagePtr->getWidth(), imagePtr->getHeight());
             }
             
             void Set( ofImage *imagePtr, string value ){
@@ -119,6 +121,7 @@ namespace VUI {
                     scale.set(1,1);
                     bounds.set(0,0, image->getWidth(), image->getHeight() );
                     active = true;
+                    dimensions.set(imagePtr->getWidth(), imagePtr->getHeight());
                 }
             }
             
@@ -390,6 +393,7 @@ namespace VUI {
                 if ( (*it) == child ) {
                     (*it)->RemoveChildren();
                     it = children.erase( it );
+                    return;
                 } else {
                     it++;
                 }

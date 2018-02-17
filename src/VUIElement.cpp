@@ -854,8 +854,19 @@ namespace VUI {
             if ( img.size == VUI_IMAGE_FILL ){
                 img.image->draw(rect.x, rect.y, rect.width, rect.height);
             } else {
-                if ( img.bounds.width == -1 ) img.image->drawSubsection(rect.x, rect.y, size.x, size.y, img.bounds.x, img.bounds.y);
-                else img.image->drawSubsection(rect.x, rect.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
+                if ( img.bounds.width == -1 ) {
+                    //ofPoint s(size);
+                    
+                    if ( styleFloat[renderState]["bg-size-x"] == 0.0 && styleFloat[renderState]["bg-size-y"] == 0.0 ){
+                        img.image->drawSubsection(styleFloat[renderState]["bg-position-x"] + rect.x, styleFloat[renderState]["bg-position-y"] + rect.y, size.x, size.y, img.bounds.x, img.bounds.y);
+                    } else {
+                        
+                        img.image->drawSubsection(styleFloat[renderState]["bg-position-x"] + rect.x, styleFloat[renderState]["bg-position-y"] + rect.y, 0, styleFloat[renderState]["bg-size-x"], styleFloat[renderState]["bg-size-y"], img.bounds.x, img.bounds.y, img.dimensions.x, img.dimensions.y );
+                    }
+                } else {
+                    img.image->drawSubsection(styleFloat[renderState]["bg-position-x"] + rect.x, styleFloat[renderState]["bg-position-y"] + rect.y, 0, size.x, size.y, img.bounds.x, img.bounds.y, img.bounds.width, img.bounds.height);
+                    
+                }
             }
             
         }
@@ -921,9 +932,13 @@ namespace VUI {
 		
 		//styleFloat[toState]["width"] = ofToFloat(style[toState]["width"]);
 		//styleFloat[toState]["height"] = ofToFloat(style[toState]["height"]);
-		styleFloat[toState]["offset-x"] = ofToFloat(style[toState]["offset-x"]);
-		styleFloat[toState]["offset-y"] = ofToFloat(style[toState]["offset-y"]);
+        styleFloat[toState]["offset-x"] = ofToFloat(style[toState]["offset-x"])*VUI::dpi;
+        styleFloat[toState]["offset-y"] = ofToFloat(style[toState]["offset-y"])*VUI::dpi;
 		styleFloat[toState]["opacity"] = ofToFloat(style[toState]["opacity"]) * 255.0;
+        styleFloat[toState]["bg-position-x"] = ofToFloat(style[toState]["bg-position-x"])*VUI::dpi;
+        styleFloat[toState]["bg-position-y"] = ofToFloat(style[toState]["bg-position-y"])*VUI::dpi;
+        styleFloat[toState]["bg-size-x"] = ofToFloat(style[toState]["bg-size-x"])*VUI::dpi;
+        styleFloat[toState]["bg-size-y"] = ofToFloat(style[toState]["bg-size-y"])*VUI::dpi;
         
         /*styleFloat[toState]["border-top"] = ofToFloat(style[toState]["border-top"]);
         styleFloat[toState]["border-right"] = ofToFloat(style[toState]["border-right"]);
@@ -1338,6 +1353,17 @@ namespace VUI {
                     if ( props.size() != 2 ) continue;
                     this->style[state]["offset-x"] = props[0];
                     this->style[state]["offset-y"] = props[1];
+                } else if ( tempSplit[0] == "bg-position" || tempSplit[0] == "bgPosition" ) {
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    if ( props.size() != 2 ) continue;
+                    this->style[state]["bg-position-x"] = props[0];
+                    this->style[state]["bg-position-y"] = props[1];
+                } else if ( tempSplit[0] == "bg-size" || tempSplit[0] == "bgSize" ) {
+                    vector<string> props = ofSplitString(tempSplit[1], ",");
+                    if ( props.size() != 2 ) continue;
+                    this->style[state]["bg-size-x"] = props[0];
+                    this->style[state]["bg-size-y"] = props[1];
+                    //ofLog() << this->style[state]["bg-size-x"] << "x" << this->style[state]["bg-size-y"];
                 } else if (tempSplit[0] == "opacity" ) {
                     vector<string> props = ofSplitString(tempSplit[1], ",");
                     if ( props.size() == 1 ) {
