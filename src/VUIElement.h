@@ -143,6 +143,7 @@ namespace VUI {
 
 		map< int, vector<string> > imageIDs;
 		map< string, ofImage* > images;
+        vector<ofImage*> extraImages;
 		map< int, bool> hasState;
 
 		int anchorPoint = VUI_ALIGN_LEFT_TOP;
@@ -275,7 +276,7 @@ namespace VUI {
             rotation = r;
         }
         
-        void SetState( VUI::State toState ){
+        void SetState( VUI::State toState, bool notifyEvent = true ){
             
             VUI::State s = toState;
             
@@ -286,26 +287,28 @@ namespace VUI {
             
             if ( s != renderState ) renderState = s;
             
-            UpdateVirtualState( toState );
+            UpdateVirtualState( toState, false, notifyEvent );
         }
         
         void SetSelected(){
             SetState( VUI_STATE_DOWN );
         }
         
-        void UpdateVirtualState( VUI::State toState, bool force = false ){
+        void UpdateVirtualState( VUI::State toState, bool force = false, bool notifyEvent = true ){
             if ( virtualState != toState ){
                 
                 prevVirtualState = int(virtualState);
                 virtualState = toState;
                 
-                vuiEventArgs args;
-                args.element = this;
-                args.eventType = VUI_EVENT_STATE_CHANGE;
-                args.renderState = int(toState);
-                args.virtualState = int(virtualState);
-                
-                ofNotifyEvent( onStateChange, args, this );
+                if ( notifyEvent ){
+                    vuiEventArgs args;
+                    args.element = this;
+                    args.eventType = VUI_EVENT_STATE_CHANGE;
+                    args.renderState = int(toState);
+                    args.virtualState = int(virtualState);
+                    
+                    ofNotifyEvent( onStateChange, args, this );
+                }
                 
                 if ( toState == VUI_STATE_DOWN ) {
                     TriggerEvent( VUI_EVENT_VALUE_CHANGE );
@@ -387,6 +390,14 @@ namespace VUI {
             }
         }
         
+        void AddImage(ofImage* image ){
+            extraImages.push_back(image);
+        }
+        
+        vector<ofImage*>& GetImages(){
+            return extraImages;
+        }
+        
         virtual void RemoveChild(Element* child){
             for(vector<Element*>::iterator it = children.begin(); it != children.begin() + children.size(); )
             {
@@ -402,7 +413,7 @@ namespace VUI {
         
         virtual void RemoveChildren(){
             parent = NULL;
-            for(vector<Element*>::reverse_iterator it = children.rbegin(); it != children.rend(); ++it )
+            for(vector<Element*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++ )
             {
                 
                 (*it)->RemoveChildren();
@@ -451,11 +462,11 @@ namespace VUI {
         bool isInteractive = true;
         bool isActive = true;
         
-        bool Hide(){
+        virtual void Hide(){
             isActive = false;
         }
         
-        bool Show(){
+        virtual void Show(){
             isActive = true;
         }
         

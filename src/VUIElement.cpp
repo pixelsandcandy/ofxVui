@@ -610,6 +610,7 @@ namespace VUI {
     }
     
     void Element::TriggerEvent(vuiEvent eventType){
+        if ( !GetEventManager()->IsActive() ) return;
         //ofLog() << "TriggerEvent[" << eventType << "]";
         
         vuiEventArgs args = GetEventArgs(eventType);
@@ -707,7 +708,9 @@ namespace VUI {
 				}
 
                 //if ( DEBUG_MODE ) ofLog() << "lastClickTimeMS:" << lastClickTimeMS << "  now:" << t;
-                if ( t - lastClickTimeMS < VUI::doubleClickThreshold ){
+                
+                //ofLog() << t - lastClickTimeMS << "  -  " << VUI::doubleClickThreshold;
+                if ( (t - lastClickTimeMS) < VUI::doubleClickThreshold ){
                     //if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_DOUBLE_CLICK)";
 					
 					
@@ -869,6 +872,10 @@ namespace VUI {
                 }
             }
             
+        }
+        
+        for (vector<ofImage*>::iterator it = extraImages.begin(); it != extraImages.end(); it++ ){
+            (*it)->draw(rect.x, rect.y);
         }
         
         for (vector<string>::iterator it = borderProps.begin(); it != borderProps.end(); it++){

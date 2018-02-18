@@ -103,7 +103,7 @@ namespace VUI {
             {
                 if ( (*it) == child ) {
                     (*it)->RemoveChildren();
-                    it = children.erase( it );
+                    it = container->children.erase( it );
                     
                     UpdateStackedPositions();
                     return;
@@ -115,13 +115,16 @@ namespace VUI {
         
         void UpdateStackedPositions(){
             vertContainer->RemoveMask();
+#ifdef USING_ofxTouchPadScroll
+            ofRemoveListener( GetEventManager()->onTouchPadScroll, this, &Container::_vuiEventHandler );
+#endif
             
             stackPos.y = 0;
             
             for (vector<Element*>::iterator it = container->children.begin(); it != container->children.end(); it++){
                 if ( stackPos.y != 0 ) stackPos.y += margin.y;
                 (*it)->SetPositionY(stackPos.y);
-                stackPos.y += (*it)->GetHeight();
+                stackPos.y += (*it)->GetOriginalHeight();
             }
             
             if ( stackPos.y > vertContainer->GetOriginalHeight() - padding.top ) CreateMask();
