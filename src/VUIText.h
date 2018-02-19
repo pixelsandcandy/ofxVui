@@ -213,7 +213,6 @@ namespace VUI {
                 
                 x*=VUI::dpi;
                 y*=VUI::dpi;
-                y-=1;
                 
                 if ( hasTextShadow ) {
                     ofSetColor(0,0,0, shadowPos.z );
