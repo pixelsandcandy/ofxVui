@@ -129,26 +129,26 @@ namespace VUI {
         }
         
         void SetPadding( int x, int y ){
-            padding.set( x*VUI::dpi, y*VUI::dpi );
+            padding.set( x, y );
         }
         
         void SetPadding( int xy ){
-            SetPadding( xy*VUI::dpi, xy*VUI::dpi );
+            SetPadding( xy, xy );
         }
         
         void SetPaddingX( int x ){
-            padding.x = x*VUI::dpi;
+            padding.x = x;
         }
         
         void SetPaddingY( int y ){
-            padding.y = y*VUI::dpi;
+            padding.y = y;
         }
         
         ofVec2f textOffset;
         ofVec3f shadowPos = ofVec3f(0,0,210);
         ofColor textColor = ofColor::gray;
         
-        ofVec2f padding;
+        ofVec2f padding = ofVec2f(0,0);
         
         int spaceOffsetX = 0;
         
@@ -164,8 +164,6 @@ namespace VUI {
         
         void RenderAfter(float parentOffsetX = 0, float parentOffsetY = 0){
             
-            //ofLog() << parentOffsetX << "," << parentOffsetY;
-            
             
             if ( font != nullptr ) {
                 _Calibrate();
@@ -176,57 +174,57 @@ namespace VUI {
                 
                 switch( textAlignment ){
                     case VUI_ALIGN_LEFT_TOP:
-                        x = 0;
-                        y = 0;
+                        x = padding.x;
+                        y = padding.y;
                         break;
                     case VUI_ALIGN_LEFT_CENTER:
-                        x = 0;
-                        y = ((GetHeight() - textOffset.y)*0.5) + padding.y;
+                        x = padding.x;
+                        y = ((GetOriginalHeight() - textOffset.y)*0.5) + textOffset.y*0.5;
                         break;
                     case VUI_ALIGN_LEFT_BOTTOM:
-                        x = 0;
-                        y = (GetHeight() - textOffset.y);
+                        x = padding.x;
+                        y = (GetOriginalHeight() - rect.height) - padding.y + textOffset.y;
                         break;
                     case VUI_ALIGN_CENTER_TOP:
-                        x = ((GetOriginalWidth() - rect.width)*0.5) + padding.x;
-                        y = 0;
+                        x = ((GetOriginalWidth() - rect.width)*0.5);
+                        y = padding.y;
                         break;
                     case VUI_ALIGN_CENTER_CENTER:
-                        x = ((GetOriginalWidth() - rect.width)*0.5) + padding.x;
-                        y = ((GetHeight() - textOffset.y)*0.5) + padding.y;
+                        x = ((GetOriginalWidth() - rect.width)*0.5);
+                        y = ((GetOriginalHeight() - textOffset.y)*0.5) + textOffset.y*0.5;
                         break;
                     case VUI_ALIGN_CENTER_BOTTOM:
-                        x = ((GetOriginalWidth() - rect.width)*0.5) + padding.x;
-                        y = (GetHeight() - textOffset.y);
+                        x = ((GetOriginalWidth() - rect.width)*0.5);
+                        y = (GetOriginalHeight() - rect.height) - padding.y + textOffset.y;
                         break;
                     case VUI_ALIGN_RIGHT_TOP:
-                        x = GetOriginalWidth() - rect.width;
-                        y = 0;
+                        x = GetOriginalWidth() - rect.width - padding.x;
+                        y = padding.y;
                         break;
                     case VUI_ALIGN_RIGHT_CENTER:
-                        x = GetOriginalWidth() - rect.width;
-                        y = ((GetHeight() - textOffset.y)*0.5) + padding.y;
+                        x = GetOriginalWidth() - rect.width - padding.x;
+                        y = ((GetOriginalHeight() - textOffset.y)*0.5) + textOffset.y*0.5;
                         break;
                     case VUI_ALIGN_RIGHT_BOTTOM:
-                        x = GetOriginalWidth() - rect.width;
-                        y = (GetHeight() - textOffset.y);
+                        x = GetOriginalWidth() - rect.width - padding.x;
+                        y = (GetOriginalHeight() - rect.height) - padding.y + textOffset.y;
                         break;
                 }
                 
-                x-=1*VUI::dpi;
-                
+                x*=VUI::dpi;
+                y*=VUI::dpi;
+                y-=1;
                 
                 if ( hasTextShadow ) {
                     ofSetColor(0,0,0, shadowPos.z );
-                    font->drawString( text, shadowPos.x + parentOffsetX + padding.x + x, shadowPos.y + parentOffsetY + padding.y + y + textOffset.y );
+                    font->drawString( text, shadowPos.x + parentOffsetX + x, shadowPos.y + parentOffsetY + y + textOffset.y );
                 }
                 
                 ofSetColor(255,255,255,255);
                 ofSetColor(textColor);
-                font->drawString( text, parentOffsetX + padding.x + x, parentOffsetY + padding.y + y + textOffset.y );
+                font->drawString( text, parentOffsetX + x, parentOffsetY + y + textOffset.y );
                 
                 ofSetColor(0,0,0,255);
-				//ofLog() << rect.height << " - " << font->getLineHeight() << " (" << font->getSize() << ")";
                 
                 // typing cursor
                 if ( isTextField && GetVirtualState() == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.x + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.y + y - 1 - 2, 1, textOffset.y+4);
@@ -235,8 +233,8 @@ namespace VUI {
         
         void UpdateRect(){
             rect = font->getStringBoundingBox(text, 0,0);
-            //rect.width *= VUI::divideDpi;
-            //rect.height *= VUI::divideDpi;
+            rect.width *= VUI::divideDpi;
+            rect.height *= VUI::divideDpi;
         }
         
     private:
@@ -251,6 +249,7 @@ namespace VUI {
             ofRectangle rect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+][}{:?><", 0,0);
             
             textOffset.set(0,rect.height - font->getSize()*.3333 );
+            textOffset.y*=VUI::divideDpi;
             _typingIndicatorOffset = font->getSize()*.3333;
         }
         
