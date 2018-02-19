@@ -183,7 +183,7 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_LEFT_BOTTOM:
                         x = padding.x;
-                        y = (GetOriginalHeight() - rect.height) - padding.y + textOffset.y;
+                        y = (GetOriginalHeight() - textOffset.y) - padding.y;
                         break;
                     case VUI_ALIGN_CENTER_TOP:
                         x = ((GetOriginalWidth() - rect.width)*0.5);
@@ -195,7 +195,7 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_CENTER_BOTTOM:
                         x = ((GetOriginalWidth() - rect.width)*0.5);
-                        y = (GetOriginalHeight() - rect.height) - padding.y + textOffset.y;
+                        y = (GetOriginalHeight() - textOffset.y) - padding.y;
                         break;
                     case VUI_ALIGN_RIGHT_TOP:
                         x = GetOriginalWidth() - rect.width - padding.x;
@@ -207,7 +207,7 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_RIGHT_BOTTOM:
                         x = GetOriginalWidth() - rect.width - padding.x;
-                        y = (GetOriginalHeight() - rect.height) - padding.y + textOffset.y;
+                        y = (GetOriginalHeight() - textOffset.y) - padding.y;
                         break;
                 }
                 
