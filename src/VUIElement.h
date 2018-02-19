@@ -417,7 +417,6 @@ namespace VUI {
             {
                 
                 (*it)->RemoveChildren();
-                delete (*it);
                 children.erase( --(it.base()) );
             };
             
