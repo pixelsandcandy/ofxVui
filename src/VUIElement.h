@@ -402,6 +402,7 @@ namespace VUI {
             for(vector<Element*>::iterator it = children.begin(); it != children.begin() + children.size(); )
             {
                 if ( (*it) == child ) {
+                    (*it)->RemoveParent();
                     (*it)->RemoveChildren();
                     it = children.erase( it );
                     return;
@@ -412,10 +413,10 @@ namespace VUI {
         }
         
         virtual void RemoveChildren(){
-            parent = NULL;
             for(vector<Element*>::reverse_iterator it = children.rbegin(); it != children.rend(); it++ )
             {
                 
+                (*it)->RemoveParent();
                 (*it)->RemoveChildren();
                 children.erase( --(it.base()) );
             };
@@ -429,6 +430,10 @@ namespace VUI {
         
         void SetParent( Element* el ){
             this->parent = el;
+        }
+        
+        void RemoveParent(){
+            this->parent = NULL;
         }
 
 		Element* SetSize(float w, float h);
