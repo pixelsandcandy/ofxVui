@@ -99,7 +99,7 @@ namespace VUI {
         }
         
         float GetOriginalBarWidth(){
-            return GetWidth() - padding.left - padding.right;
+            return barContainer->GetWidth() - 2;
         }
         
         void _vuiEventHandler(vuiEventArgs& evt){
@@ -113,14 +113,17 @@ namespace VUI {
                 
             float w = GetOriginalBarWidth();
             
-            if ( evt.localMousePos.x <= padding.left ) sliderVal = 0;
-            else if ( evt.localMousePos.x >= padding.left + w ) sliderVal = w;
-            else sliderVal = evt.localMousePos.x - padding.left;
+            if ( evt.localMousePos.x < 1 ) sliderVal = 0;
+            else if ( evt.localMousePos.x > w) sliderVal = w+2;
+            else sliderVal = evt.localMousePos.x;
             
             sliderPerc = sliderVal / w;
+            if ( sliderPerc > 1.0 ) sliderPerc = 1.0;
             
-            if ( evt.eventType == VUI_EVENT_MOUSE_CLICK || evt.eventType == VUI_EVENT_MOUSE_RELEASED || evt.eventType == VUI_EVENT_MOUSE_PRESSED ) bar->SetWidth( ofToString(sliderPerc*100.0) + "%" );
-            else bar->SetWidth( sliderVal*VUI::divideDpi );
+            bar->SetWidth( ofToString(sliderPerc*100.0) + "%" );
+            
+            /*if ( evt.eventType == VUI_EVENT_MOUSE_CLICK || evt.eventType == VUI_EVENT_MOUSE_RELEASED || evt.eventType == VUI_EVENT_MOUSE_PRESSED ) bar->SetWidth( ofToString(sliderPerc*100.0) + "%" );
+            else bar->SetWidth( ofToString(sliderPerc*100.0) + "%" );*/
             
             vuiEventArgs args = GetEventArgs(VUI_EVENT_SLIDER_VALUE_CHANGE);
             args.value = sliderVal;
