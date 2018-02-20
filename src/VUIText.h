@@ -110,14 +110,14 @@ namespace VUI {
             ofRectangle rect = font->getStringBoundingBox(text, 0,0);
             rect.width*=VUI::divideDpi;
             rect.height*=VUI::divideDpi;
-            SetSize( rect.width + padding.left+padding.right, rect.height + padding.top+padding.bottom );
+            SetSize( rect.width + (padding.left+padding.right)*VUI::dpi, rect.height + (padding.top+padding.bottom)*VUI::dpi );
         }
         
         void SizeWidthToText(){
             ofRectangle rect = font->getStringBoundingBox(text, 0,0);
             rect.width*=VUI::divideDpi;
             rect.height*=VUI::divideDpi;
-            SetWidth( rect.width + padding.left + padding.top );
+            SetWidth( rect.width + padding.left*VUI::dpi + padding.top*VUI::dpi );
         }
         
         bool IsFocused(){
@@ -230,6 +230,8 @@ namespace VUI {
                 
                 x*=VUI::dpi;
                 y*=VUI::dpi;
+                
+                x-=VUI::dpi;
                 
                 if ( hasTextShadow ) {
                     ofSetColor(0,0,0, shadowPos.z );
