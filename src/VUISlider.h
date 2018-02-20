@@ -74,6 +74,16 @@ namespace VUI {
             return barContainer;
         }
         
+        void SetPercValue(float perc){
+            bar->SetWidth( ofToString(perc*100.0) + "%" );
+        }
+        
+        void SetValue(int value){
+            if ( value < 0 ) SetPercValue(0.0);
+            else if ( value > GetOriginalBarWidth() ) SetPercValue( 1.0 );
+            else SetPercValue( value / GetOriginalBarWidth() );
+        }
+        
     private:
         
         
