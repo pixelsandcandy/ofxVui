@@ -894,7 +894,7 @@ namespace VUI {
         }
         
         ofSetColor(255,255,255,255);
-        RenderAfter(0,0);
+        RenderAfter(rect.x,rect.y);
         
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
 

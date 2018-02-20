@@ -94,7 +94,14 @@ namespace VUI {
         string text = "";
         Align textAlignment = VUI_ALIGN_LEFT_TOP;
         
+        float GetTextOpacity(){
+            if ( HasParent() ) return parent->GetOpacity();
+            else return GetOpacity();
+        }
         
+        float GetTextOpacity255(){
+            return GetTextOpacity()*255.0;
+        }
         
         void SetText( string t, bool sizeToText = false ){
             text = t;
@@ -171,7 +178,7 @@ namespace VUI {
         
         bool hasTextShadow = false;
         void SetTextShadow( float x, float y, float opacity = 1.0 ){
-            shadowPos.set(x,y, opacity*255.0);
+            shadowPos.set(x,y, opacity);
             hasTextShadow = true;
         }
         
@@ -233,13 +240,14 @@ namespace VUI {
                 
                 x-=VUI::dpi;
                 
+                float op = GetTextOpacity255();
+                
                 if ( hasTextShadow ) {
-                    ofSetColor(0,0,0, shadowPos.z );
+                    ofSetColor(0,0,0, shadowPos.z*op );
                     font->drawString( text, shadowPos.x + parentOffsetX + x, shadowPos.y + parentOffsetY + y + textOffset.y );
                 }
                 
-                ofSetColor(255,255,255,255);
-                ofSetColor(textColor);
+                ofSetColor(textColor, op);
                 font->drawString( text, parentOffsetX + x, parentOffsetY + y + textOffset.y );
                 
                 ofSetColor(0,0,0,255);
