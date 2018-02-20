@@ -443,10 +443,10 @@ namespace VUI {
         void SetHeight( string h );
         void SetWidth( string w );
         
-        int GetHeight( bool scaled = true);
-        int GetWidth(bool scaled = true);
-        int GetOriginalHeight( bool scaled = true);
-        int GetOriginalWidth(bool scaled = true);
+        virtual int GetHeight( bool scaled = true);
+        virtual int GetWidth(bool scaled = true);
+        virtual int GetOriginalHeight( bool scaled = true);
+        virtual int GetOriginalWidth(bool scaled = true);
         
         ofVec2f GetPosition();
 		Element* SetPosition(float x, float y);

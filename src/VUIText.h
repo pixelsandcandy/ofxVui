@@ -78,10 +78,15 @@ namespace VUI {
                 vector<string> xy = ofSplitString( value, "," );
                 if ( xy.size() == 1 ) SetPadding( ofToInt(xy[0]) );
                 else if ( xy.size() == 2 ) SetPadding( ofToInt(xy[0]), ofToInt(xy[1]) );
+                else if ( xy.size() == 4 ) SetPadding( ofToInt(xy[0]), ofToInt(xy[1]), ofToInt(xy[2]), ofToInt(xy[3]) );
             } else if ( prop == "padding-left" ){
-                SetPaddingX( ofToInt(value) );
+                SetPaddingLeft( ofToInt(value) );
             } else if ( prop == "padding-top" ){
-                SetPaddingY( ofToInt(value) );
+                SetPaddingTop( ofToInt(value) );
+            } else if ( prop == "padding-right" ){
+                SetPaddingRight( ofToInt(value) );
+            } else if ( prop == "padding-bottom" ){
+                SetPaddingBottom( ofToInt(value) );
             }
         }
         
@@ -105,14 +110,14 @@ namespace VUI {
             ofRectangle rect = font->getStringBoundingBox(text, 0,0);
             rect.width*=VUI::divideDpi;
             rect.height*=VUI::divideDpi;
-            SetSize( rect.width + padding.x*2, rect.height + padding.y*2 );
+            SetSize( rect.width + padding.left+padding.right, rect.height + padding.top+padding.bottom );
         }
         
         void SizeWidthToText(){
             ofRectangle rect = font->getStringBoundingBox(text, 0,0);
             rect.width*=VUI::divideDpi;
             rect.height*=VUI::divideDpi;
-            SetWidth( rect.width + padding.x*2 );
+            SetWidth( rect.width + padding.left + padding.top );
         }
         
         bool IsFocused(){
@@ -128,27 +133,39 @@ namespace VUI {
             textAlignment = align;
         }
         
-        void SetPadding( int x, int y ){
-            padding.set( x, y );
+        void SetPadding( int top, int right, int bottom, int left ){
+            padding.Set(top,right,bottom,left);
         }
         
-        void SetPadding( int xy ){
-            SetPadding( xy, xy );
+        void SetPadding( int pad ){
+            padding.Set(pad,pad,pad,pad);
         }
         
-        void SetPaddingX( int x ){
-            padding.x = x;
+        void SetPadding( int topBottom, int leftRight ){
+            padding.Set(topBottom,leftRight,topBottom,leftRight);
         }
         
-        void SetPaddingY( int y ){
-            padding.y = y;
+        void SetPaddingTop( int pad){
+            padding.top = pad;
+        }
+        
+        void SetPaddingRight( int pad){
+            padding.right = pad;
+        }
+        
+        void SetPaddingBottom( int pad){
+            padding.bottom = pad;
+        }
+        
+        void SetPaddingLeft( int pad){
+            padding.left = pad;
         }
         
         ofVec2f textOffset;
         ofVec3f shadowPos = ofVec3f(0,0,210);
         ofColor textColor = ofColor::gray;
         
-        ofVec2f padding = ofVec2f(0,0);
+        Padding padding;
         
         int spaceOffsetX = 0;
         
@@ -174,20 +191,20 @@ namespace VUI {
                 
                 switch( textAlignment ){
                     case VUI_ALIGN_LEFT_TOP:
-                        x = padding.x;
-                        y = padding.y;
+                        x = padding.left;
+                        y = padding.top;
                         break;
                     case VUI_ALIGN_LEFT_CENTER:
-                        x = padding.x;
+                        x = padding.left;
                         y = ((GetOriginalHeight() - textOffset.y)*0.5) + textOffset.y*0.5;
                         break;
                     case VUI_ALIGN_LEFT_BOTTOM:
-                        x = padding.x;
-                        y = (GetOriginalHeight() - textOffset.y) - padding.y;
+                        x = padding.left;
+                        y = (GetOriginalHeight() - textOffset.y) - padding.bottom;
                         break;
                     case VUI_ALIGN_CENTER_TOP:
                         x = ((GetOriginalWidth() - rect.width)*0.5);
-                        y = padding.y;
+                        y = padding.top;
                         break;
                     case VUI_ALIGN_CENTER_CENTER:
                         x = ((GetOriginalWidth() - rect.width)*0.5);
@@ -195,19 +212,19 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_CENTER_BOTTOM:
                         x = ((GetOriginalWidth() - rect.width)*0.5);
-                        y = (GetOriginalHeight() - textOffset.y) - padding.y;
+                        y = (GetOriginalHeight() - textOffset.y) - padding.bottom;
                         break;
                     case VUI_ALIGN_RIGHT_TOP:
-                        x = GetOriginalWidth() - rect.width - padding.x;
-                        y = padding.y;
+                        x = GetOriginalWidth() - rect.width - padding.right;
+                        y = padding.top;
                         break;
                     case VUI_ALIGN_RIGHT_CENTER:
-                        x = GetOriginalWidth() - rect.width - padding.x;
+                        x = GetOriginalWidth() - rect.width - padding.right;
                         y = ((GetOriginalHeight() - textOffset.y)*0.5) + textOffset.y*0.5;
                         break;
                     case VUI_ALIGN_RIGHT_BOTTOM:
-                        x = GetOriginalWidth() - rect.width - padding.x;
-                        y = (GetOriginalHeight() - textOffset.y) - padding.y;
+                        x = GetOriginalWidth() - rect.width - padding.right;
+                        y = (GetOriginalHeight() - textOffset.y) - padding.bottom;
                         break;
                 }
                 
@@ -226,7 +243,7 @@ namespace VUI {
                 ofSetColor(0,0,0,255);
                 
                 // typing cursor
-                if ( isTextField && GetVirtualState() == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.x + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.y + y - 1 - 2, 1, textOffset.y+4);
+                if ( isTextField && GetVirtualState() == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.top + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.top + y - 1 - 2, 1, textOffset.y+4);
             }
         }
         
