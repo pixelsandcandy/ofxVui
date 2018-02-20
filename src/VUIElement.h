@@ -94,6 +94,10 @@ namespace VUI {
             
         };
         
+        bool HasState(int state){
+            return hasState[state];
+        }
+        
 	protected:
         PercentCalcValues percentCalcValues;
         
@@ -152,8 +156,6 @@ namespace VUI {
 		int virtualState = VUI_STATE_UP;
         int prevVirtualState = VUI_STATE_UP;
 		bool hasStyle = false;
-        
-        
 
         bool DEBUG_MODE = false;
 		

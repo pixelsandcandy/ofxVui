@@ -105,11 +105,17 @@ namespace VUI {
         void _vuiEventHandler(vuiEventArgs& evt){
             
             if ( evt.eventType == VUI_EVENT_MOUSE_OVER || evt.eventType == VUI_EVENT_MOUSE_OUT ){
-                if ( evt.eventType == VUI_EVENT_MOUSE_OVER ) bar->SetState(VUI_STATE_OVER);
-                else bar->SetState(VUI_STATE_UP);
+                if ( evt.eventType == VUI_EVENT_MOUSE_OVER ) bar->SetState(VUI_STATE_OVER, false);
+                else bar->SetState(VUI_STATE_UP, false);
                 return;
             }
-                
+            
+            if ( evt.eventType == VUI_EVENT_MOUSE_RELEASED || evt.eventType == VUI_EVENT_MOUSE_CLICK ){
+                bar->SetState(VUI_STATE_UP, false);
+            } else {
+                if ( bar->HasState(VUI_STATE_DOWN ) ) bar->SetState(VUI_STATE_DOWN, false);
+            }
+            
                 
             float w = GetOriginalBarWidth();
             
