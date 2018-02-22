@@ -278,12 +278,18 @@ namespace VUI {
             rotation = r;
         }
         
-        void SetState( VUI::State toState, bool notifyEvent = true ){
+        void SetState( VUI::State toState, bool notifyEvent = true, bool force = false ){
             
             VUI::State s = toState;
             
+            if ( isToggle ){
+                if ( renderState == VUI_STATE_DOWN && toState == VUI_STATE_OVER && !force ) return;
+            }
+            
             if ( s == VUI_STATE_DOWN && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_OVER;
             if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
+            
+            //ofLog() << GetName() << "  -  " << toState << "   >  " << hasState[VUI_STATE_OVER] << "  >  " << 
             
             bool updated = false;
             
@@ -292,9 +298,11 @@ namespace VUI {
             UpdateVirtualState( toState, false, notifyEvent );
         }
         
-        void SetSelected(){
-            SetState( VUI_STATE_DOWN );
+        void SetSelected( bool selected = true ){
+            if ( selected ) SetState( VUI_STATE_DOWN );
+            else SetState( VUI_STATE_UP );
         }
+        
         
         void UpdateVirtualState( VUI::State toState, bool force = false, bool notifyEvent = true ){
             if ( virtualState != toState ){
@@ -308,6 +316,8 @@ namespace VUI {
                     args.eventType = VUI_EVENT_STATE_CHANGE;
                     args.renderState = int(toState);
                     args.virtualState = int(virtualState);
+                    if ( toState == VUI_STATE_DOWN ) args.value = 1;
+                    else args.value = 0;
                     
                     ofNotifyEvent( onStateChange, args, this );
                 }
@@ -449,6 +459,9 @@ namespace VUI {
         virtual int GetWidth(bool scaled = true);
         virtual int GetOriginalHeight( bool scaled = true);
         virtual int GetOriginalWidth(bool scaled = true);
+        
+        virtual int GetInnerWidth(bool scaled = true){ return GetWidth(scaled); }
+        virtual int GetInnerHeight(bool scaled = true){ return GetHeight(scaled); }
         
         ofVec2f GetPosition();
 		Element* SetPosition(float x, float y);

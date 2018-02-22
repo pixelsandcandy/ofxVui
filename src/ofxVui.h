@@ -42,7 +42,9 @@ namespace VUI {
     
     enum Stack {
         VUI_STACK_HORZ,
-        VUI_STACK_VERT
+        VUI_STACK_HORZ_REVERSE,
+        VUI_STACK_VERT,
+        VUI_STACK_VERT_REVERSE
     };
     
 	enum Align {

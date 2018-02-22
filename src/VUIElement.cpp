@@ -470,7 +470,7 @@ namespace VUI {
         
         if ( isToggle || isSelection ){
             
-            bool isDown = virtualState == VUI_STATE_DOWN ? true : false;
+            bool isDown = (virtualState == VUI_STATE_DOWN);
             
             if ( isDown && toState == VUI_STATE_OVER ) return;
             
@@ -500,6 +500,7 @@ namespace VUI {
             
             if ( virtualState == VUI_STATE_DOWN && toState == VUI_STATE_OVER ) {
                 GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
+                SetState(VUI_STATE_OVER,true,true);
             } else if ( virtualState == VUI_STATE_OVER && toState == VUI_STATE_DOWN ){
                 GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_PRESSED );
             }
@@ -630,8 +631,8 @@ namespace VUI {
                 ofNotifyEvent(onUnfocus, args, this);
                 break;
             case VUI_EVENT_VALUE_CHANGE:
-                if ( virtualState == VUI_STATE_DOWN ) args.value = true;
-                else args.value = false;
+                if ( virtualState == VUI_STATE_DOWN ) args.value = 1;
+                else args.value = 0;
                 
                 ofNotifyEvent(onValueChange, args, this);
                 break;
@@ -1020,8 +1021,8 @@ namespace VUI {
         ofVec2f pos;
         
         if ( HasParent() ) {
-            pos.x = percentCalcValues.getValue("x", parent->GetWidth() );
-            pos.y = percentCalcValues.getValue("y", parent->GetHeight() );
+            pos.x = percentCalcValues.getValue("x", parent->GetInnerWidth() );
+            pos.y = percentCalcValues.getValue("y", parent->GetInnerHeight() );
         } else {
             pos.x = percentCalcValues.getValue("x", VUI::GetCurrentEventManager()->vw );
             pos.y = percentCalcValues.getValue("y", VUI::GetCurrentEventManager()->vh );
@@ -1078,7 +1079,7 @@ namespace VUI {
     
     int Element::GetWidth(bool scaled){
         int w;
-        if ( HasParent() ) w = percentCalcValues.getValue("width", parent->GetWidth() );
+        if ( HasParent() ) w = percentCalcValues.getValue("width", parent->GetInnerWidth() );
         else w = percentCalcValues.getValue("width", GetEventManager()->vw);
         
         if ( scaled ) return w*scale;
@@ -1087,7 +1088,7 @@ namespace VUI {
     
     int Element::GetHeight(bool scaled){
         int h;
-        if ( HasParent() ) h = percentCalcValues.getValue("height", parent->GetHeight() );
+        if ( HasParent() ) h = percentCalcValues.getValue("height", parent->GetInnerHeight() );
         else h = percentCalcValues.getValue("height", GetEventManager()->vh );
         
         if ( scaled ) return h*scale;

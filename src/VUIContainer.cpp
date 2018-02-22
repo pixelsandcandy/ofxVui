@@ -9,7 +9,7 @@ namespace VUI {
         UpdateScrollbarStyle();
     }
     
-    void Container::Setup(){
+    void Container::Setup(StyleSheet *ss, string primarySelector, string secondarySelector){
         horzContainer = new Element(0, 0 );
         horzContainer->SetInteractive(false);
         
@@ -32,6 +32,29 @@ namespace VUI {
         
         UpdateContainerStyle();
     }
+    
+    void Container::Setup(int x, int y, StyleSheet *ss, string primarySelector, string secondarySelector){
+        Element::Setup(x,y,ss,primarySelector,secondarySelector);
+        Setup(ss,primarySelector,secondarySelector);
+    }
+    
+    void Container::Setup(string x, int y, StyleSheet *ss, string primarySelector, string secondarySelector){
+        Element::Setup(x,y,ss,primarySelector,secondarySelector);
+        Setup(ss,primarySelector,secondarySelector);
+    }
+    
+    void Container::Setup(int x, string y, StyleSheet *ss, string primarySelector, string secondarySelector){
+        Element::Setup(x,y,ss,primarySelector,secondarySelector);
+        Setup(ss,primarySelector,secondarySelector);
+    }
+    
+    void Container::Setup(string x, string y, StyleSheet *ss, string primarySelector, string secondarySelector){
+        Element::Setup(x,y,ss,primarySelector,secondarySelector);
+        Setup(ss,primarySelector,secondarySelector);
+    }
+    
+    int Container::GetInnerWidth(bool scaled){ return GetWidth(scaled) - (padding.right*VUI::divideDpi) + (padding.left*VUI::divideDpi); }
+    int Container::GetInnerHeight(bool scaled){ return GetHeight(scaled) - (padding.bottom*VUI::divideDpi) + (padding.left*VUI::divideDpi); }
     
     void Container::_vuiEventHandler(vuiEventArgs& evt){
 #ifdef USING_ofxTouchPadScroll

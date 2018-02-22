@@ -17,22 +17,23 @@ namespace VUI {
     class Container : public Element
     {
     public:
+        Container(){};
         ~Container(){};
         
-        Container( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            Setup();
+        Container( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x,y,ss,primarySelector,secondarySelector);
         }
         
-        Container( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            Setup();
+        Container( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x,y,ss,primarySelector,secondarySelector);
         }
         
-        Container( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            Setup();
+        Container( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x,y,ss,primarySelector,secondarySelector);
         }
         
-        Container( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            Setup();
+        Container( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x,y,ss,primarySelector,secondarySelector);
         }
         
         void SetScrollbar( StyleSheet *ss, string styleSelector );
@@ -45,6 +46,12 @@ namespace VUI {
         void SetPadding( int pad ){
             padding.Set(pad,pad,pad,pad);
             UpdateContainerStyle();
+        }
+        
+        Stack stackDirection = VUI_STACK_VERT;
+        
+        void SetStackDirection(Stack direction){
+            stackDirection = direction;
         }
         
         void SetPadding( int topBottom, int leftRight ){
@@ -63,7 +70,7 @@ namespace VUI {
 #endif
         }
         
-        void AddAndStackChild(Element* child, Stack stackDirection = VUI_STACK_VERT){
+        void AddAndStackChild(Element* child, bool resizeToContent = false){
             
             if ( stackPos.y != 0 ) stackPos.y += margin.y;
             
@@ -72,6 +79,15 @@ namespace VUI {
                 child->SetPosition(0,stackPos.y);
                 stackPos.y += child->GetOriginalHeight();
                 
+            } else if ( stackDirection == VUI_STACK_VERT_REVERSE ){
+                AddChild(child);
+                stackPos.y = 0;
+                
+                for (vector<Element*>::reverse_iterator it = container->children.rbegin(); it != container->children.rend(); it++){
+                    if ( stackPos.y != 0 ) stackPos.y += margin.y;
+                    (*it)->SetPositionY(stackPos.y);
+                    stackPos.y += (*it)->GetOriginalHeight();
+                }
             } else {
                 // TODO: Test/Fix this
                 
@@ -88,13 +104,15 @@ namespace VUI {
                     stackPos.x = 0;
                     stackPos.y += child->GetOriginalHeight();
                     
-                    AddAndStackChild(child, stackDirection);
+                    AddAndStackChild(child);
                 }
                 
             }
             
             if ( stackPos.y > vertContainer->GetOriginalHeight() - padding.top ) CreateMask();
             UpdateScrollbarStyle();
+            
+            if ( resizeToContent ) ResizeToContent();
             
         }
         
@@ -115,6 +133,7 @@ namespace VUI {
         
         void UpdateStackedPositions(){
             vertContainer->RemoveMask();
+            
 #ifdef USING_ofxTouchPadScroll
             ofRemoveListener( GetEventManager()->onTouchPadScroll, this, &Container::_vuiEventHandler );
 #endif
@@ -164,11 +183,19 @@ namespace VUI {
             }
         }
         
-        void Setup();
+        void Setup(int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
+        void Setup(string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
+        void Setup(int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
+        void Setup(string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
+        void Setup(StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "");
         
         void SetStackMargin(int x, int y){
             margin.x = x;
             margin.y = y;
+        }
+        
+        ofVec2f GetStackPos(){
+            return stackPos;
         }
         
         void AddChild( Element* el ){
@@ -180,7 +207,11 @@ namespace VUI {
             if ( perc == 1.0 ) container->SetPositionY( (-scrollDist.y*VUI::divideDpi) );
         }
         
-    //private:
+        virtual int GetInnerWidth(bool scaled = true);
+        virtual int GetInnerHeight(bool scaled = true);
+        
+        
+    private:
         Padding padding;
         Element* scrollbar = NULL;
         Element* horzContainer = NULL;

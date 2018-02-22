@@ -42,17 +42,44 @@ namespace VUI {
             toggles.push_back( toggle );
             ofAddListener( toggle->onValueChange, this, &ToggleGroup::_vuiEventHandler );
             ofAddListener( toggle->onMouseClick, this, &ToggleGroup::_vuiEventHandler );
+            
+            if ( shouldSelectOnHover ){
+                ofAddListener( toggle->onMouseOver, this, &ToggleGroup::_vuiEventHandler );
+            }
+        }
+        
+        void SelectOnHover(){
+            shouldSelectOnHover = true;
+            for ( vector<Element*>::iterator it = toggles.begin(); it != toggles.end(); it++ ){
+                ofAddListener( (*it)->onMouseOver, this, &ToggleGroup::_vuiEventHandler );
+            }
         }
         
     private:
         
+        bool shouldSelectOnHover = false;
+        
         vector<Element*> toggles;
         
         void _vuiEventHandler(vuiEventArgs& evt){
+            
+            if ( shouldSelectOnHover && evt.eventType == VUI_EVENT_MOUSE_OVER ){
+                if ( evt.element->GetState() != VUI_STATE_DOWN ){
+                    for ( vector<Element*>::iterator it = toggles.begin(); it != toggles.end(); it++ ){
+                        if ( (*it)->GetState() == VUI_STATE_DOWN ) {
+                            (*it)->SetSelected(false);
+                            evt.element->SetSelected(true);
+                            return;
+                        }
+                    }
+                }
+                return;
+            }
+            
             if ( evt.eventType == VUI_EVENT_VALUE_CHANGE ){
                 if ( evt.value == 1 ){
                     for ( vector<Element*>::iterator it= toggles.begin(); it != toggles.end(); it++){
-                        if ( (*it) != evt.element ) (*it)->SetState(VUI_STATE_UP);
+                        if ( (*it) != evt.element ) (*it)->SetSelected(false);
                     }
                     
                     vuiEventArgs args;

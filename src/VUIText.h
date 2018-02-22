@@ -25,20 +25,20 @@ namespace VUI {
         
         
         
-        Text( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            _Setup(ss,primarySelector,secondarySelector);
+        Text( int x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x, y, ss, primarySelector,secondarySelector);
         }
         
-        Text( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            _Setup(ss,primarySelector,secondarySelector);
+        Text( int x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x, y, ss, primarySelector,secondarySelector);
         }
         
-        Text( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            _Setup(ss,primarySelector,secondarySelector);
+        Text( string x, int y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x, y, ss, primarySelector,secondarySelector);
         }
         
-        Text( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ):Element(x,y,ss,primarySelector,secondarySelector){
-            _Setup(ss,primarySelector,secondarySelector);
+        Text( string x, string y, StyleSheet *ss = nullptr, string primarySelector = "", string secondarySelector = "" ){
+            Setup(x, y, ss, primarySelector,secondarySelector);
         }
         
         
@@ -263,25 +263,27 @@ namespace VUI {
             rect.height *= VUI::divideDpi;
         }
         
-    private:
-        
-        
-        bool _isCalibrated = false;
-        float _typingIndicatorOffset;
-        void _Calibrate(){
-            if ( _isCalibrated ) return;
-            _isCalibrated = true;
-            
-            ofRectangle rect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+][}{:?><", 0,0);
-            
-            textOffset.set(0,rect.height - font->getSize()*.3333 );
-            textOffset.y*=VUI::divideDpi;
-            _typingIndicatorOffset = font->getSize()*.3333;
+        void Setup(int x, int y, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
+            Element::Setup(x, y, ss,primarySelector,secondarySelector);
+            Setup(ss, primarySelector, secondarySelector);
         }
         
+        void Setup(string x, int y, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
+            Element::Setup(x, y, ss,primarySelector,secondarySelector);
+            Setup(ss, primarySelector, secondarySelector);
+        }
         
+        void Setup(int x, string y, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
+            Element::Setup(x, y, ss,primarySelector,secondarySelector);
+            Setup(ss, primarySelector, secondarySelector);
+        }
         
-        void _Setup(StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
+        void Setup(string x, string y, StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
+            Element::Setup(x, y, ss,primarySelector,secondarySelector);
+            Setup(ss, primarySelector, secondarySelector);
+        }
+        
+        void Setup(StyleSheet *ss = nullptr, const string primarySelector = "", const string secondarySelector = ""){
             textColor.setHex(stoul("0x000000", nullptr, 16), 255.0 );
             
             for (int i = 0; i < 3; i++) {
@@ -313,6 +315,29 @@ namespace VUI {
                 ParsePropValue( (*it).first, (*it).second );
             }
         }
+        
+        virtual int GetInnerWidth(bool scaled = true){ return GetWidth(scaled) - (padding.left+padding.right); }
+        virtual int GetInnerHeight(bool scaled = true){ return GetHeight(scaled) - (padding.top+padding.bottom); }
+        
+    private:
+        
+        
+        bool _isCalibrated = false;
+        float _typingIndicatorOffset;
+        void _Calibrate(){
+            if ( _isCalibrated ) return;
+            _isCalibrated = true;
+            
+            ofRectangle rect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+][}{:?><", 0,0);
+            
+            textOffset.set(0,rect.height - font->getSize()*.3333 );
+            textOffset.y*=VUI::divideDpi;
+            _typingIndicatorOffset = font->getSize()*.3333;
+        }
+        
+        
+        
+        
     };
     
 }
