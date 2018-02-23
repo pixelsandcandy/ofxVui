@@ -723,6 +723,10 @@ namespace VUI {
                 } else {
                     //if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_CLICK)";
 					args.eventType = VUI_EVENT_MOUSE_CLICK;
+                    
+                    if ( GetState() == VUI_STATE_DOWN ) args.value = 1;
+                    else args.value = 0;
+                    
                     ofNotifyEvent(onMouseClick, args, this);
                     
                     argsTouch.eventType = VUI_EVENT_TOUCH_TAP;
