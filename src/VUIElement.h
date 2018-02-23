@@ -552,7 +552,7 @@ namespace VUI {
             propValue[prop] = value;
         }
         
-        virtual void RenderAfter(float parentOffsetX = 0, float parentOffsetY = 0){};
+        virtual void RenderAfter(ofRectangle& parentRect){};
         
         template <typename ArgumentsType, class ListenerClass>
         Tween* Animate( float timeSeconds, string params, ListenerClass* listener, void (ListenerClass::*listenerMethod)(ArgumentsType&) ){
@@ -576,6 +576,10 @@ namespace VUI {
         
         bool IsMouseInside(){
             return _mInside;
+        }
+        
+        bool IsMouseDown(){
+            return isMouseDown;
         }
         
         Tween* tween = NULL;

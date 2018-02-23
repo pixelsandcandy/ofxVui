@@ -186,7 +186,7 @@ namespace VUI {
         
         ofRectangle rect;
         
-        void RenderAfter(float parentOffsetX = 0, float parentOffsetY = 0){
+        void RenderAfter(ofRectangle& parentRect){
             
             
             if ( font != nullptr ) {
@@ -244,16 +244,16 @@ namespace VUI {
                 
                 if ( hasTextShadow ) {
                     ofSetColor(0,0,0, shadowPos.z*op );
-                    font->drawString( text, shadowPos.x + parentOffsetX + x, shadowPos.y + parentOffsetY + y + textOffset.y );
+                    font->drawString( text, shadowPos.x + parentRect.x + x, shadowPos.y + parentRect.y + y + textOffset.y );
                 }
                 
                 ofSetColor(textColor, op);
-                font->drawString( text, parentOffsetX + x, parentOffsetY + y + textOffset.y );
+                font->drawString( text, parentRect.x + x, parentRect.y + y + textOffset.y );
                 
                 ofSetColor(0,0,0,255);
                 
                 // typing cursor
-                if ( isTextField && GetVirtualState() == VUI_STATE_DOWN ) ofDrawRectangle( parentOffsetX + spaceOffsetX + padding.top + x + rect.width + (font->getSize()*.18), parentOffsetY + padding.top + y - 1 - 2, 1, textOffset.y+4);
+                if ( isTextField && GetVirtualState() == VUI_STATE_DOWN ) ofDrawRectangle( parentRect.x + spaceOffsetX + padding.top + x + rect.width + (font->getSize()*.18), parentRect.y + padding.top + y - 1 - 2, 1, textOffset.y+4);
             }
         }
         
