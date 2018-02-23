@@ -207,6 +207,8 @@ namespace VUI {
             if ( perc == 1.0 ) container->SetPositionY( (-scrollDist.y*VUI::divideDpi) );
         }
         
+        //virtual int GetHeight( bool scaled = true);
+        //virtual int GetWidth(bool scaled = true);
         virtual int GetInnerWidth(bool scaled = true);
         virtual int GetInnerHeight(bool scaled = true);
         
@@ -301,9 +303,9 @@ namespace VUI {
         
         void UpdateContainerStyle(){
             horzContainer->Setup(padding.left, 0 );
-            horzContainer->SetWidth("calc(100%-"+ofToString(padding.right)+")");
+            horzContainer->SetWidth("calc(100%-"+ofToString(padding.left+padding.right)+")");
             
-            vertContainer->SetWidth("calc(100%-" + ofToString(padding.right) + ")" );
+            vertContainer->SetWidth("100%" );
             vertContainer->SetHeight("100%");
             
             container->Setup(0, padding.top );

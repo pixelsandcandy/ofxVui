@@ -53,8 +53,8 @@ namespace VUI {
         Setup(ss,primarySelector,secondarySelector);
     }
     
-    int Container::GetInnerWidth(bool scaled){ return GetWidth(scaled) - (padding.right*VUI::divideDpi) + (padding.left*VUI::divideDpi); }
-    int Container::GetInnerHeight(bool scaled){ return GetHeight(scaled) - (padding.bottom*VUI::divideDpi) + (padding.left*VUI::divideDpi); }
+    int Container::GetInnerWidth(bool scaled){ return GetWidth(scaled); }
+    int Container::GetInnerHeight(bool scaled){ return GetHeight(scaled); }
     
     void Container::_vuiEventHandler(vuiEventArgs& evt){
 #ifdef USING_ofxTouchPadScroll

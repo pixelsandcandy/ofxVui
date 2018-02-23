@@ -98,8 +98,9 @@ namespace VUI {
             return hasState[state];
         }
         
-	protected:
         PercentCalcValues percentCalcValues;
+        
+	protected:
         
         struct Image {
             ofRectangle bounds;

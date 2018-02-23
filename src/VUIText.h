@@ -316,8 +316,8 @@ namespace VUI {
             }
         }
         
-        virtual int GetInnerWidth(bool scaled = true){ return GetWidth(scaled) - (padding.left+padding.right); }
-        virtual int GetInnerHeight(bool scaled = true){ return GetHeight(scaled) - (padding.top+padding.bottom); }
+        virtual int GetInnerWidth(bool scaled = true){ return GetWidth(scaled) - padding.right*VUI::dpi; }
+        virtual int GetInnerHeight(bool scaled = true){ return GetHeight(scaled) - padding.bottom*VUI::dpi; }
         
     private:
         
