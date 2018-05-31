@@ -1014,8 +1014,9 @@ namespace VUI {
             fbo.end();
         }
         
-        if (currView.empty() || views[currView] == nullptr ) return;
-        
+        if ( useViewManager ){
+            if (currView.empty() || views[currView] == nullptr ) return;
+        }
         
         ofSetColor(255, 255, 255, 255);
         ofEnableAlphaBlending();

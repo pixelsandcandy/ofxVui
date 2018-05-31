@@ -898,13 +898,13 @@ namespace VUI {
             }
         }
         
-        ofSetColor(255,255,255,255);
-        RenderAfter(rect);
-        
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
 
             (*it)->Render(localMinPosition.x + rect.x + parentSumOffset.x + anchorOffset.x, localMinPosition.y + rect.y + parentSumOffset.y + anchorOffset.y, parentSumOpacity);
         }
+        
+        ofSetColor(255,255,255,255);
+        RenderAfter(rect);
 
         ofSetColor(255,255,255,255);
 

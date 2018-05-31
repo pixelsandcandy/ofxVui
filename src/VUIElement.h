@@ -582,6 +582,10 @@ namespace VUI {
             return isMouseDown;
         }
         
+        bool IsActive(){
+            return isActive;
+        }
+        
         Tween* tween = NULL;
         
         void StopTween(){
