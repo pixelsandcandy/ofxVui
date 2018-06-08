@@ -69,7 +69,7 @@ Elements
   ∟ Slider
   ∟ Container
   
-  (x/y position » px/%/calc)
+  (x/y position » px, %, calc)
     
 Animation Tween
   ∟ x
@@ -80,6 +80,8 @@ Animation Tween
   ∟ opacity
   ∟ rotation
   ∟ ease/easing
+  
+  (x/y/width/height/scale/opacity/rotation » px, +=, -=, *=)
   
 Animation Events
   ∟ ANIMATE_START
