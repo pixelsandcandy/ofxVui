@@ -507,6 +507,11 @@ void draw(){
   ⭐️ StyleSheet
       ✔️ width/height - percentage based values
       ✔️ width/height - calc() based values
+  
+  ⭐️ Animate
+      ✔️ += value (x/y/width/height/scale/opacity/rotation)
+      ✔️ -= value (x/y/width/height/scale/opacity/rotation)
+      ✔️ *= value (x/y/width/height/scale/opacity/rotation)
       
   ⭐️ VUI::SetRotation()
       + Add option - VUI_ROTATE_90_CW
