@@ -222,6 +222,7 @@ namespace VUI {
         void Update( float currTime );
         void UpdateValues();
         void StoreValue( string param, string val );
+        void StoreValue( string param, float val );
         void StoreStartValues();
         void SetID( string name ){
             id = name;
@@ -875,15 +876,15 @@ namespace VUI {
     static int GetWindowWidth( bool scaled = true) {
         float s = scaled == true ? vscale : 1.0;
         
-        if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vh * s;
-        return vw*s;
+        if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vh * s * divideDpi;
+        return vw*s*divideDpi;
     }
     
     static int GetWindowHeight( bool scaled = true ){
-        float s = scaled == true ? vscale : 1.0;
+        float s = (scaled == true) ? vscale : 1.0;
         
-        if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vw * s;
-        return vh*s;
+        if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vw * s * divideDpi;
+        return vh*s * divideDpi;
     }
 
 	static int GetHeight(bool scaled = true) {

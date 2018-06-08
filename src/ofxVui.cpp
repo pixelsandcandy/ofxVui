@@ -394,6 +394,32 @@ namespace VUI {
                 //ofLog() << propVal[0] << " => " << propVal[1];
                 
                 if ( propVal[0] == "rotation" || propVal[0] == "x" || propVal[0] == "y" || propVal[0] == "width" || propVal[0] == "height" || propVal[0] == "opacity" || propVal[0] == "scale" ){
+                    if ( propVal[1].find("+=") != -1 ) {
+                        if ( propVal[0] == "x" ) propVal[1] = ofToString(el->GetPosition(true).x + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                        else if ( propVal[0] == "y" ) propVal[1] = ofToString(el->GetPosition(true).y + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                        else if ( propVal[0] == "opacity" ) propVal[1] = ofToString(el->GetOpacity() + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                        else if ( propVal[0] == "width" ) propVal[1] = ofToString(el->GetWidth() + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                        else if ( propVal[0] == "height" ) propVal[1] = ofToString(el->GetHeight() + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                        else if ( propVal[0] == "scale" ) propVal[1] = ofToString(el->GetScale() + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                        else if ( propVal[0] == "rotation" ) propVal[1] = ofToString(el->GetRotation() + ofToFloat( ofSplitString( propVal[1], "+=" )[1] ));
+                    } else if ( propVal[1].find("-=") != -1 ){
+                        if ( propVal[0] == "x" ) propVal[1] = ofToString(el->GetPosition(true).x - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                        else if ( propVal[0] == "y" ) propVal[1] = ofToString(el->GetPosition(true).y - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                        else if ( propVal[0] == "opacity" ) propVal[1] = ofToString(el->GetOpacity() - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                        else if ( propVal[0] == "width" ) propVal[1] = ofToString(el->GetWidth() - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                        else if ( propVal[0] == "height" ) propVal[1] = ofToString(el->GetHeight() - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                        else if ( propVal[0] == "scale" ) propVal[1] = ofToString(el->GetScale() - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                        else if ( propVal[0] == "rotation" ) propVal[1] = ofToString(el->GetRotation() - ofToFloat( ofSplitString( propVal[1], "-=" )[1] ));
+                    } else if ( propVal[1].find("*=") != -1 ){
+                        if ( propVal[0] == "x" ) propVal[1] = ofToString(el->GetPosition(true).x * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                        else if ( propVal[0] == "y" ) propVal[1] = ofToString(el->GetPosition(true).y * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                        else if ( propVal[0] == "opacity" ) propVal[1] = ofToString(el->GetOpacity() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                        else if ( propVal[0] == "width" ) propVal[1] = ofToString(el->GetWidth() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                        else if ( propVal[0] == "height" ) propVal[1] = ofToString(el->GetHeight() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                        else if ( propVal[0] == "scale" ) propVal[1] = ofToString(el->GetScale() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                        else if ( propVal[0] == "rotation" ) propVal[1] = ofToString(el->GetRotation() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                    }
+                    
                     StoreValue( propVal[0], propVal[1] );
                 } else if ( propVal[0] == "delay" ){
                     delay = ofToFloat( propVal[1] );
@@ -442,9 +468,10 @@ namespace VUI {
     void Tween::StoreStartValues(){
         for ( vector<string>::iterator it = valueNames.begin(); it != valueNames.end(); it++ ){
             if ( (*it) == "x" ){
-                startValues[ (*it) ] = el->GetPosition().x;
+                startValues[ (*it) ] = el->GetPosition(true).x;
             } else if ( (*it) == "y" ){
-                startValues[ (*it) ] = el->GetPosition().y;
+                startValues[ (*it) ] = el->GetPosition(true).y;
+                //ofLog() << "sy:" << startValues[ (*it) ];
             } else if ( (*it) == "width" ){
                 //ofLog() << "width:" << el->GetWidth();
                 startValues[ (*it) ] = el->GetWidth(false);
@@ -464,6 +491,11 @@ namespace VUI {
     
     void Tween::StoreValue( string param, string val ){
         endValues[ param ] = ofToFloat( val );
+        valueNames.push_back( param );
+    }
+    
+    void Tween::StoreValue( string param, float val ){
+        endValues[ param ] = val;
         valueNames.push_back( param );
     }
     

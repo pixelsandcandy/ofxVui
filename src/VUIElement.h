@@ -26,23 +26,29 @@ namespace VUI {
                 ~PCV(){};
                 
                 float perc = 1.0;
-                float offset = 0;
-                float val = 1.0;
+                float offset = 0.0;
+                float val = 0.0;
                 
                 bool pxValue = false;
                 
-                float getValue( float parentValue ){
-                    //ofLog() << "pxValue:" << pxValue << "  val:" << val << "  parentValue:" << parentValue << "  perc:" << perc << "  offset:" << offset;
+                float getValue( float parentValue){
                     if ( pxValue == true ) return val;
                     else return (parentValue*perc)+offset;
                 }
                 
                 void parse(int value){
+                    perc = 1.0;
+                    offset = 0.0;
+                    
                     val = (float)value*VUI::dpi;
                     pxValue = true;
                 }
                 
                 void parse(string value){
+                    perc = 1.0;
+                    val = 0.0;
+                    offset = 0.0;
+                    
                     if ( value.find( "calc" ) != -1 && value.find( "%" ) != -1 && value.find("(") != -1 && value.find(")") != -1 && (value.find("-") != -1 || value.find("+") != -1 ) ) {
                         
                         int start, end;
@@ -54,16 +60,15 @@ namespace VUI {
                         
                         if ( value.find("-") != -1 ) {
                             start = value.find("-")+1;
-                            offset = -1;
+                            offset = -1.0;
                         } else {
                             start = value.find("+")+1;
-                            offset = 1;
+                            offset = 1.0;
                         }
                             
-                        end = value.find(")")+1;
+                        end = value.find(")");
                         
                         string diff = value.substr( start, end - start);
-                        
                         offset = (ofToFloat( diff )*offset)*VUI::dpi;
                         pxValue = false;
                         
@@ -88,7 +93,6 @@ namespace VUI {
             }
             
             int getValue(string name, float parentValue ){
-                //ofLog() << name << "  -  " << parentValue << "  = " << values[name].getValue(parentValue);
                 return values[name].getValue(parentValue);
             }
             
@@ -464,7 +468,7 @@ namespace VUI {
         virtual int GetInnerWidth(bool scaled = true){ return GetWidth(scaled); }
         virtual int GetInnerHeight(bool scaled = true){ return GetHeight(scaled); }
         
-        ofVec2f GetPosition();
+        ofVec2f GetPosition(bool normalize = false);
 		Element* SetPosition(float x, float y);
         void SetPosition(string x, string y);
         void SetPosition(float x, string y);
@@ -552,6 +556,7 @@ namespace VUI {
             propValue[prop] = value;
         }
         
+        virtual void RenderBefore(ofRectangle& parentRect){};
         virtual void RenderAfter(ofRectangle& parentRect){};
         
         template <typename ArgumentsType, class ListenerClass>
@@ -580,6 +585,10 @@ namespace VUI {
         
         bool IsMouseDown(){
             return isMouseDown;
+        }
+        
+        bool IsActive(){
+            return isActive;
         }
         
         Tween* tween = NULL;

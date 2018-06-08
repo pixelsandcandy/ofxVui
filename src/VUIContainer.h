@@ -70,6 +70,21 @@ namespace VUI {
 #endif
         }
         
+        void SwapPosition(Element* a, Element* b){
+            ofVec2f posA = a->GetPosition()*VUI::divideDpi;
+            ofVec2f posB = b->GetPosition()*VUI::divideDpi;
+            
+            /*ofLog() << "";
+            ofLog() << "----";
+            ofLog() << "a:" << a->GetPosition().y << " b:" << b->GetPosition().y;
+            ofLog() << posA.y << " <> " << posB.y;*/
+            
+            a->SetPosition( posB.x, posB.y );
+            b->SetPosition( posA.x, posA.y );
+            
+            //ofLog() << "a:" << a->GetPosition().y << " b:" << b->GetPosition().y;
+        }
+        
         void AddAndStackChild(Element* child, bool resizeToContent = false){
             
             if ( stackPos.y != 0 ) stackPos.y += margin.y;

@@ -152,7 +152,9 @@ namespace VUI {
 	void Element::Update(int mouseX, int mouseY, bool internalUpdate) {
         if ( !GetEventManager()->active ) return;
         if ( !isActive ) return;
+        if ( opacity == 0.0 ) return;
         if ( !internalUpdate ) userUpdating = true;
+        
         
 		UpdatePosition();
         
@@ -416,6 +418,7 @@ namespace VUI {
 	void Element::UpdateState(int toState, bool isInside, bool isMouseDown ) {
         //ofLog() << "UpdateState => " << toState;
         
+        if ( opacity == 0.0 ) return;
         if ( !GetEventManager()->IsActive() ) return;
         if ( !isInteractive ) return;
         
@@ -814,7 +817,7 @@ namespace VUI {
 
 	void Element::Render(float parentOffsetX, float parentOffsetY, float parentOpacity, ofVec2f _anchorOffset, ofVec2f _parentOffsetPos ) {
         
-        if ( !isActive ) return;
+        if ( !isActive || opacity == 0.0 ) return;
         
         parentSumOpacity = parentOpacity * opacity;
         parentSumOffset.set( parentOffsetX, parentOffsetY );
@@ -843,6 +846,8 @@ namespace VUI {
         }
         
         ofRectangle rect(0, 0, size.x, size.y );
+        
+        RenderBefore(rect);
 
 		if (style[renderState]["background-color"] != "clear") {
 			color.setHex(styleFloat[renderState]["background-color"], styleFloat[renderState]["background-opacity"]*styleFloat[renderState]["opacity"]*parentSumOpacity);
@@ -898,13 +903,13 @@ namespace VUI {
             }
         }
         
-        ofSetColor(255,255,255,255);
-        RenderAfter(rect);
-        
         for ( vector<Element*>::iterator it = children.begin(); it != children.end(); it++){
 
             (*it)->Render(localMinPosition.x + rect.x + parentSumOffset.x + anchorOffset.x, localMinPosition.y + rect.y + parentSumOffset.y + anchorOffset.y, parentSumOpacity);
         }
+        
+        ofSetColor(255,255,255,255);
+        RenderAfter(rect);
 
         ofSetColor(255,255,255,255);
 
@@ -1021,15 +1026,22 @@ namespace VUI {
         SetPositionY(y);
     }
     
-    ofVec2f Element::GetPosition(){
+    ofVec2f Element::GetPosition(bool normalize ){
         ofVec2f pos;
         
         if ( HasParent() ) {
             pos.x = percentCalcValues.getValue("x", parent->GetInnerWidth() );
             pos.y = percentCalcValues.getValue("y", parent->GetInnerHeight() );
         } else {
-            pos.x = percentCalcValues.getValue("x", VUI::GetCurrentEventManager()->vw );
-            pos.y = percentCalcValues.getValue("y", VUI::GetCurrentEventManager()->vh );
+            if ( normalize ) {
+                pos.x = percentCalcValues.getValue("x", VUI::GetCurrentEventManager()->vw );
+                pos.y = percentCalcValues.getValue("y", VUI::GetCurrentEventManager()->vh );
+                return pos*VUI::divideDpi;
+            } else {
+                pos.x = percentCalcValues.getValue("x", VUI::GetCurrentEventManager()->vw );
+                pos.y = percentCalcValues.getValue("y", VUI::GetCurrentEventManager()->vh );
+            }
+            
         }
         
         return pos;
