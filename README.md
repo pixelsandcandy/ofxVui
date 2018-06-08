@@ -157,7 +157,7 @@ There are a bunch of example projects/code in the repo but here are some basics.
 using namespace VUI;
 
 // basic
-elementPtr->Animate(1.25, "{x: 160, width: 150, height: 50, scale: 1.75, rotation: -135, opacity: .75, ease: Elastic.easeOut }");
+elementPtr->Animate(1.25, "{x: +=160, width: 150, height: 50, scale: *=.5, rotation: -=90, opacity: .75, ease: Elastic.easeOut }");
 
 
 // add listener - method A
