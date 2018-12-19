@@ -67,6 +67,8 @@ namespace VUI {
 	enum vuiEvent {
         VUI_EVENT_MOUSE_OVER,
         VUI_EVENT_MOUSE_OUT,
+        VUI_EVENT_MOUSE_ENTER,
+        VUI_EVENT_MOUSE_EXIT,
         VUI_EVENT_MOUSE_PRESSED,
         VUI_EVENT_MOUSE_MOVED,
         VUI_EVENT_MOUSE_DRAGGED,
@@ -347,6 +349,8 @@ namespace VUI {
     static vector<vuiEvent> evtlist = {
         VUI_EVENT_MOUSE_OVER,
         VUI_EVENT_MOUSE_OUT,
+        VUI_EVENT_MOUSE_ENTER,
+        VUI_EVENT_MOUSE_EXIT,
         VUI_EVENT_MOUSE_PRESSED,
         VUI_EVENT_MOUSE_MOVED,
         VUI_EVENT_MOUSE_DRAGGED,

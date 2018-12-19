@@ -170,6 +170,12 @@ namespace VUI {
                         _mInside = true;
                     }
                     isMouseInside = true;
+                    
+                    if ( !_mEnter ) {
+                        _mEnter = true;
+                        GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_ENTER );
+                    }
+                    
 					return;
 				}
 			}
@@ -389,6 +395,10 @@ namespace VUI {
                         }
                         
                         if (  GetEventManager()->overElement != this ) GetEventManager()->StoreOverElement(this);
+                        if ( !_mEnter ) {
+                            _mEnter = true;
+                            GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_ENTER );
+                        }
                         _mInside = true;
                     } else {
                         isMouseInside = true;
@@ -398,9 +408,14 @@ namespace VUI {
                 }
             }
             
-			if (isMouseInside) {
+			if (isMouseInside || _mInside ) {
                 if ( isInteractive ){
-                    GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
+                    if ( isMouseInside ) GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_OUT );
+                    if ( _mEnter ) {
+                        _mEnter = false;
+                        GetEventManager()->StoreEvent( this, VUI_EVENT_MOUSE_EXIT );
+                    }
+                    
                     UpdateState(VUI_STATE_UP);
                 }
 				isMouseInside = false;
@@ -647,6 +662,12 @@ namespace VUI {
                 ofNotifyEvent(onMouseOut, args, this);
                 canDrag = false;
                 firstMove = true;
+                break;
+            case VUI_EVENT_MOUSE_EXIT:
+                ofNotifyEvent(onMouseExit, args, this);
+                break;
+            case VUI_EVENT_MOUSE_ENTER:
+                ofNotifyEvent(onMouseEnter, args, this);
                 break;
             case VUI_EVENT_MOUSE_PRESSED:
 				//ofLog() << "TriggerEvent >> VUI_EVENT_MOUSE_PRESSED";

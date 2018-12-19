@@ -193,6 +193,8 @@ namespace VUI {
 
 		ofEvent<vuiEventArgs> onMouseOver;
         ofEvent<vuiEventArgs> onMouseOut;
+        ofEvent<vuiEventArgs> onMouseExit;
+        ofEvent<vuiEventArgs> onMouseEnter;
 		ofEvent<vuiEventArgs> onMousePressed;
         ofEvent<vuiEventArgs> onMouseMoved;
         ofEvent<vuiEventArgs> onMouseDragged;
@@ -634,6 +636,7 @@ namespace VUI {
         bool isMouseDown = false;
         bool isMouseInside = false;
         bool _mInside = false;
+        bool _mEnter = false;
         int lastClickTimeMS = 0;
 		int touchDownTimeMS = 0;
 
