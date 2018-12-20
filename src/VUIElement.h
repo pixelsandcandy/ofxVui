@@ -359,6 +359,14 @@ namespace VUI {
         void MakeSelection(){
             SetSelection();
         }
+        
+        bool IsToggled(){
+            if ( !isToggle ) return false;
+            else {
+                if (virtualState == VUI_STATE_DOWN) return true;
+                else return false;
+            }
+        }
 
 		//
 
