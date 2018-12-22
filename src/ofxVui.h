@@ -22,21 +22,21 @@
 #endif
 
 namespace VUI {
-	class Element;
-
-	enum State {
-		VUI_STATE_UP,
-		VUI_STATE_OVER,
-		VUI_STATE_DOWN,
-		VUI_STATE_ALL
-	};
-
+    class Element;
+    
+    enum State {
+        VUI_STATE_UP,
+        VUI_STATE_OVER,
+        VUI_STATE_DOWN,
+        VUI_STATE_ALL
+    };
+    
     enum Rotate {
         VUI_ROTATE_NONE,
         VUI_ROTATE_90_CCW
         /* TODO
-             VUI_ROTATE_90_CW,
-             VUI_ROTATE_180
+         VUI_ROTATE_90_CW,
+         VUI_ROTATE_180
          */
     };
     
@@ -47,24 +47,24 @@ namespace VUI {
         VUI_STACK_VERT_REVERSE
     };
     
-	enum Align {
-		VUI_ALIGN_LEFT_TOP,
-		VUI_ALIGN_LEFT_CENTER,
-		VUI_ALIGN_LEFT_BOTTOM,
-		VUI_ALIGN_RIGHT_TOP,
-		VUI_ALIGN_RIGHT_CENTER,
-		VUI_ALIGN_RIGHT_BOTTOM,
-		VUI_ALIGN_CENTER_TOP,
-		VUI_ALIGN_CENTER_CENTER,
-		VUI_ALIGN_CENTER_BOTTOM
-	};
+    enum Align {
+        VUI_ALIGN_LEFT_TOP,
+        VUI_ALIGN_LEFT_CENTER,
+        VUI_ALIGN_LEFT_BOTTOM,
+        VUI_ALIGN_RIGHT_TOP,
+        VUI_ALIGN_RIGHT_CENTER,
+        VUI_ALIGN_RIGHT_BOTTOM,
+        VUI_ALIGN_CENTER_TOP,
+        VUI_ALIGN_CENTER_CENTER,
+        VUI_ALIGN_CENTER_BOTTOM
+    };
     
     enum ImageSize {
         VUI_IMAGE_NORMAL,
         VUI_IMAGE_FILL
     };
-
-	enum vuiEvent {
+    
+    enum vuiEvent {
         VUI_EVENT_MOUSE_OVER,
         VUI_EVENT_MOUSE_OUT,
         VUI_EVENT_MOUSE_ENTER,
@@ -73,12 +73,12 @@ namespace VUI {
         VUI_EVENT_MOUSE_MOVED,
         VUI_EVENT_MOUSE_DRAGGED,
         VUI_EVENT_MOUSE_RELEASED,
-		VUI_EVENT_MOUSE_CLICK,
+        VUI_EVENT_MOUSE_CLICK,
         VUI_EVENT_MOUSE_DOUBLE_CLICK,
-
-		VUI_EVENT_TOUCH_DOWN,
-		VUI_EVENT_TOUCH_UP,
-		VUI_EVENT_TOUCH_TAP,
+        
+        VUI_EVENT_TOUCH_DOWN,
+        VUI_EVENT_TOUCH_UP,
+        VUI_EVENT_TOUCH_TAP,
         VUI_EVENT_TOUCH_DOUBLE_TAP,
         
         VUI_EVENT_STATE_CHANGE,
@@ -101,12 +101,12 @@ namespace VUI {
         ,VUI_EVENT_TOUCHPAD_SCROLL_END
         ,VUI_EVENT_TOUCHPAD_SCROLL_INERTIA
 #endif
-	};
-
+    };
+    
 #ifdef USING_ofxTouchPadScroll
     extern ofxTouchPadScroll tps;
 #endif
-	
+    
     extern Rotate uiRotation;
     extern Rotate viewRotation;
     
@@ -145,7 +145,7 @@ namespace VUI {
         fonts[filename][fontSize*VUI::dpi][letterSpacing] = tf;
         return fonts[filename][fontSize*VUI::dpi][letterSpacing];
     }
-
+    
     
     struct vuiEventArgs;
     
@@ -181,12 +181,12 @@ namespace VUI {
         float delay = 0;
         float opacity;
         float scale;
-
-		string id = "";
-
-		string GetID() {
-			return id;
-		}
+        
+        string id = "";
+        
+        string GetID() {
+            return id;
+        }
         
         ofEvent<vuiEventArgs> onComplete;
         ofEvent<vuiEventArgs> onStart;
@@ -306,43 +306,43 @@ namespace VUI {
     }
     
     /*class EMBridge {
-    public:
-        ~EMBridge(){};
-        EMBridge(){};
-        
-        void Init();
-        
-        void ShouldDestroyTween( Tween* t ){
-            tweensToDestroy.push_back( t );
-        }
-        
-        void DestroyTween(Tween* t){
-            int index = 0;
-            for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
-                if ( (*it) == t ){
-                    //ofLog() << "found tween - destroying...";
-                    t = nullptr;
-                    tweens.erase( tweens.begin() + index );
-                    return;
-                }
-                index++;
-            }
-        }
-        
-    private:
-        vector<Tween*> tweensToDestroy;
-        
-        bool EventHasElement( vuiEvent eventType ){
-            return !VUI::events[eventType].empty();
-        }
-        
-        Element* GetLatestElement( vuiEvent eventType ){
-            return VUI::events[eventType].back();
-        }
-        
-        void update(ofEventArgs & args);
-        
-    };*/
+     public:
+     ~EMBridge(){};
+     EMBridge(){};
+     
+     void Init();
+     
+     void ShouldDestroyTween( Tween* t ){
+     tweensToDestroy.push_back( t );
+     }
+     
+     void DestroyTween(Tween* t){
+     int index = 0;
+     for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
+     if ( (*it) == t ){
+     //ofLog() << "found tween - destroying...";
+     t = nullptr;
+     tweens.erase( tweens.begin() + index );
+     return;
+     }
+     index++;
+     }
+     }
+     
+     private:
+     vector<Tween*> tweensToDestroy;
+     
+     bool EventHasElement( vuiEvent eventType ){
+     return !VUI::events[eventType].empty();
+     }
+     
+     Element* GetLatestElement( vuiEvent eventType ){
+     return VUI::events[eventType].back();
+     }
+     
+     void update(ofEventArgs & args);
+     
+     };*/
     
     //
     
@@ -383,7 +383,7 @@ namespace VUI {
         int mouseY = 0;
         
         void StoreOverElement( Element *el);
-		
+        
         Element* GetOverElement(){
             return overElement;
         }
@@ -394,7 +394,7 @@ namespace VUI {
         void StoreEvent( Element *el, vuiEvent eventType );
         void StoreState( Element *el, State state );
         
-		void Disable();        int shouldEnable = 0;
+        void Disable();        int shouldEnable = 0;
         
         void Enable();
         bool IsActive(){
@@ -420,21 +420,21 @@ namespace VUI {
 #endif
         
         /*void ShouldDestroyTween( Tween* t ){
-            tweensToDestroy.push_back( t );
-        }
-        
-        void DestroyTween(Tween* t){
-            int index = 0;
-            for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
-                if ( (*it) == t ){
-                    //ofLog() << "found tween - destroying...";
-                    t = nullptr;
-                    tweens.erase( tweens.begin() + index );
-                    return;
-                }
-                index++;
-            }
-        }*/
+         tweensToDestroy.push_back( t );
+         }
+         
+         void DestroyTween(Tween* t){
+         int index = 0;
+         for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
+         if ( (*it) == t ){
+         //ofLog() << "found tween - destroying...";
+         t = nullptr;
+         tweens.erase( tweens.begin() + index );
+         return;
+         }
+         index++;
+         }
+         }*/
         
     private:
         //vector<Tween*> tweensToDestroy;
@@ -470,20 +470,24 @@ namespace VUI {
         return currEventManager;
     }
     
-	static Element* GetOverElement() {
-		return GetCurrentEventManager()->overElement;
-	}
+    static Element* GetOverElement() {
+        return GetCurrentEventManager()->overElement;
+    }
     
     static Element* GetPrevOverElement() {
         return GetCurrentEventManager()->prevOverElement;
     }
-
+    
+    
+    
+    
+    
     static void ClearOverElement();
     
     
     
     
-
+    
 }
 
 
@@ -501,27 +505,27 @@ namespace VUI {
 // ===================================
 
 namespace VUI {
-
-	enum Status {
-		VIEW_INACTIVE,
-		VIEW_STARTING,
-		VIEW_ACTIVE,
-		VIEW_FINISHING
-	};
-
-	extern map< string, View*> views;
-	extern string currView;
-	extern string nextView;
-	extern ofVec2f multCoords;
-	extern int mouseX;
-	extern int mouseY;
-
-	extern int vw;
-	extern int vh;
-	extern float vscale;
-	extern ofFbo fbo;
-
-	extern map< int, ofPoint> touches;
+    
+    enum Status {
+        VIEW_INACTIVE,
+        VIEW_STARTING,
+        VIEW_ACTIVE,
+        VIEW_FINISHING
+    };
+    
+    extern map< string, View*> views;
+    extern string currView;
+    extern string nextView;
+    extern ofVec2f multCoords;
+    extern int mouseX;
+    extern int mouseY;
+    
+    extern int vw;
+    extern int vh;
+    extern float vscale;
+    extern ofFbo fbo;
+    
+    extern map< int, ofPoint> touches;
     
     // UI
     
@@ -533,12 +537,12 @@ namespace VUI {
     static StyleSheet* GetStyleSheet(string name){
         return styleSheets[name];
     }
-
-	//
-
-	static map< int, ofPoint>* GetTouches() {
-		return &touches;
-	}
+    
+    //
+    
+    static map< int, ofPoint>* GetTouches() {
+        return &touches;
+    }
     
     extern bool isListening;
     
@@ -552,6 +556,30 @@ namespace VUI {
     
     extern bool useViewManager;
     
+    extern vector<TextField*> textFields;
+    extern TextField* activeTextField;
+    
+    static void ResetTextFields(TextField* tf = NULL){
+        for ( vector<TextField*>::iterator it = textFields.begin(); it != textFields.end(); it++){
+            if ( tf != NULL ) {
+                if ( (*it) != tf ) (*it)->SetState( VUI_STATE_UP );
+            } else {
+                (*it)->SetState( VUI_STATE_UP );
+            }
+        }
+        
+        activeTextField = NULL;
+    }
+    
+    static TextField* GetActiveTextField(){
+        return activeTextField;
+    }
+    
+    static bool HasActiveTextField(){
+        if ( activeTextField == NULL ) return false;
+        else return true;
+    }
+    
     static void SetResolution(int w, int h, float scale = 1.0, bool enableViewManager = true ) {
         vw = w*VUI::dpi;
         vh = h*VUI::dpi;
@@ -559,20 +587,20 @@ namespace VUI {
         ScaleView(scale);
         useViewManager = enableViewManager;
     }
-
-	class ViewManagerBridge {
-	public:
-		~ViewManagerBridge() {};
-		ViewManagerBridge() {};
+    
+    class ViewManagerBridge {
+    public:
+        ~ViewManagerBridge() {};
+        ViewManagerBridge() {};
         
-		void StartView(string name);
-
-		bool isReady = false;
-
-		void Init() {
-			if (isReady) return;
-
-			if (!isReady) {
+        void StartView(string name);
+        
+        bool isReady = false;
+        
+        void Init() {
+            if (isReady) return;
+            
+            if (!isReady) {
                 if ( VUI::vw == -1 || VUI::vh == -1 ){
                     VUI::SetResolution( ofGetWidth(), ofGetHeight() );
                 }
@@ -587,47 +615,47 @@ namespace VUI {
                     ofClear(0);
                     VUI::fbo.end();
                 }
-				
-			}
-
-			isReady = true;
-		}
-
-		/*void Next() {
-		if (VUI::nextView.empty()) return;
-
-		VUI::views[VUI::nextView]->Exit();
-
-		StartView(VUI::nextView);
-		}*/
-
-		ofEvent<ofMouseEventArgs> onMouseMoved;
-		ofEvent<ofMouseEventArgs> onMouseDragged;
-		ofEvent<ofMouseEventArgs> onMousePressed;
-		ofEvent<ofMouseEventArgs> onMouseReleased;
-
-		ofEvent<ofMouseEventArgs> onMouseScrolled;
-		ofEvent<ofMouseEventArgs> onMouseEntered;
-		ofEvent<ofMouseEventArgs> onMouseExited;
-
-		ofEvent<ofTouchEventArgs> onTouchDown;
-		ofEvent<ofTouchEventArgs> onTouchMoved;
-		ofEvent<ofTouchEventArgs> onTouchUp;
+                
+            }
+            
+            isReady = true;
+        }
+        
+        /*void Next() {
+         if (VUI::nextView.empty()) return;
+         
+         VUI::views[VUI::nextView]->Exit();
+         
+         StartView(VUI::nextView);
+         }*/
+        
+        ofEvent<ofMouseEventArgs> onMouseMoved;
+        ofEvent<ofMouseEventArgs> onMouseDragged;
+        ofEvent<ofMouseEventArgs> onMousePressed;
+        ofEvent<ofMouseEventArgs> onMouseReleased;
+        
+        ofEvent<ofMouseEventArgs> onMouseScrolled;
+        ofEvent<ofMouseEventArgs> onMouseEntered;
+        ofEvent<ofMouseEventArgs> onMouseExited;
+        
+        ofEvent<ofTouchEventArgs> onTouchDown;
+        ofEvent<ofTouchEventArgs> onTouchMoved;
+        ofEvent<ofTouchEventArgs> onTouchUp;
         
         bool isTouchListening = false;
-
-		void DisableMouseEvents() {
-			ofRemoveListener(ofEvents().mouseMoved, this, &ViewManagerBridge::mouseMoved);
-			ofRemoveListener(ofEvents().mouseDragged, this, &ViewManagerBridge::mouseDragged);
-			ofRemoveListener(ofEvents().mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
-			ofRemoveListener(ofEvents().mouseReleased, this, &ViewManagerBridge::mouseReleased);
-
-			ofRemoveListener(ofEvents().mouseEntered, this, &ViewManagerBridge::mouseEntered);
-			ofRemoveListener(ofEvents().mouseExited, this, &ViewManagerBridge::mouseExited);
-
-			ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
-			ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
-		}
+        
+        void DisableMouseEvents() {
+            ofRemoveListener(ofEvents().mouseMoved, this, &ViewManagerBridge::mouseMoved);
+            ofRemoveListener(ofEvents().mouseDragged, this, &ViewManagerBridge::mouseDragged);
+            ofRemoveListener(ofEvents().mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
+            ofRemoveListener(ofEvents().mouseReleased, this, &ViewManagerBridge::mouseReleased);
+            
+            ofRemoveListener(ofEvents().mouseEntered, this, &ViewManagerBridge::mouseEntered);
+            ofRemoveListener(ofEvents().mouseExited, this, &ViewManagerBridge::mouseExited);
+            
+            ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
+            ofRemoveListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
+        }
         
         shared_ptr<ofAppBaseWindow> targetWindow = NULL;
         EM* eventManager = NULL;
@@ -741,29 +769,29 @@ namespace VUI {
             
             
         }
-
-
-		void Listen() {
+        
+        
+        void Listen() {
             
-			ofAddListener(ofEvents().update, this, &ViewManagerBridge::update);
-			//ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
-
-			ofAddListener(ofEvents().windowResized, this, &ViewManagerBridge::windowResized);
-
-			ofAddListener(ofEvents().keyPressed, this, &ViewManagerBridge::keyPressed);
-			ofAddListener(ofEvents().keyReleased, this, &ViewManagerBridge::keyReleased);
-
-			ofAddListener(ofEvents().mouseMoved, this, &ViewManagerBridge::mouseMoved);
-			ofAddListener(ofEvents().mouseDragged, this, &ViewManagerBridge::mouseDragged);
-			ofAddListener(ofEvents().mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
-			ofAddListener(ofEvents().mouseReleased, this, &ViewManagerBridge::mouseReleased);
-
-			ofAddListener(ofEvents().mouseEntered, this, &ViewManagerBridge::mouseEntered);
-			ofAddListener(ofEvents().mouseExited, this, &ViewManagerBridge::mouseExited);
-
-			ofAddListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
-
-			ofAddListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
+            ofAddListener(ofEvents().update, this, &ViewManagerBridge::update);
+            //ofAddListener(ofEvents().setup, this, &ViewManagerBridge::setup);
+            
+            ofAddListener(ofEvents().windowResized, this, &ViewManagerBridge::windowResized);
+            
+            ofAddListener(ofEvents().keyPressed, this, &ViewManagerBridge::keyPressed);
+            ofAddListener(ofEvents().keyReleased, this, &ViewManagerBridge::keyReleased);
+            
+            ofAddListener(ofEvents().mouseMoved, this, &ViewManagerBridge::mouseMoved);
+            ofAddListener(ofEvents().mouseDragged, this, &ViewManagerBridge::mouseDragged);
+            ofAddListener(ofEvents().mousePressed, this, &ViewManagerBridge::mousePressed, OF_EVENT_ORDER_BEFORE_APP);
+            ofAddListener(ofEvents().mouseReleased, this, &ViewManagerBridge::mouseReleased);
+            
+            ofAddListener(ofEvents().mouseEntered, this, &ViewManagerBridge::mouseEntered);
+            ofAddListener(ofEvents().mouseExited, this, &ViewManagerBridge::mouseExited);
+            
+            ofAddListener(ofEvents().messageEvent, this, &ViewManagerBridge::messageReceived);
+            
+            ofAddListener(ofEvents().fileDragEvent, this, &ViewManagerBridge::dragged);
             
 #ifdef USING_ofxTouchPadScroll
             ofAddListener(tps.onScrollStart, this, &ViewManagerBridge::touchPadScrollStart);
@@ -771,9 +799,9 @@ namespace VUI {
             ofAddListener(tps.onScrollEnd, this, &ViewManagerBridge::touchPadScrollEnd);
             ofAddListener(tps.onScrollInertia, this, &ViewManagerBridge::touchPadScrollInertia);
 #endif
-
             
-		}
+            
+        }
         
         void EnableTouchEvents(){
             if ( isTouchListening ) return;
@@ -790,42 +818,42 @@ namespace VUI {
             ofAddListener(ofEvents().touchMoved, this, &ViewManagerBridge::touchMoved);
             ofAddListener(ofEvents().touchUp, this, &ViewManagerBridge::touchUp);
 #endif
-
-			DisableMouseEvents();
+            
+            DisableMouseEvents();
         }
-
-
-	private:
-		// copied from ofBaseApp
-		void setup(ofEventArgs& args);
-		void update(ofEventArgs & args);
-		void draw(ofEventArgs & args);
-		void windowResized(ofResizeEventArgs & resize);
-		void keyPressed(ofKeyEventArgs & key);
-		void keyReleased(ofKeyEventArgs & key);
-		void mouseMoved(ofMouseEventArgs & mouse);
-		void mouseDragged(ofMouseEventArgs & mouse);
-		void mousePressed(ofMouseEventArgs & mouse);
-		void mouseReleased(ofMouseEventArgs & mouse);
-		void mouseScrolled(ofMouseEventArgs & mouse);
-		void mouseEntered(ofMouseEventArgs & mouse);
-		void mouseExited(ofMouseEventArgs & mouse);
-		void dragged(ofDragInfo & drag);
-		void messageReceived(ofMessage & message);
-		void touchDown(ofTouchEventArgs & touch);
-		void touchMoved(ofTouchEventArgs & touch);
-		void touchUp(ofTouchEventArgs & touch);
-		void touchDoubleTap(ofTouchEventArgs & touch);
-		void touchCancelled(ofTouchEventArgs & touch);
+        
+        
+    private:
+        // copied from ofBaseApp
+        void setup(ofEventArgs& args);
+        void update(ofEventArgs & args);
+        void draw(ofEventArgs & args);
+        void windowResized(ofResizeEventArgs & resize);
+        void keyPressed(ofKeyEventArgs & key);
+        void keyReleased(ofKeyEventArgs & key);
+        void mouseMoved(ofMouseEventArgs & mouse);
+        void mouseDragged(ofMouseEventArgs & mouse);
+        void mousePressed(ofMouseEventArgs & mouse);
+        void mouseReleased(ofMouseEventArgs & mouse);
+        void mouseScrolled(ofMouseEventArgs & mouse);
+        void mouseEntered(ofMouseEventArgs & mouse);
+        void mouseExited(ofMouseEventArgs & mouse);
+        void dragged(ofDragInfo & drag);
+        void messageReceived(ofMessage & message);
+        void touchDown(ofTouchEventArgs & touch);
+        void touchMoved(ofTouchEventArgs & touch);
+        void touchUp(ofTouchEventArgs & touch);
+        void touchDoubleTap(ofTouchEventArgs & touch);
+        void touchCancelled(ofTouchEventArgs & touch);
 #ifdef USING_ofxTouchPadScroll
         void touchPadScrollStart(TouchPadScrollEventArgs& args);
         void touchPadScroll(TouchPadScrollEventArgs& args);
         void touchPadScrollEnd(TouchPadScrollEventArgs& args);
         void touchPadScrollInertia(TouchPadScrollEventArgs& args);
 #endif
-	};
-
-	extern ViewManagerBridge PRIVATE;
+    };
+    
+    extern ViewManagerBridge PRIVATE;
     
     extern bool useTouch;
     
@@ -856,26 +884,26 @@ namespace VUI {
     static bool IsTouchEnabled() {
         return useTouch;
     }
-
-	template<class ListenerClass>
-	static void RegisterMouseEvents(ListenerClass * listener, int prio = OF_EVENT_ORDER_AFTER_APP) {
-		ofAddListener(PRIVATE.onMouseDragged, listener, &ListenerClass::mouseDragged, prio);
-		ofAddListener(PRIVATE.onMouseMoved, listener, &ListenerClass::mouseMoved, prio);
-		ofAddListener(PRIVATE.onMousePressed, listener, &ListenerClass::mousePressed, prio);
-		ofAddListener(PRIVATE.onMouseReleased, listener, &ListenerClass::mouseReleased, prio);
-		ofAddListener(PRIVATE.onMouseScrolled, listener, &ListenerClass::mouseScrolled, prio);
-		ofAddListener(PRIVATE.onMouseEntered, listener, &ListenerClass::mouseEntered, prio);
-		ofAddListener(PRIVATE.onMouseExited, listener, &ListenerClass::mouseExited, prio);
-	}
-
-	static void DisableMouseEvents() {
-		PRIVATE.DisableMouseEvents();
-	}
-
-	static int GetWidth(bool scaled = true) {
-		if (scaled) return vw * vscale;
-		return vw;
-	}
+    
+    template<class ListenerClass>
+    static void RegisterMouseEvents(ListenerClass * listener, int prio = OF_EVENT_ORDER_AFTER_APP) {
+        ofAddListener(PRIVATE.onMouseDragged, listener, &ListenerClass::mouseDragged, prio);
+        ofAddListener(PRIVATE.onMouseMoved, listener, &ListenerClass::mouseMoved, prio);
+        ofAddListener(PRIVATE.onMousePressed, listener, &ListenerClass::mousePressed, prio);
+        ofAddListener(PRIVATE.onMouseReleased, listener, &ListenerClass::mouseReleased, prio);
+        ofAddListener(PRIVATE.onMouseScrolled, listener, &ListenerClass::mouseScrolled, prio);
+        ofAddListener(PRIVATE.onMouseEntered, listener, &ListenerClass::mouseEntered, prio);
+        ofAddListener(PRIVATE.onMouseExited, listener, &ListenerClass::mouseExited, prio);
+    }
+    
+    static void DisableMouseEvents() {
+        PRIVATE.DisableMouseEvents();
+    }
+    
+    static int GetWidth(bool scaled = true) {
+        if (scaled) return vw * vscale;
+        return vw;
+    }
     
     static int GetWindowWidth( bool scaled = true) {
         float s = scaled == true ? vscale : 1.0;
@@ -890,27 +918,27 @@ namespace VUI {
         if ( VUI::viewRotation == VUI_ROTATE_90_CCW ) return vw * s * divideDpi;
         return vh*s * divideDpi;
     }
-
-	static int GetHeight(bool scaled = true) {
-		if (scaled) return vh * vscale;
-		return vh;
-	}
-
-	static int GetTrueWidth() {
-		return vw;
-	}
-
-	static int GetTrueHeight() {
-		return vh;
-	}
-
-	static int GetScaledWidth() {
-		return vw * vscale;
-	}
-
-	static int GetScaledHeight() {
-		return vh * vscale;
-	}
+    
+    static int GetHeight(bool scaled = true) {
+        if (scaled) return vh * vscale;
+        return vh;
+    }
+    
+    static int GetTrueWidth() {
+        return vw;
+    }
+    
+    static int GetTrueHeight() {
+        return vh;
+    }
+    
+    static int GetScaledWidth() {
+        return vw * vscale;
+    }
+    
+    static int GetScaledHeight() {
+        return vh * vscale;
+    }
     
     static int GetResolutionX(){
         return vw*VUI::divideDpi;
@@ -924,11 +952,11 @@ namespace VUI {
         if ( inverse ) return 1/vscale;
         return vscale;
     }
-
-	static bool GetTouchDown() {
-		if (touches.size() > 0) return true;
-		else return false;
-	}
+    
+    static bool GetTouchDown() {
+        if (touches.size() > 0) return true;
+        else return false;
+    }
     
     static void _PrivateRotateUI(){
         return;
@@ -939,8 +967,8 @@ namespace VUI {
     }
     
     /*static void RotateUI(Rotate rotation){
-        uiRotation = rotation;
-    }*/
+     uiRotation = rotation;
+     }*/
     
     static void RotateView(Rotate rotation){
         //SetResolution( GetHeight(false), GetWidth(false), GetScale() );
@@ -948,14 +976,14 @@ namespace VUI {
         uiRotation = rotation;
         //RotateUI( rotation );
     }
-
-	/*static void Update() {
-	if (currView.empty() || views[currView] == nullptr) return;
-	views[currView]->Update();
-	}*/
-
-	//map<string,View*> visibleViews;
-	extern vector<View*> visibleViews;
+    
+    /*static void Update() {
+     if (currView.empty() || views[currView] == nullptr) return;
+     views[currView]->Update();
+     }*/
+    
+    //map<string,View*> visibleViews;
+    extern vector<View*> visibleViews;
     
     extern float backgroundOpacity;
     extern ofColor backgroundColor;
@@ -1045,90 +1073,90 @@ namespace VUI {
         
         fbo.draw(x, y, w, h);
     }
-
-	static void Render(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
+    
+    static void Render(bool drawingInsideFbo = false, int x = 0, int y = 0, int width = -1, int height = -1) {
         RenderBegin( drawingInsideFbo, x, y, width, height );
         RenderEnd( drawingInsideFbo, x, y, width, height );
-	}
-
-
-	static void ShowView(string name) {
-		//if ( views[name] != nullptr ) visibleViews[ name ] = views[ name ];
-
-		if (views[name] != nullptr) {
-			if (std::find(visibleViews.begin(), visibleViews.end(), views[name]) != visibleViews.end()) {
-
-			}
-			else {
-				visibleViews.push_back(views[name]);
-			}
-
-		}
-	}
-
-	extern vector<string> hideViews;
-
-	static void HideView(string name) {
-		/*map<string, View*>::iterator it;
-		it = visibleViews.find(name);
-		if (it != visibleViews.end() ) visibleViews.erase(it);*/
-
-		//visibleViews.clear();
-		hideViews.push_back(name);
-		return;
-
-
-	}
-	static void ActualHideView(string name) {
-		int index = 0;
-		for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
-			if ((*it) == views[name]) {
-				visibleViews.erase(visibleViews.begin() + index);
-				return;
-			}
-			index++;
-		}
-	}
-
-	/*static void StartView(string name) {
-	currView = nextView;
-	views[currView]->Start();
-
-	nextView.clear();
-	}*/
-
-	static void Next() {
-		if (nextView.empty()) return;
-
-		VUI::EventManager.Disable();
-
-		//if (!currView.empty()) views[currView]->OnExitView();
-
-		PRIVATE.StartView(nextView);
-	}
-
+    }
+    
+    
+    static void ShowView(string name) {
+        //if ( views[name] != nullptr ) visibleViews[ name ] = views[ name ];
+        
+        if (views[name] != nullptr) {
+            if (std::find(visibleViews.begin(), visibleViews.end(), views[name]) != visibleViews.end()) {
+                
+            }
+            else {
+                visibleViews.push_back(views[name]);
+            }
+            
+        }
+    }
+    
+    extern vector<string> hideViews;
+    
+    static void HideView(string name) {
+        /*map<string, View*>::iterator it;
+         it = visibleViews.find(name);
+         if (it != visibleViews.end() ) visibleViews.erase(it);*/
+        
+        //visibleViews.clear();
+        hideViews.push_back(name);
+        return;
+        
+        
+    }
+    static void ActualHideView(string name) {
+        int index = 0;
+        for (vector<View*>::iterator it = visibleViews.begin(); it != visibleViews.end(); it++) {
+            if ((*it) == views[name]) {
+                visibleViews.erase(visibleViews.begin() + index);
+                return;
+            }
+            index++;
+        }
+    }
+    
+    /*static void StartView(string name) {
+     currView = nextView;
+     views[currView]->Start();
+     
+     nextView.clear();
+     }*/
+    
+    static void Next() {
+        if (nextView.empty()) return;
+        
+        VUI::EventManager.Disable();
+        
+        //if (!currView.empty()) views[currView]->OnExitView();
+        
+        PRIVATE.StartView(nextView);
+    }
+    
     extern int doubleClickThreshold;
-	extern int touchTapThreshold;
+    extern int touchTapThreshold;
     
     static void SetDoubleClickThreshold( int milliseconds = 400 ){
         doubleClickThreshold = milliseconds;
     }
-
-	static void SetTouchTapThreshold(int milliseconds = 180) {
-		touchTapThreshold = milliseconds;
-	}
-
-	static void SetView(string name, bool triggerBeforeExitView = false ) {
-		if (currView == name) return;
-
-		if (!isListening) PRIVATE.Listen();
-
-		if (views[name] == nullptr) return;
-		nextView = name;
-
+    
+    static void SetTouchTapThreshold(int milliseconds = 180) {
+        touchTapThreshold = milliseconds;
+    }
+    
+    static void SetView(string name, bool triggerBeforeExitView = false ) {
+        if (currView == name) return;
+        
+        if (!isListening) PRIVATE.Listen();
+        
+        if (views[name] == nullptr) return;
+        nextView = name;
+        
         if ( !currView.empty() && triggerBeforeExitView ) views[currView]->BeforeExitView();
         else Next();
-	}
+    }
     
     extern bool _didInit;
     extern StyleSheet* _vuiStyleSheet;
@@ -1137,26 +1165,26 @@ namespace VUI {
         _didInit = true;
         
         string styles = R"(
-            [.Container-container>
-                 height: 100%;
-                 width: 100%;
-             ]
+        [.Container-container>
+         height: 100%;
+         width: 100%;
+         ]
         
-            [.Container-vertContainer>
-                 height: 100%;
-                 width: 100%;
-             ]
+        [.Container-vertContainer>
+         height: 100%;
+         width: 100%;
+         ]
         
-            [.Container-horzContainer>
-                 width: 100%;
-             ]
+        [.Container-horzContainer>
+         width: 100%;
+         ]
         
-            [.Container-scrollbar>
-             bgColor: #000000;
-             bgOpacity: .85;
-             width: 10;
-             height: 30;
-             ]
+        [.Container-scrollbar>
+         bgColor: #000000;
+         bgOpacity: .85;
+         width: 10;
+         height: 30;
+         ]
         )";
         
         //
@@ -1174,18 +1202,19 @@ namespace VUI {
         views[name] = view;
         if ( setView ) SetView( name );
     };
-
-	static View* GetCurrentView() {
-		return views[currView];
-	}
-
-	static string GetViewName() {
-		return currView;
-	}
+    
+    static View* GetCurrentView() {
+        return views[currView];
+    }
+    
+    static string GetViewName() {
+        return currView;
+    }
     
     
-
-
+    
+    
+    
 }
 
 #endif

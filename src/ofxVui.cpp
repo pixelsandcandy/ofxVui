@@ -3,47 +3,49 @@
 #include "VUIView.h"
 
 namespace VUI {
-
+    
     StyleSheet* _vuiStyleSheet;
     
 #ifdef USING_ofxTouchPadScroll
     ofxTouchPadScroll tps;
 #endif
     
-	map< string, View*> views;
-
-	map< int, ofPoint> touches;
+    map< string, View*> views;
+    
+    map< int, ofPoint> touches;
     map<string, StyleSheet*> styleSheets;
-
-	string nextView;
-	string currView;
-
-	ofVec2f multCoords(1.0, 1.0);
-
-	ViewManagerBridge PRIVATE;
-
-	bool isListening = false;
-
-	int mouseX;
-	int mouseY;
+    vector<TextField*> textFields;
+    TextField* activeTextField = NULL;
+    
+    string nextView;
+    string currView;
+    
+    ofVec2f multCoords(1.0, 1.0);
+    
+    ViewManagerBridge PRIVATE;
+    
+    bool isListening = false;
+    
+    int mouseX;
+    int mouseY;
     float dpi = 1.0;
     float divideDpi = 1.0;
-
-	int vw = -1;
-	int vh = -1;
-	float vscale = 1.0;
-	ofFbo fbo;
-
-	vector<View*> visibleViews;
-	vector<string> hideViews;
+    
+    int vw = -1;
+    int vh = -1;
+    float vscale = 1.0;
+    ofFbo fbo;
+    
+    vector<View*> visibleViews;
+    vector<string> hideViews;
     
     float backgroundOpacity = 0.0;
     ofColor backgroundColor = ofColor(255);
-
-	/*void ViewManagerBridge::update(ofEventArgs &e) {
-	cout << "ViewManagerBridge - update - " << ofRandomf() << endl;
-	if ( !VUI::currView.empty() ) VUI::GetCurrentView()->update(e);
-	}*/
+    
+    /*void ViewManagerBridge::update(ofEventArgs &e) {
+     cout << "ViewManagerBridge - update - " << ofRandomf() << endl;
+     if ( !VUI::currView.empty() ) VUI::GetCurrentView()->update(e);
+     }*/
     
     Tween* Animate( Element* el, float timeSeconds, string params ){
         Tween *t = new Tween();
@@ -52,102 +54,102 @@ namespace VUI {
         tweens.push_back( t );
         return t;
     }
-
-	void ViewManagerBridge::StartView(string name) {
-		//ofLog() << "name:" << name << "  curr:" << VUI::currView << "  next:" << VUI::nextView;
-		/*if (name = VUI::nextView) {
-		VUI::nextView.clear();
-		return;
-		}*/
-
-		VUI::currView = VUI::nextView;
-
+    
+    void ViewManagerBridge::StartView(string name) {
+        //ofLog() << "name:" << name << "  curr:" << VUI::currView << "  next:" << VUI::nextView;
+        /*if (name = VUI::nextView) {
+         VUI::nextView.clear();
+         return;
+         }*/
+        
+        VUI::currView = VUI::nextView;
+        
         if (!VUI::currView.empty() && VUI::views[VUI::currView] != nullptr) {
             VUI::views[VUI::currView]->_Setup();
             VUI::views[VUI::currView]->OnEnterView();
         }
-
-
+        
+        
         if (VUI::IsTouchEnabled()) {
             if (!VUI::GetTouchDown()) VUI::GetCurrentEventManager()->Enable();
         }
         else {
             if (!ofGetMousePressed()) VUI::GetCurrentEventManager()->Enable();
         }
-
-		//ofLog() << "mousePressed: " << ofGetMousePressed();
-
-		VUI::nextView.clear();
-	}
-
-	void ViewManagerBridge::setup(ofEventArgs & args) {
-		//update();
-
-		VUI::mouseX = ofGetMouseX()*multCoords.x;
-		VUI::mouseY = ofGetMouseY()*multCoords.y;
-
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->setup();
-	}
-
-	void ViewManagerBridge::update(ofEventArgs & args) {
-		//update();
-		//ofLog() << "ViewManagerBridge::update - " << ofGetMouseX() << "x" << ofGetMouseY() << "   - " << ofRandomf() << endl;
-
-
-
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->update();
-
-		for (vector<string>::iterator it = hideViews.begin(); it != hideViews.end(); it++) {
-			VUI::ActualHideView((*it));
-		}
-
-		hideViews.clear();
-	}
-	void ViewManagerBridge::draw(ofEventArgs & args) {
-		//draw();
-		//ofLog() << "ViewManagerBridge::draw - " << ofRandomf() << endl;
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->draw();
-	}
-
-	void ViewManagerBridge::windowResized(ofResizeEventArgs & resize) {
-		//windowResized(resize.width, resize.height);
+        
+        //ofLog() << "mousePressed: " << ofGetMousePressed();
+        
+        VUI::nextView.clear();
+    }
+    
+    void ViewManagerBridge::setup(ofEventArgs & args) {
+        //update();
+        
+        VUI::mouseX = ofGetMouseX()*multCoords.x;
+        VUI::mouseY = ofGetMouseY()*multCoords.y;
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->setup();
+    }
+    
+    void ViewManagerBridge::update(ofEventArgs & args) {
+        //update();
+        //ofLog() << "ViewManagerBridge::update - " << ofGetMouseX() << "x" << ofGetMouseY() << "   - " << ofRandomf() << endl;
+        
+        
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->update();
+        
+        for (vector<string>::iterator it = hideViews.begin(); it != hideViews.end(); it++) {
+            VUI::ActualHideView((*it));
+        }
+        
+        hideViews.clear();
+    }
+    void ViewManagerBridge::draw(ofEventArgs & args) {
+        //draw();
+        //ofLog() << "ViewManagerBridge::draw - " << ofRandomf() << endl;
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->draw();
+    }
+    
+    void ViewManagerBridge::windowResized(ofResizeEventArgs & resize) {
+        //windowResized(resize.width, resize.height);
         VUI::vw = resize.width;
         VUI::vh = resize.height;
         
         VUI::GetCurrentEventManager()->vw = resize.width;
         VUI::GetCurrentEventManager()->vh = resize.height;
         
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(resize.width, resize.height);
-	}
-
-	void ViewManagerBridge::keyPressed(ofKeyEventArgs & key) {
-		//keyPressed(key.key);
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->keyPressed(key.key);
-	}
-	void ViewManagerBridge::keyReleased(ofKeyEventArgs & key) {
-		//keyReleased(key.key);
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->keyReleased(key.key);
-	}
-
-
-
-
-
-
-	void ViewManagerBridge::mouseMoved(ofMouseEventArgs & mouse) {
-		//mouseX = mouse.x;
-		//mouseY = mouse.y;
-		//mouseMoved(mouse.x, mouse.y);
-		//
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(resize.width, resize.height);
+    }
+    
+    void ViewManagerBridge::keyPressed(ofKeyEventArgs & key) {
+        //keyPressed(key.key);
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->keyPressed(key.key);
+    }
+    void ViewManagerBridge::keyReleased(ofKeyEventArgs & key) {
+        //keyReleased(key.key);
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->keyReleased(key.key);
+    }
+    
+    
+    
+    
+    
+    
+    void ViewManagerBridge::mouseMoved(ofMouseEventArgs & mouse) {
+        //mouseX = mouse.x;
+        //mouseY = mouse.y;
+        //mouseMoved(mouse.x, mouse.y);
+        //
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
         
         
         
-		if (!VUI::currView.empty()) {
-			/*#ifdef USING_ofxSupervui
+        if (!VUI::currView.empty()) {
+            /*#ifdef USING_ofxSupervui
              if ( !VUI::EventManager.active ) return;
-			#endif*/
+             #endif*/
             
             //cout << VUI::mouseX << "x" << VUI::mouseY << endl;
             
@@ -155,177 +157,179 @@ namespace VUI {
             else if (mouse.x > VUI::GetWindowWidth() || mouse.y > VUI::GetWindowHeight() ) VUI::GetCurrentView()->_SetIsMouseInside(false);
             else VUI::GetCurrentView()->_SetIsMouseInside(true);
             
-			ofMouseEventArgs args(ofMouseEventArgs::Moved, VUI::mouseX, VUI::mouseY);
-			ofNotifyEvent(onMouseMoved, args, this);
-
-			VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
-			VUI::GetCurrentView()->mouseMoved(VUI::mouseX, VUI::mouseY);
-		}
-	}
-	void ViewManagerBridge::mouseDragged(ofMouseEventArgs & mouse) {
-		//mouseX = mouse.x;
-		//mouseY = mouse.y;
-		//mouseDragged(mouse.x, mouse.y, mouse.button);
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
-
-		if (!VUI::currView.empty()) {
-			if (!VUI::GetCurrentEventManager()->active) return;
-
-			ofMouseEventArgs args(ofMouseEventArgs::Dragged, VUI::mouseX, VUI::mouseY, mouse.button);
-			ofNotifyEvent(onMouseDragged, args, this);
-
-			VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
-			VUI::GetCurrentView()->mouseDragged(VUI::mouseX, VUI::mouseY, mouse.button);
-		}
-	}
-	void ViewManagerBridge::mousePressed(ofMouseEventArgs & mouse) {
-		//mouseX = mouse.x;
-		//mouseY = mouse.y;
-		//mousePressed(mouse.x, mouse.y, mouse.button);
-
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
-
-		if (!VUI::currView.empty()) {
-			if (!VUI::GetCurrentEventManager()->active) return;
+            ofMouseEventArgs args(ofMouseEventArgs::Moved, VUI::mouseX, VUI::mouseY);
+            ofNotifyEvent(onMouseMoved, args, this);
+            
+            VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
+            VUI::GetCurrentView()->mouseMoved(VUI::mouseX, VUI::mouseY);
+        }
+    }
+    void ViewManagerBridge::mouseDragged(ofMouseEventArgs & mouse) {
+        //mouseX = mouse.x;
+        //mouseY = mouse.y;
+        //mouseDragged(mouse.x, mouse.y, mouse.button);
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
+        
+        if (!VUI::currView.empty()) {
+            if (!VUI::GetCurrentEventManager()->active) return;
+            
+            ofMouseEventArgs args(ofMouseEventArgs::Dragged, VUI::mouseX, VUI::mouseY, mouse.button);
+            ofNotifyEvent(onMouseDragged, args, this);
+            
+            VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
+            VUI::GetCurrentView()->mouseDragged(VUI::mouseX, VUI::mouseY, mouse.button);
+        }
+    }
+    void ViewManagerBridge::mousePressed(ofMouseEventArgs & mouse) {
+        //mouseX = mouse.x;
+        //mouseY = mouse.y;
+        //mousePressed(mouse.x, mouse.y, mouse.button);
+        
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
+        
+        if (!VUI::currView.empty()) {
+            if (!VUI::GetCurrentEventManager()->active) return;
             
             VUI::GetCurrentView()->_SetIsMouseInside(true);
-
-			ofMouseEventArgs args(ofMouseEventArgs::Pressed, VUI::mouseX, VUI::mouseY, mouse.button);
-			ofNotifyEvent(onMousePressed, args, this);
-
-			VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
-			VUI::GetCurrentView()->mousePressed(VUI::mouseX, VUI::mouseY, mouse.button);
-		}
-	}
+            
+            ofMouseEventArgs args(ofMouseEventArgs::Pressed, VUI::mouseX, VUI::mouseY, mouse.button);
+            ofNotifyEvent(onMousePressed, args, this);
+            
+            VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
+            VUI::GetCurrentView()->mousePressed(VUI::mouseX, VUI::mouseY, mouse.button);
+        }
+    }
     
-	void ViewManagerBridge::mouseReleased(ofMouseEventArgs & mouse) {
-		//mouseX = mouse.x;
-		//mouseY = mouse.y;
-		//mouseReleased(mouse.x, mouse.y, mouse.button);
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
-
-		if (!VUI::currView.empty()) {
-
-			if (!VUI::GetCurrentEventManager()->active) {
-				if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
-				return;
-			}
-
-			ofMouseEventArgs args(ofMouseEventArgs::Released, VUI::mouseX, VUI::mouseY, mouse.button);
-			ofNotifyEvent(onMouseReleased, args, this);
-
-			VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
-			VUI::GetCurrentView()->mouseReleased(VUI::mouseX, VUI::mouseY, mouse.button);
-		}
-
-		if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
-
-	}
-
-
-	void ViewManagerBridge::mouseScrolled(ofMouseEventArgs & mouse) {
-		//mouseScrolled(mouse.x, mouse.y, mouse.scrollX, mouse.scrollY);
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
-
-		if (!VUI::currView.empty()) {
-			if (!VUI::GetCurrentEventManager()->active) return;
-
-			ofMouseEventArgs args(ofMouseEventArgs::Scrolled, VUI::mouseX, VUI::mouseY);
-			args.scrollX = mouse.scrollX;
-			args.scrollY = mouse.scrollY;
-			ofNotifyEvent(onMouseScrolled, args, this);
-
-			VUI::GetCurrentView()->mouseScrolled(VUI::mouseX, VUI::mouseY, mouse.scrollX, mouse.scrollY);
-		}
-	}
-
-	void ViewManagerBridge::mouseEntered(ofMouseEventArgs & mouse) {
-		//mouseEntered(mouse.x, mouse.y);
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
-
-		if (!VUI::currView.empty()) {
-			/*#ifdef USING_ofxSupervui
-			if ( !VUI::EventManager.active ) return;
-			#endif*/
+    void ViewManagerBridge::mouseReleased(ofMouseEventArgs & mouse) {
+        //mouseX = mouse.x;
+        //mouseY = mouse.y;
+        //mouseReleased(mouse.x, mouse.y, mouse.button);
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
+        
+        if (!VUI::currView.empty()) {
+            
+            if (!VUI::GetCurrentEventManager()->active) {
+                if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
+                return;
+            }
+            
+            ofMouseEventArgs args(ofMouseEventArgs::Released, VUI::mouseX, VUI::mouseY, mouse.button);
+            ofNotifyEvent(onMouseReleased, args, this);
+            
+            VUI::GetCurrentView()->UpdateMousePos(VUI::mouseX, VUI::mouseY);
+            VUI::GetCurrentView()->mouseReleased(VUI::mouseX, VUI::mouseY, mouse.button);
+        }
+        
+        if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
+        
+        if ( VUI::GetPrevOverElement() == NULL ) VUI::ResetTextFields();
+        
+    }
+    
+    
+    void ViewManagerBridge::mouseScrolled(ofMouseEventArgs & mouse) {
+        //mouseScrolled(mouse.x, mouse.y, mouse.scrollX, mouse.scrollY);
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
+        
+        if (!VUI::currView.empty()) {
+            if (!VUI::GetCurrentEventManager()->active) return;
+            
+            ofMouseEventArgs args(ofMouseEventArgs::Scrolled, VUI::mouseX, VUI::mouseY);
+            args.scrollX = mouse.scrollX;
+            args.scrollY = mouse.scrollY;
+            ofNotifyEvent(onMouseScrolled, args, this);
+            
+            VUI::GetCurrentView()->mouseScrolled(VUI::mouseX, VUI::mouseY, mouse.scrollX, mouse.scrollY);
+        }
+    }
+    
+    void ViewManagerBridge::mouseEntered(ofMouseEventArgs & mouse) {
+        //mouseEntered(mouse.x, mouse.y);
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
+        
+        if (!VUI::currView.empty()) {
+            /*#ifdef USING_ofxSupervui
+             if ( !VUI::EventManager.active ) return;
+             #endif*/
             
             VUI::GetCurrentView()->_SetIsMouseInside(true);
             
-			ofMouseEventArgs args(ofMouseEventArgs::Entered, VUI::mouseX, VUI::mouseY);
-			ofNotifyEvent(onMouseEntered, args, this);
+            ofMouseEventArgs args(ofMouseEventArgs::Entered, VUI::mouseX, VUI::mouseY);
+            ofNotifyEvent(onMouseEntered, args, this);
             
-			VUI::GetCurrentView()->mouseEntered(VUI::mouseX, VUI::mouseY);
-		}
-	}
-	void ViewManagerBridge::mouseExited(ofMouseEventArgs & mouse) {
-		//mouseExited(mouse.x, mouse.y);
-		VUI::mouseX = mouse.x*multCoords.x;
-		VUI::mouseY = mouse.y*multCoords.y;
-
-		if (!VUI::currView.empty()) {
-			/*#ifdef USING_ofxSupervui
-			if ( !VUI::EventManager.active ) return;
-			#endif*/
+            VUI::GetCurrentView()->mouseEntered(VUI::mouseX, VUI::mouseY);
+        }
+    }
+    void ViewManagerBridge::mouseExited(ofMouseEventArgs & mouse) {
+        //mouseExited(mouse.x, mouse.y);
+        VUI::mouseX = mouse.x*multCoords.x;
+        VUI::mouseY = mouse.y*multCoords.y;
+        
+        if (!VUI::currView.empty()) {
+            /*#ifdef USING_ofxSupervui
+             if ( !VUI::EventManager.active ) return;
+             #endif*/
             VUI::GetCurrentView()->_SetIsMouseInside(false);
             
-			ofMouseEventArgs args(ofMouseEventArgs::Exited, VUI::mouseX, VUI::mouseY);
-			ofNotifyEvent(onMouseExited, args, this);
+            ofMouseEventArgs args(ofMouseEventArgs::Exited, VUI::mouseX, VUI::mouseY);
+            ofNotifyEvent(onMouseExited, args, this);
             
-			VUI::GetCurrentView()->mouseExited(VUI::mouseX, VUI::mouseY);
-		}
-	}
-	void ViewManagerBridge::dragged(ofDragInfo & drag) {
-		//dragEvent(drag);
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->dragEvent(drag);
-	}
-	void ViewManagerBridge::messageReceived(ofMessage & message) {
-		//gotMessage(message);
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->gotMessage(message);
-	}
-	void ViewManagerBridge::touchDown(ofTouchEventArgs & touch) {
-		//touchDown(touch.x, touch.y, touch.id);
-		touches[touch.id].x = touch.x*multCoords.x;
-		touches[touch.id].y = touch.y*multCoords.y;
-
-		if (!VUI::GetCurrentEventManager()->active) return;
-
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchDown(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
-	};
-	void ViewManagerBridge::touchMoved(ofTouchEventArgs & touch) {
-		//touchMoved(touch.x, touch.y, touch.id);
-		touches[touch.id].x = touch.x*multCoords.x;
-		touches[touch.id].y = touch.y*multCoords.y;
-
-		if (!VUI::GetCurrentEventManager()->active) return;
-
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchMoved(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
-	};
-	void ViewManagerBridge::touchUp(ofTouchEventArgs & touch) {
-		//touchUp(touch.x, touch.y, touch.id);
-		map<int, ofPoint>::iterator it;
-		it = touches.find(touch.id);
-		if (it != touches.end()) touches.erase(it);
-
-
-		if (!VUI::GetCurrentEventManager()->active) {
-			if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
-			return;
-		}
-
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchUp(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
-	};
-	void ViewManagerBridge::touchDoubleTap(ofTouchEventArgs & touch) {
-		//touchDoubleTap(touch.x, touch.y, touch.id);
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchDoubleTap(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
-	};
-	void ViewManagerBridge::touchCancelled(ofTouchEventArgs & touch) {
-		//touchCancelled(touch.x, touch.y, touch.id);
-		if (!VUI::currView.empty()) VUI::GetCurrentView()->touchCancelled(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
-	}
+            VUI::GetCurrentView()->mouseExited(VUI::mouseX, VUI::mouseY);
+        }
+    }
+    void ViewManagerBridge::dragged(ofDragInfo & drag) {
+        //dragEvent(drag);
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->dragEvent(drag);
+    }
+    void ViewManagerBridge::messageReceived(ofMessage & message) {
+        //gotMessage(message);
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->gotMessage(message);
+    }
+    void ViewManagerBridge::touchDown(ofTouchEventArgs & touch) {
+        //touchDown(touch.x, touch.y, touch.id);
+        touches[touch.id].x = touch.x*multCoords.x;
+        touches[touch.id].y = touch.y*multCoords.y;
+        
+        if (!VUI::GetCurrentEventManager()->active) return;
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchDown(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
+    };
+    void ViewManagerBridge::touchMoved(ofTouchEventArgs & touch) {
+        //touchMoved(touch.x, touch.y, touch.id);
+        touches[touch.id].x = touch.x*multCoords.x;
+        touches[touch.id].y = touch.y*multCoords.y;
+        
+        if (!VUI::GetCurrentEventManager()->active) return;
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchMoved(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
+    };
+    void ViewManagerBridge::touchUp(ofTouchEventArgs & touch) {
+        //touchUp(touch.x, touch.y, touch.id);
+        map<int, ofPoint>::iterator it;
+        it = touches.find(touch.id);
+        if (it != touches.end()) touches.erase(it);
+        
+        
+        if (!VUI::GetCurrentEventManager()->active) {
+            if (VUI::GetCurrentEventManager()->enableOnMouseUp) VUI::GetCurrentEventManager()->DelayEnable(50);
+            return;
+        }
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchUp(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
+    };
+    void ViewManagerBridge::touchDoubleTap(ofTouchEventArgs & touch) {
+        //touchDoubleTap(touch.x, touch.y, touch.id);
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchDoubleTap(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
+    };
+    void ViewManagerBridge::touchCancelled(ofTouchEventArgs & touch) {
+        //touchCancelled(touch.x, touch.y, touch.id);
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->touchCancelled(touch.x*multCoords.x, touch.y*multCoords.y, touch.id);
+    }
     
 #ifdef USING_ofxTouchPadScroll
     void ViewManagerBridge::touchPadScroll(TouchPadScrollEventArgs& args){
@@ -366,7 +370,7 @@ namespace VUI {
     bool _didInit = false;
     
     int doubleClickThreshold = 400;
-	int touchTapThreshold = 180;
+    int touchTapThreshold = 180;
     
     // Tween
     
@@ -452,10 +456,10 @@ namespace VUI {
                     else if ( e == "quad.easeout" ) ease = ofxeasing::quad::easeOut;
                     else if ( e == "quad.easeinout" ) ease = ofxeasing::quad::easeInOut;
                     
-				}
-				else if (propVal[0] == "id") {
-					id = propVal[1];
-				}
+                }
+                else if (propVal[0] == "id") {
+                    id = propVal[1];
+                }
                 
             }
         }
@@ -548,8 +552,8 @@ namespace VUI {
             
             
             vuiEventArgs args;
-			args.element = el;
-			args.tween = this;
+            args.element = el;
+            args.tween = this;
             args.eventType = VUI_EVENT_ANIMATE_COMPLETE;
             
             ofNotifyEvent( onComplete, args, this );
@@ -598,9 +602,9 @@ namespace VUI {
     
     vector<Tween*> tweensToDestroy;
     vector<Tween*> tweens;
-
+    
     void EM::StoreEvent(Element* el, vuiEvent eventType ){
-		//ofLog() << "StoreEvent[" << eventType << "]  active:" << active;
+        //ofLog() << "StoreEvent[" << eventType << "]  active:" << active;
         if ( !active ) return;
         
         this->events[ eventType ].push_back( el );
@@ -654,14 +658,14 @@ namespace VUI {
         
         //if ( EventManager.overElement != nullptr ) ofLog() << EventManager.overElement->vuiUID;
     }
-
-	void EM::Disable() {
-		//ofLog() << "EventManager::Disable" << endl;
-		active = false;
+    
+    void EM::Disable() {
+        //ofLog() << "EventManager::Disable" << endl;
+        active = false;
         
-		Purge();
-		if (ofGetMousePressed()|| VUI::GetTouchDown()) enableOnMouseUp = true;
-	};
+        Purge();
+        if (ofGetMousePressed()|| VUI::GetTouchDown()) enableOnMouseUp = true;
+    };
     
     void EM::Enable(){
         //ofLog() << "EventManager::Enable" << endl;
@@ -669,7 +673,7 @@ namespace VUI {
         enableOnMouseUp = false;
         shouldEnable = -1;
     }
-
+    
     TM TweenManager;
     
     void TM::Init(){
@@ -711,6 +715,7 @@ namespace VUI {
     
     void ClearOverElement() {
         GetCurrentEventManager()->prevOverElement = GetCurrentEventManager()->overElement;
+        GetCurrentEventManager()->overElement = NULL;
         //GetCurrentEventManager()->overElement = nullptr;
         //if ( GetCurrentEventManager()->prevOverElement != nullptr ) ofLog() << GetCurrentEventManager()->overElement->GetName();
     }

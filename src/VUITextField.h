@@ -166,20 +166,9 @@ namespace VUI {
         
         
     private:
-        void _vuiEventHandler(vuiEventArgs& evt){
-            if ( evt.eventType == VUI_EVENT_VALUE_CHANGE ){
-                if ( evt.value == 1 ) TriggerEvent( VUI_EVENT_FOCUS );
-                else if ( evt.value == 0 ) TriggerEvent( VUI_EVENT_UNFOCUS );
-            }
-        }
+        void _vuiEventHandler(vuiEventArgs& evt);
         
-        void _Setup(){
-            MakeToggle();
-            isTextField = true;
-            
-            ofAddListener( ofEvents().keyPressed, this, &TextField::keyPressed );
-            ofAddListener( onValueChange, this, &TextField::_vuiEventHandler );
-        }
+        void _Setup();
     };
     
 }
