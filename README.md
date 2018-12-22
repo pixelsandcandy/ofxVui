@@ -1,4 +1,10 @@
 # ✨ Much Easy! View + GUI System for openFrameworks ✨
+###### *BRANCHES*
+```
+master (rolling updates)
+v1-stable (use this - last edit 12/21/2018)
+```
+***
 ###### *TELEPORT*
 * **<a href='#watch-examples-video' class='anchor'>Watch Examples Video</a>**
 * **<a href='#ofxvui-features' class='anchor'>ofxVui Features</a>**
