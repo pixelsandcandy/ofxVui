@@ -1,7 +1,7 @@
 # ✨ Much Easy! View + GUI System for openFrameworks ✨
 ###### *BRANCHES*
-  * ```master``` » Rolling updates (constantly updating, might break)
-  * ```v1-stable``` » Last commit 12/21/2018
+  * ```master``` » Latest version (constantly adding features, use at your own risk 😈)
+  * ```v1-stable``` » Last commit 12/21/2018 (use this or commit **0f429e641b8e5554c7e773e14fd50910fd28d451**)
 ***
 ###### *TELEPORT*
 * **<a href='#watch-examples-video' class='anchor'>Watch Examples Video</a>**

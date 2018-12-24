@@ -68,7 +68,8 @@ namespace VUI {
             rect.width += 2;
             
             if ( t == " " ) rect.width += font->getSize() * .85;
-            if ( rect.width > width - (padding.left+padding.top) ) return;
+            
+            if ( rect.width + padding.right*VUI::dpi > GetInnerWidth() ) return;
             
             text = text + t;
             if ( t == " " ) spaceOffsetX = font->getSize() * .5;
