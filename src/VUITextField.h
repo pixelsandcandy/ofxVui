@@ -65,11 +65,11 @@ namespace VUI {
             }
             
             ofRectangle rect = font->getStringBoundingBox(text + t , 0,0);
-            rect.width += 2;
+            rect.width += VUI::dpi;
             
             if ( t == " " ) rect.width += font->getSize() * .85;
             
-            if ( rect.width + padding.right*VUI::dpi > GetInnerWidth() ) return;
+            if ( rect.width >= GetInnerWidth() ) return;
             
             text = text + t;
             if ( t == " " ) spaceOffsetX = font->getSize() * .5;
