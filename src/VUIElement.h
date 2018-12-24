@@ -558,6 +558,20 @@ namespace VUI {
         
         void TriggerEvent(vuiEvent eventType);
         
+        string GetExitPositionString(ofVec2f localMousePos){
+            if ( localMousePos.x <= 0 ) return "left";
+            else if ( localMousePos.y <= 0 ) return "top";
+            else if ( localMousePos.x >= GetWidth() ) return "right";
+            else return "bottom";
+        }
+        
+        Position GetExitPosition(ofVec2f localMousePos){
+            if ( localMousePos.x <= 0 ) return Position::VUI_LEFT;
+            else if ( localMousePos.y <= 0 ) return Position::VUI_TOP;
+            else if ( localMousePos.x >= GetWidth() ) return Position::VUI_RIGHT;
+            else return Position::VUI_BOTTOM;
+        }
+        
         vuiEventArgs GetEventArgs(vuiEvent eventType);
         
         map<string,string> propValue;

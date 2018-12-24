@@ -55,6 +55,19 @@ namespace VUI {
             }
         }
         
+        void SelectToggleByIndex( int index ){
+            int count = 0;
+            for ( vector<Element*>::iterator it = toggles.begin(); it != toggles.end(); it++ ){
+                if ( count == index ) (*it)->SetSelected(true);
+                else (*it)->SetSelected(false);
+                count++;
+            }
+        }
+        
+        Element* GetToggleByIndex( int index ) {
+            return toggles[index];
+        }
+        
     private:
         
         bool shouldSelectOnHover = false;

@@ -31,6 +31,13 @@ namespace VUI {
         VUI_STATE_ALL
     };
     
+    enum Position {
+        VUI_TOP,
+        VUI_RIGHT,
+        VUI_BOTTOM,
+        VUI_LEFT
+    };
+    
     enum Rotate {
         VUI_ROTATE_NONE,
         VUI_ROTATE_90_CCW
