@@ -95,7 +95,7 @@ namespace VUI {
         Align textAlignment = VUI_ALIGN_LEFT_TOP;
         
         float GetTextOpacity(){
-            if ( HasParent() ) return parent->GetOpacity();
+            if ( HasParent() ) return parent->GetOpacity() * GetOpacity();
             else return GetOpacity();
         }
         

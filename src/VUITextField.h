@@ -91,9 +91,25 @@ namespace VUI {
             TriggerValueChangeEvent();
         }
         
+        void ClearText(){
+            text = "";
+            UpdateRect();
+            TriggerValueChangeEvent();
+            _CheckPlaceholder();
+        }
+        
         void AddText( char c ){
             AddText( ofToString(c) );
         }
+        
+        string placeholder = "";
+        
+        void SetPlaceholderText( string str ){
+            placeholder = str;
+            _CheckPlaceholder();
+        }
+        
+        
         
         void TriggerValueChangeEvent(){
             vuiEventArgs args;
@@ -157,6 +173,8 @@ namespace VUI {
                     break;
             }
             
+            if ( ofGetKeyPressed(OF_KEY_SUPER) ) return;
+            
             AddText((char)key.key);
         }
         
@@ -168,7 +186,9 @@ namespace VUI {
         
     private:
         void _vuiEventHandler(vuiEventArgs& evt);
-        
+        void _CheckPlaceholder(){
+            if ( text == "" ) SetText(placeholder);
+        }
         void _Setup();
     };
     

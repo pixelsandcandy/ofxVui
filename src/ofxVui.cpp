@@ -422,6 +422,9 @@ namespace VUI {
                         else if ( propVal[0] == "height" ) propVal[1] = ofToString(el->GetHeight() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
                         else if ( propVal[0] == "scale" ) propVal[1] = ofToString(el->GetScale() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
                         else if ( propVal[0] == "rotation" ) propVal[1] = ofToString(el->GetRotation() * ofToFloat( ofSplitString( propVal[1], "*=" )[1] ));
+                    } else if ( propVal[1].find("%") != -1 && el->HasParent() ){
+                        if ( propVal[0] == "width" ) propVal[1] = ofToString(el->GetParent()->GetInnerWidth()*VUI::divideDpi * ofToFloat( ofSplitString( propVal[1], "*=" )[0] )*.01 );
+                        else if ( propVal[0] == "height" ) propVal[1] = ofToString(el->GetParent()->GetInnerHeight()*VUI::divideDpi * ofToFloat( ofSplitString( propVal[1], "*=" )[0] )*.01 );
                     }
                     
                     StoreValue( propVal[0], propVal[1] );
@@ -478,10 +481,10 @@ namespace VUI {
                 //ofLog() << "sy:" << startValues[ (*it) ];
             } else if ( (*it) == "width" ){
                 //ofLog() << "width:" << el->GetWidth();
-                startValues[ (*it) ] = el->GetWidth(false);
+                startValues[ (*it) ] = el->GetWidth(false)*VUI::divideDpi;
             } else if ( (*it) == "height" ){
                 //ofLog() << "height:" << el->GetHeight();
-                startValues[ (*it) ] = el->GetHeight(false);
+                startValues[ (*it) ] = el->GetHeight(false)*VUI::divideDpi;
             } else if ( (*it) == "rotation" ){
                 startValues[ (*it) ] = el->GetRotation();
             } else if ( (*it) == "opacity" ){

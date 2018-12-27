@@ -404,6 +404,10 @@ namespace VUI {
             }
         }
         
+        Element* GetParent(){
+            return parent;
+        }
+        
         bool HasParent(){
             if ( parent == nullptr || parent == NULL ) return false;
             return true;

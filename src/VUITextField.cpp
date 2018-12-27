@@ -9,9 +9,12 @@ namespace VUI {
                 
                 TriggerEvent( VUI_EVENT_FOCUS );
                 VUI::activeTextField = this;
+                
+                if ( text == placeholder ) SetText("");
             } else if ( evt.value == 0 ) {
                 TriggerEvent( VUI_EVENT_UNFOCUS );
                 if ( VUI::activeTextField == this ) VUI::activeTextField = NULL;
+                if ( text == "" ) SetText(placeholder);
             }
         }
     }
