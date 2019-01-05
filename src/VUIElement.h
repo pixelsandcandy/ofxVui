@@ -294,7 +294,7 @@ namespace VUI {
             }
             
             if ( s == VUI_STATE_DOWN && !hasState[VUI_STATE_DOWN] ) s = VUI_STATE_OVER;
-            else if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
+            if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
             
             //ofLog() << GetName() << "  -  " << toState << "   >  " << hasState[VUI_STATE_OVER] << "  >  " << 
             
