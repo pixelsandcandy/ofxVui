@@ -103,11 +103,27 @@ namespace VUI {
             return GetTextOpacity()*255.0;
         }
         
-        void SetText( string t, bool sizeToText = false ){
+        Text* SetText( string t, bool sizeToText = false ){
             text = t;
             UpdateRect();
             if ( sizeToText ) SizeToText();
+            return this;
         }
+        
+        Text* SetTextColor( string hexColor ){
+            float floatColor;
+            
+            if ( hexColor.find("#") != string::npos ){
+                string str(hexColor);
+                
+                ofStringReplace(str, "#", "");
+                floatColor = stoul(str, nullptr, 16);
+            } else {
+                floatColor = ofToFloat( hexColor );
+            }
+            
+            textColor.setHex(floatColor, 255.0);
+        };
         
         string GetText(){
             return text;

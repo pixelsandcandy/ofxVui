@@ -157,6 +157,7 @@ namespace VUI {
         
         
         UpdatePosition();
+        CustomUpdate();
         
         //if ( !isInteractive )return;
         

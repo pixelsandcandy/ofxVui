@@ -293,8 +293,8 @@ namespace VUI {
                 if ( renderState == VUI_STATE_DOWN && toState == VUI_STATE_OVER && !force ) return;
             }
             
-            if ( s == VUI_STATE_DOWN && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_OVER;
-            if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
+            if ( s == VUI_STATE_DOWN && !hasState[VUI_STATE_DOWN] ) s = VUI_STATE_OVER;
+            else if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
             
             //ofLog() << GetName() << "  -  " << toState << "   >  " << hasState[VUI_STATE_OVER] << "  >  " << 
             
@@ -586,6 +586,7 @@ namespace VUI {
         
         virtual void RenderBefore(ofRectangle& parentRect){};
         virtual void RenderAfter(ofRectangle& parentRect){};
+        virtual void CustomUpdate(){};
         
         template <typename ArgumentsType, class ListenerClass>
         Tween* Animate( float timeSeconds, string params, ListenerClass* listener, void (ListenerClass::*listenerMethod)(ArgumentsType&) ){
