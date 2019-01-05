@@ -1056,8 +1056,8 @@ namespace VUI {
         ofVec2f pos;
         
         if ( HasParent() ) {
-            pos.x = percentCalcValues.getValue("x", parent->GetInnerWidth() );
-            pos.y = percentCalcValues.getValue("y", parent->GetInnerHeight() );
+            pos.x = parent->padding.left*VUI::dpi + percentCalcValues.getValue("x", parent->GetInnerWidth() );
+            pos.y = parent->padding.top*VUI::dpi + percentCalcValues.getValue("y", parent->GetInnerHeight() );
         } else {
             if ( normalize ) {
                 pos.x = percentCalcValues.getValue("x", VUI::GetCurrentEventManager()->vw );
@@ -1429,6 +1429,19 @@ namespace VUI {
                 } else if (tempSplit[0] == "bgOpacity" || tempSplit[0] == "background-opacity" || tempSplit[0] == "bg-opacity" ) {
                     tempSplit[0] = "background-opacity";
                     this->style[state][tempSplit[0]] = tempSplit[1];
+                } else if ( tempSplit[0] == "padding" ){
+                    vector<string> xy = ofSplitString( tempSplit[1], "," );
+                    if ( xy.size() == 1 ) SetPadding( ofToInt(xy[0]) );
+                    else if ( xy.size() == 2 ) SetPadding( ofToInt(xy[0]), ofToInt(xy[1]) );
+                    else if ( xy.size() == 4 ) SetPadding( ofToInt(xy[0]), ofToInt(xy[1]), ofToInt(xy[2]), ofToInt(xy[3]) );
+                } else if ( tempSplit[0] == "padding-left" ){
+                    SetPaddingLeft( ofToInt(tempSplit[1]) );
+                } else if ( tempSplit[0] == "padding-top" ){
+                    SetPaddingTop( ofToInt(tempSplit[1]) );
+                } else if ( tempSplit[0] == "padding-right" ){
+                    SetPaddingRight( ofToInt(tempSplit[1]) );
+                } else if ( tempSplit[0] == "padding-bottom" ){
+                    SetPaddingBottom( ofToInt(tempSplit[1]) );
                 } else {
                     if ( tempSplit[0] == "bg" || tempSplit[0] == "bgColor" || tempSplit[0] == "backgroundColor" ) tempSplit[0] = "background-color";
                     

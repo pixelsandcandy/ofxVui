@@ -635,6 +635,36 @@ namespace VUI {
         
         void SetOffsetY(int offset);
         void SetOffsetX(int offset);
+        
+        Padding padding;
+        
+        void SetPadding( int top, int right, int bottom, int left ){
+            padding.Set(top,right,bottom,left);
+        }
+        
+        void SetPadding( int pad ){
+            padding.Set(pad,pad,pad,pad);
+        }
+        
+        void SetPadding( int topBottom, int leftRight ){
+            padding.Set(topBottom,leftRight,topBottom,leftRight);
+        }
+        
+        void SetPaddingTop( int pad){
+            padding.top = pad;
+        }
+        
+        void SetPaddingRight( int pad){
+            padding.right = pad;
+        }
+        
+        void SetPaddingBottom( int pad){
+            padding.bottom = pad;
+        }
+        
+        void SetPaddingLeft( int pad){
+            padding.left = pad;
+        }
 				
     protected:
         ofTrueTypeFont* font = nullptr;

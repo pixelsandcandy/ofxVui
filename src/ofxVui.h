@@ -1223,6 +1223,16 @@ namespace VUI {
         return currView;
     }
     
+    static void TriggerResize(int width, int height){
+        VUI::vw = width;
+        VUI::vh = height;
+        
+        VUI::GetCurrentEventManager()->vw = width;
+        VUI::GetCurrentEventManager()->vh = height;
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(width, height);
+    }
+    
     
     
     

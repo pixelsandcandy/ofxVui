@@ -156,39 +156,13 @@ namespace VUI {
             textAlignment = align;
         }
         
-        void SetPadding( int top, int right, int bottom, int left ){
-            padding.Set(top,right,bottom,left);
-        }
         
-        void SetPadding( int pad ){
-            padding.Set(pad,pad,pad,pad);
-        }
-        
-        void SetPadding( int topBottom, int leftRight ){
-            padding.Set(topBottom,leftRight,topBottom,leftRight);
-        }
-        
-        void SetPaddingTop( int pad){
-            padding.top = pad;
-        }
-        
-        void SetPaddingRight( int pad){
-            padding.right = pad;
-        }
-        
-        void SetPaddingBottom( int pad){
-            padding.bottom = pad;
-        }
-        
-        void SetPaddingLeft( int pad){
-            padding.left = pad;
-        }
         
         ofVec2f textOffset;
         ofVec3f shadowPos = ofVec3f(0,0,210);
         ofColor textColor = ofColor::gray;
         
-        Padding padding;
+        
         
         int spaceOffsetX = 0;
         
