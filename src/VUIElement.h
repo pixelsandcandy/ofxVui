@@ -300,15 +300,20 @@ namespace VUI {
             
             bool updated = false;
             
-            if ( s != renderState ) renderState = s;
+            if ( s != renderState ) {
+                renderState = s;
+            }
+            
+            if ( s == VUI_STATE_UP ) ResetEnterExit();
             
             UpdateVirtualState( toState, false, notifyEvent );
         }
         
-        void SetSelected( bool selected = true ){
-            if ( selected ) SetState( VUI_STATE_DOWN );
-            else SetState( VUI_STATE_UP );
+        void SetSelected( bool selected = true, bool notifyEvent = true, bool force = false ){
+            if ( selected ) SetState( VUI_STATE_DOWN, notifyEvent, force );
+            else SetState( VUI_STATE_UP, notifyEvent, force );
         }
+        
         
         
         void UpdateVirtualState( VUI::State toState, bool force = false, bool notifyEvent = true ){
@@ -502,6 +507,7 @@ namespace VUI {
         
         virtual void Hide(){
             isActive = false;
+            ResetEnterExit();
         }
         
         virtual void Show(){
@@ -707,6 +713,11 @@ namespace VUI {
         bool isSelection = false;
         int lastTimeMouseDown;
         int fixMouseY = 3;
+        
+        void ResetEnterExit(){
+            _mInside = false;
+            _mEnter = false;
+        }
         
 	};
 }

@@ -485,8 +485,13 @@ namespace VUI {
         return GetCurrentEventManager()->prevOverElement;
     }
     
-    static bool IsOverElement() {
-        if ( GetCurrentEventManager()->prevOverElement == NULL ) return false;
+    static bool HasOverElement() {
+        if ( GetCurrentEventManager()->overElement == NULL ) return false;
+        return true;
+    }
+    
+    static bool HasPrevOverElement() {
+        if ( GetCurrentEventManager()->overElement == NULL ) return false;
         return true;
     }
     

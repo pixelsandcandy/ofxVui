@@ -650,7 +650,7 @@ namespace VUI {
                 ofNotifyEvent(onUnfocus, args, this);
                 break;
             case VUI_EVENT_VALUE_CHANGE:
-                if ( virtualState == VUI_STATE_DOWN ) args.value = 1;
+                if ( GetVirtualState() == VUI_STATE_DOWN || GetState() == VUI_STATE_DOWN ) args.value = 1;
                 else args.value = 0;
                 
                 ofNotifyEvent(onValueChange, args, this);
@@ -749,7 +749,7 @@ namespace VUI {
                     //if ( DEBUG_MODE ) ofLog() << "TriggerEvent(VUI_EVENT_MOUSE_CLICK)";
                     args.eventType = VUI_EVENT_MOUSE_CLICK;
                     
-                    if ( GetState() == VUI_STATE_DOWN ) args.value = 1;
+                    if ( GetState() == VUI_STATE_DOWN || GetVirtualState() == VUI_STATE_DOWN ) args.value = 1;
                     else args.value = 0;
                     
                     ofNotifyEvent(onMouseClick, args, this);

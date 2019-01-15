@@ -746,14 +746,19 @@ namespace VUI {
         //ofLog() << "EMBridge::Update - " << ofRandomf();
         //if ( EventHasElement(VUI_EVENT_MOUSE_CLICK) ) ofLog() << GetLatestElement(VUI_EVENT_MOUSE_CLICK)->GetName();
         for( vector<vuiEvent>::iterator it = evtlist.begin(); it != evtlist.end(); it++ ){
-            if ( (*it) != VUI_EVENT_MOUSE_EXIT && (*it) != VUI_EVENT_MOUSE_ENTER ) if ( EventHasElement((*it)) ) GetLatestElement((*it))->TriggerEvent((*it));
+            if ( (*it) != VUI_EVENT_MOUSE_EXIT && (*it) != VUI_EVENT_MOUSE_ENTER ) if ( EventHasElement((*it)) ) {
+                if ( GetLatestElement((*it))->GetName()[0] != '.' && GetLatestElement((*it))->GetName()[0] != '#' ) continue;
+                GetLatestElement((*it))->TriggerEvent((*it));
+            }
         }
         
         for ( vector<Element*>::iterator it = this->events[VUI_EVENT_MOUSE_ENTER].begin(); it != this->events[VUI_EVENT_MOUSE_ENTER].end(); it++ ){
+            if ( (*it)->GetName()[0] != '.' && (*it)->GetName()[0] != '#' ) continue;
             (*it)->TriggerEvent(VUI_EVENT_MOUSE_ENTER);
         }
         
         for ( vector<Element*>::iterator it = this->events[VUI_EVENT_MOUSE_EXIT].begin(); it != this->events[VUI_EVENT_MOUSE_EXIT].end(); it++ ){
+            if ( (*it)->GetName()[0] != '.' && (*it)->GetName()[0] != '#' ) continue;
             (*it)->TriggerEvent(VUI_EVENT_MOUSE_EXIT);
         }
         

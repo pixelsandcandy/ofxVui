@@ -55,6 +55,12 @@ namespace VUI {
             }
         }
         
+        void Reset(bool notifyEvent = true){
+            for ( vector<Element*>::iterator it = toggles.begin(); it != toggles.end(); it++ ){
+                (*it)->SetSelected(false, notifyEvent);
+            }
+        }
+        
         void SelectToggleByIndex( int index ){
             int count = 0;
             for ( vector<Element*>::iterator it = toggles.begin(); it != toggles.end(); it++ ){
@@ -77,11 +83,13 @@ namespace VUI {
         void _vuiEventHandler(vuiEventArgs& evt){
             
             if ( shouldSelectOnHover && evt.eventType == VUI_EVENT_MOUSE_OVER ){
-                if ( evt.element->GetState() != VUI_STATE_DOWN ){
+                if ( evt.element->GetVirtualState() != VUI_STATE_DOWN ){
                     for ( vector<Element*>::iterator it = toggles.begin(); it != toggles.end(); it++ ){
                         if ( (*it)->GetState() == VUI_STATE_DOWN ) {
                             (*it)->SetSelected(false);
                             evt.element->SetSelected(true);
+                            
+                            
                             return;
                         }
                     }
@@ -90,7 +98,13 @@ namespace VUI {
             }
             
             if ( evt.eventType == VUI_EVENT_VALUE_CHANGE ){
-                if ( evt.value == 1 ){
+                vuiEventArgs args;
+                args.eventType = VUI_EVENT_VALUE_CHANGE;
+                args.element = evt.element;
+                args.value = evt.value;
+                ofNotifyEvent( onToggleChange, args, evt.element );
+                
+                if (evt.value == 1 ){
                     for ( vector<Element*>::iterator it= toggles.begin(); it != toggles.end(); it++){
                         if ( (*it) != evt.element ) (*it)->SetSelected(false);
                     }
@@ -98,24 +112,23 @@ namespace VUI {
                     vuiEventArgs args;
                     args.eventType = VUI_EVENT_TOGGLE_CHANGE;
                     args.element = evt.element;
-                    args.value = 1;
+                    args.value = evt.value;
                     ofNotifyEvent( onToggleChange, args, this );
+                } else {
+                    
                 }
+                
+                
+                
+                
                 
             } else if ( evt.eventType == VUI_EVENT_MOUSE_CLICK ){
-                bool itemSelected = false;
                 
-                for ( vector<Element*>::iterator it= toggles.begin(); it != toggles.end(); it++){
-                    if ( evt.element->GetVirtualState() == VUI_STATE_DOWN ) itemSelected = true;
-                }
-                
-                if ( !itemSelected ){
-                    vuiEventArgs args;
-                    args.eventType = VUI_EVENT_TOGGLE_CHANGE;
-                    args.element = evt.element;
-                    args.value = 0;
-                    ofNotifyEvent( onToggleChange, args, this );
-                }
+                /*vuiEventArgs args;
+                args.eventType = VUI_EVENT_TOGGLE_CHANGE;
+                args.element = this;
+                args.value = evt.value;
+                ofNotifyEvent( onToggleChange, args, this );*/
             }
         }
         

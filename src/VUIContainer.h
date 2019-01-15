@@ -85,6 +85,15 @@ namespace VUI {
             //ofLog() << "a:" << a->GetPosition().y << " b:" << b->GetPosition().y;
         }
         
+        void FixChildrenPosition(){
+            stackPos.y = 0;
+            for (vector<Element*>::reverse_iterator it = container->children.rbegin(); it != container->children.rend(); it++){
+                if ( stackPos.y != 0 ) stackPos.y += margin.y;
+                (*it)->SetPositionY(stackPos.y);
+                stackPos.y += (*it)->GetOriginalHeight();
+            }
+        }
+        
         void AddAndStackChild(Element* child, bool resizeToContent = false){
             
             if ( stackPos.y != 0 ) stackPos.y += margin.y;
@@ -155,10 +164,18 @@ namespace VUI {
             
             stackPos.y = 0;
             
-            for (vector<Element*>::iterator it = container->children.begin(); it != container->children.end(); it++){
-                if ( stackPos.y != 0 ) stackPos.y += margin.y;
-                (*it)->SetPositionY(stackPos.y);
-                stackPos.y += (*it)->GetOriginalHeight();
+            if ( stackDirection == VUI_STACK_VERT_REVERSE ){
+                for (vector<Element*>::reverse_iterator it = container->children.rbegin(); it != container->children.rend(); it++){
+                    if ( stackPos.y != 0 ) stackPos.y += margin.y;
+                    (*it)->SetPositionY(stackPos.y);
+                    stackPos.y += (*it)->GetOriginalHeight();
+                }
+            } else {
+                for (vector<Element*>::iterator it = container->children.begin(); it != container->children.end(); it++){
+                    if ( stackPos.y != 0 ) stackPos.y += margin.y;
+                    (*it)->SetPositionY(stackPos.y);
+                    stackPos.y += (*it)->GetOriginalHeight();
+                }
             }
             
             if ( stackPos.y > vertContainer->GetOriginalHeight() - padding.top ) CreateMask();
@@ -185,6 +202,10 @@ namespace VUI {
         
         vector<Element*> GetChildren(){
             return container->children;
+        }
+        
+        vector<Element*>* GetChildrenPtr(){
+            return &container->children;
         }
         
         void SetEventManager(VUI::EM* eventManager){
