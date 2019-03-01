@@ -118,6 +118,13 @@ namespace VUI {
     extern Rotate viewRotation;
     
     extern map<string, map<int, map< float, ofTrueTypeFont*>>> fonts;
+    struct FontSettings{
+        string filename;
+        int size;
+        float letterSpacing;
+    };
+    extern vector<FontSettings> loadedFontSettings;
+    
     extern int fontSize;
     extern float dpi;
     extern float divideDpi;
@@ -129,6 +136,15 @@ namespace VUI {
     static void SetDpi( float _dpi ){
         dpi = _dpi;
         divideDpi = 1.0 / _dpi;
+        
+        for ( vector<FontSettings>::iterator it = loadedFontSettings.begin(); it != loadedFontSettings.end(); it++){
+            //UpdateFont(filename, fontSize, letterSpacing = 1.0, float dpi = 1.0);
+            fonts[it->filename][it->size][it->letterSpacing]->load(it->filename, it->size*VUI::dpi);
+            fonts[it->filename][it->size][it->letterSpacing]->setLetterSpacing(it->letterSpacing);
+        }
+        
+        //map<string, map<int, map< float, ofTrueTypeFont*>>> fonts;
+        
     }
     
     static float GetDpi(){
@@ -136,12 +152,8 @@ namespace VUI {
     }
     
     static bool HasFont( string filename, int fontSize, float letterSpacing ){
-        if ( fonts[filename][fontSize*VUI::dpi][letterSpacing] != nullptr ) return true;
+        if ( fonts[filename][fontSize][letterSpacing] != nullptr ) return true;
         return false;
-    }
-    
-    static ofTrueTypeFont* GetFont( string filename, int fontSize, float letterSpacing ){
-        return fonts[filename][fontSize*VUI::dpi][letterSpacing];
     }
     
     static ofTrueTypeFont* AddFont( string filename, int fontSize, float letterSpacing = 1.0 ){
@@ -149,9 +161,22 @@ namespace VUI {
         tf->load(filename, fontSize*VUI::dpi);
         tf->setLetterSpacing(letterSpacing);
         
-        fonts[filename][fontSize*VUI::dpi][letterSpacing] = tf;
-        return fonts[filename][fontSize*VUI::dpi][letterSpacing];
+        FontSettings fs;
+        fs.filename = filename;
+        fs.size = fontSize;
+        fs.letterSpacing = letterSpacing;
+        loadedFontSettings.push_back(fs);
+        
+        fonts[filename][fontSize][letterSpacing] = tf;
+        return fonts[filename][fontSize][letterSpacing];
     }
+    
+    static ofTrueTypeFont* GetFont( string filename, int fontSize, float letterSpacing ){
+        if (!HasFont(filename, fontSize, letterSpacing) ) AddFont(filename, fontSize, letterSpacing);
+        return fonts[filename][fontSize][letterSpacing];
+    }
+    
+    
     
     
     struct vuiEventArgs;
@@ -299,8 +324,8 @@ namespace VUI {
         tweensToDestroy.push_back( t );
     }
     
-    static void DestroyTween(Tween* t){
-        int index = 0;
+    static void DestroyTween(const Tween* t){
+        /*int index = 0;
         for ( vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++ ){
             if ( (*it) == t ){
                 //ofLog() << "found tween - destroying...";
@@ -309,7 +334,10 @@ namespace VUI {
                 return;
             }
             index++;
-        }
+        }*/
+        
+        auto it = std::find(tweens.begin(), tweens.end(), t);
+        if (it != tweens.end()) { tweens.erase(it); }
     }
     
     /*class EMBridge {

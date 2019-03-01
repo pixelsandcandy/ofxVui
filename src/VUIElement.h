@@ -32,15 +32,15 @@ namespace VUI {
                 bool pxValue = false;
                 
                 float getValue( float parentValue){
-                    if ( pxValue == true ) return val;
-                    else return (parentValue*perc)+offset;
+                    if ( pxValue == true ) return val*VUI::dpi;
+                    else return (parentValue*perc)+offset*VUI::dpi;
                 }
                 
                 void parse(int value){
                     perc = 1.0;
                     offset = 0.0;
                     
-                    val = (float)value*VUI::dpi;
+                    val = (float)value;
                     pxValue = true;
                 }
                 
@@ -69,14 +69,14 @@ namespace VUI {
                         end = value.find(")");
                         
                         string diff = value.substr( start, end - start);
-                        offset = (ofToFloat( diff )*offset)*VUI::dpi;
+                        offset = (ofToFloat( diff )*offset);
                         pxValue = false;
                         
                     } else if ( value.find("%") != -1 ){
                         perc = ofToFloat( value )*.01;
                         pxValue = false;
                     } else {
-                        val = ofToFloat(value)*VUI::dpi;
+                        val = ofToFloat(value);
                         pxValue = true;
                     }
                 }
@@ -95,6 +95,8 @@ namespace VUI {
             int getValue(string name, float parentValue ){
                 return values[name].getValue(parentValue);
             }
+            
+            
             
         };
         
@@ -142,7 +144,7 @@ namespace VUI {
         map< int, Image> bgImage;
 
         
-		string name;
+        string name = "VUIElement";
 
 		map< int, map<string, string> > style;
 		map< int, map<string, float> > styleFloat;
@@ -674,6 +676,10 @@ namespace VUI {
 				
     protected:
         ofTrueTypeFont* font = nullptr;
+        string fontFilename;
+        int fontSize;
+        float fontLetterSpacing;
+        
         vector<string> SplitStyles(string s);
         virtual void UpdateState(int renderState, bool isInside = false, bool isMouseDown = false);
         void UpdatePosition();

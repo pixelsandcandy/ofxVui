@@ -173,11 +173,17 @@ namespace VUI {
         }
         
         bool isTextField = false;
+        int dpi = -1;
         
         ofRectangle rect;
         
         void RenderAfter(ofRectangle& parentRect){
-            
+            if ( dpi == -1 ) dpi = VUI::dpi;
+            if ( dpi != VUI::dpi ) {
+                _Calibrate(true);
+                UpdateRect();
+                dpi = VUI::dpi;
+            }
             
             if ( font != nullptr ) {
                 _Calibrate();
@@ -214,7 +220,7 @@ namespace VUI {
                         break;
                     case VUI_ALIGN_RIGHT_TOP:
                         x = GetWidth() - rect.width - padding.right*VUI::dpi - VUI::dpi;
-                        y = padding.top*VUI::dpi;;
+                        y = padding.top*VUI::dpi;
                         break;
                     case VUI_ALIGN_RIGHT_CENTER:
                         x = GetWidth() - rect.width - padding.right*VUI::dpi - VUI::dpi;
@@ -239,7 +245,7 @@ namespace VUI {
                 }
                 
                 ofSetColor(textColor, op);
-                font->drawString( text, parentRect.x + x, parentRect.y + y + textOffset.y + VUI::dpi );
+                font->drawString( text, parentRect.x + x, parentRect.y + y + textOffset.y );
                 
                 ofSetColor(0,0,0,255);
                 
@@ -320,15 +326,20 @@ namespace VUI {
         float _typingIndicatorOffset;
         float _typingIndicatorHeight = 0;
         ofRectangle originalRect;
-        void _Calibrate(){
-            if ( _isCalibrated ) return;
+        void _Calibrate(bool force = false){
+            if ( _isCalibrated && !force ) return;
             _isCalibrated = true;
             
-            originalRect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+][}{:?><", 0,0);
+            originalRect = font->getStringBoundingBox("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 0,0);
             
-            textOffset.set(0,originalRect.height - font->getSize()*.3333 );
+            //textOffset.set(0,originalRect.height*.25 + font->getSize()*.75 );
+            textOffset.set(0, font->getSize() );
+            
+            //if ( VUI::dpi == 1.0 ) textOffset.y = -10.0;
+            //ofLog() << VUI::dpi;
+            
             //textOffset.y*=VUI::divideDpi;
-            _typingIndicatorOffset = font->getSize()*.3333;
+            _typingIndicatorOffset = textOffset.y;
             _typingIndicatorHeight = originalRect.height + 4*VUI::dpi;
         }
         

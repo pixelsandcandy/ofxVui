@@ -364,6 +364,7 @@ namespace VUI {
     bool useViewManager = true;
     
     map<string, map<int, map<float,ofTrueTypeFont*>>> fonts;
+    vector<FontSettings> loadedFontSettings;
     int fontSize = 16;
     
     bool useTouch = false;
@@ -512,7 +513,7 @@ namespace VUI {
     
     
     void Tween::Update(float currTime){
-        if ( !active ) return;
+        if ( !active || el == NULL ) return;
         
         if ( currTime >= startTime && currTime < endTime ){
             
@@ -603,8 +604,8 @@ namespace VUI {
     EM EventManager;
     EM* currEventManager = NULL;
     
-    vector<Tween*> tweensToDestroy;
-    vector<Tween*> tweens;
+    vector<Tween*> tweensToDestroy = vector<Tween*>();
+    vector<Tween*> tweens = vector<Tween*>();
     
     void EM::StoreEvent(Element* el, vuiEvent eventType ){
         //ofLog() << "StoreEvent[" << eventType << "]  active:" << active;
@@ -688,8 +689,13 @@ namespace VUI {
         
         //ofLog() << "# tweens: " << tweens.size();
         
+        int max = tweens.size();
+        int i = 0;
         for (vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++){
-            (*it)->Update( currTime );
+            if ( i >= 0 && i < max && (*it) != NULL && (*it) != nullptr && (*it)->el != NULL ) (*it)->Update( currTime );
+            else return;
+            //(*it)->Update( currTime );
+            i++;
         }
         
         for (vector<Tween*>::iterator it = tweensToDestroy.begin(); it !=  tweensToDestroy.end(); it++){

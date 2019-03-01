@@ -1333,11 +1333,12 @@ namespace VUI {
                         size = ofToInt(fontProps[1]);
                         spacing = ofToFloat(fontProps[2]);
                     }
-                    if ( VUI::HasFont( fontProps[0], size, spacing ) ) {
-                        font = VUI::GetFont( fontProps[0], size, spacing );
-                    } else {
-                        font = VUI::AddFont( fontProps[0], size, spacing );
-                    }
+                    
+                    font = VUI::GetFont( fontProps[0], size, spacing );
+                    
+                    fontFilename = fontProps[0];
+                    fontSize = size;
+                    fontLetterSpacing = spacing;
                 }
                 else if (tempSplit[0] == "border" ){
                     vector<string> props = ofSplitString(tempSplit[1], ",");
