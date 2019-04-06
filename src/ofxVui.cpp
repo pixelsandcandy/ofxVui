@@ -30,6 +30,8 @@ namespace VUI {
     int mouseY;
     float dpi = 1.0;
     float divideDpi = 1.0;
+    float divideRetinaDpi = .5;
+    float multRetinaDpi = 2.0;
     
     int vw = -1;
     int vh = -1;
@@ -567,7 +569,7 @@ namespace VUI {
     }
     
     void Tween::UpdateValues(){
-        
+        if ( valueNames.size() == 0 ) return;
         for ( vector<string>::iterator it = valueNames.begin(); it != valueNames.end(); it++ ){
             if ( (*it) == "x" ){
                 //x = el->GetPosition().x;
@@ -692,8 +694,13 @@ namespace VUI {
         int max = tweens.size();
         int i = 0;
         for (vector<Tween*>::iterator it = tweens.begin(); it != tweens.end(); it++){
-            if ( i >= 0 && i < max && (*it) != NULL && (*it) != nullptr && (*it)->el != NULL ) (*it)->Update( currTime );
-            else return;
+            //if ( i >= 0 && i < max && (*it) != NULL && (*it) != nullptr && (*it)->el != NULL ) (*it)->Update( currTime );
+            //else return;
+            if ( i >= 0 && i < max ) {
+                if ( (*it) != NULL && (*it)->active && !isnan((*it)->duration) && (*it)->duration != 0.0 ) (*it)->Update( currTime );
+            } else {
+                return;
+            }
             //(*it)->Update( currTime );
             i++;
         }

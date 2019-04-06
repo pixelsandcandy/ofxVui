@@ -128,6 +128,8 @@ namespace VUI {
     extern int fontSize;
     extern float dpi;
     extern float divideDpi;
+    extern float divideRetinaDpi;
+    extern float multRetinaDpi;
     
     static void SetFontSize( int size ){
         fontSize = size;
@@ -136,6 +138,8 @@ namespace VUI {
     static void SetDpi( float _dpi ){
         dpi = _dpi;
         divideDpi = 1.0 / _dpi;
+        divideRetinaDpi = .5 * _dpi;
+        multRetinaDpi = 2.0 / _dpi;
         
         for ( vector<FontSettings>::iterator it = loadedFontSettings.begin(); it != loadedFontSettings.end(); it++){
             //UpdateFont(filename, fontSize, letterSpacing = 1.0, float dpi = 1.0);
@@ -202,7 +206,9 @@ namespace VUI {
     class Tween {
     public:
         ~Tween(){};
-        Tween(){};
+        Tween(){
+            valueNames.clear();
+        };
         
         float x;
         float y;
@@ -226,9 +232,9 @@ namespace VUI {
         
         int UID = abs((int)ofRandom(7, 7777777777));
         
-        float startTime;
-        float endTime;
-        float duration;
+        float startTime = 0.0;
+        float endTime = 0.0;
+        float duration = 0.0;
         float perc = 0.0;
         
         float GetPercentCompleted(){
@@ -239,7 +245,7 @@ namespace VUI {
             return perc;
         }
         
-        vector<string> valueNames;
+        vector<string> valueNames = vector<string>();
         map<string, float> endValues;
         map<string, float> startValues;
         
@@ -977,6 +983,14 @@ namespace VUI {
         return vh;
     }
     
+    static int GetAbsoluteWidth() {
+        return vw;
+    }
+    
+    static int GetAbsoluteHeight() {
+        return vh;
+    }
+    
     static int GetScaledWidth() {
         return vw * vscale;
     }
@@ -1256,6 +1270,13 @@ namespace VUI {
         return currView;
     }
     
+    static void SetAbsoluteResolution(int width, int height){
+        VUI::vw = width;
+        VUI::vh = height;
+        
+        if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(width, height);
+    }
+    
     static void TriggerResize(int width, int height){
         VUI::vw = width;
         VUI::vh = height;
@@ -1264,6 +1285,11 @@ namespace VUI {
         VUI::GetCurrentEventManager()->vh = height;
         
         if (!VUI::currView.empty()) VUI::GetCurrentView()->windowResized(width, height);
+    }
+    
+    static void TriggerResizeEventManager(EM* eventManager, int width, int height){
+        eventManager->vw = width;
+        eventManager->vh = height;
     }
     
     
