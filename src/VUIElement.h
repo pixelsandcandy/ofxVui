@@ -288,7 +288,8 @@ namespace VUI {
         }
         
         void SetState( VUI::State toState, bool notifyEvent = true, bool force = false ){
-            
+            if ( DEBUG_MODE ) ofLog() << GetName() << "  -  " << toState << "   >  " << hasState[VUI_STATE_OVER] << "  >  ";
+                
             VUI::State s = toState;
             
             if ( isToggle ){
@@ -298,7 +299,7 @@ namespace VUI {
             if ( s == VUI_STATE_DOWN && !hasState[VUI_STATE_DOWN] ) s = VUI_STATE_OVER;
             if ( s == VUI_STATE_OVER && !hasState[VUI_STATE_OVER] ) s = VUI_STATE_UP;
             
-            //ofLog() << GetName() << "  -  " << toState << "   >  " << hasState[VUI_STATE_OVER] << "  >  " << 
+            
             
             bool updated = false;
             

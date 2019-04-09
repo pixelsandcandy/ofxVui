@@ -432,17 +432,29 @@ namespace VUI {
     }
     
     void Element::UpdateState(int toState, bool isInside, bool isMouseDown ) {
-        //ofLog() << "UpdateState => " << toState;
+        
+        
+        if ( DEBUG_MODE ){
+            ofLog() << "UpdateState => " << toState;
+            ofLog() << "GetEventManager()->IsActive(): " << GetEventManager()->IsActive();
+            ofLog() << "isInteractive: " << isInteractive;
+        }
+        
         
         if ( opacity == 0.0 ) return;
         if ( !GetEventManager()->IsActive() ) return;
         if ( !isInteractive ) return;
         
+        if ( DEBUG_MODE ) ofLog() << "virtual:" << virtualState << " -> to:" << toState;
+        
         int oldState(renderState);
         
-        bool update = renderState != toState ? true : false;
+        //bool update = renderState != toState ? true : false;
+        bool update = virtualState != toState ? true : false;
+        
         if ( isToggle || isSelection ) {
-            //ofLog() << "virtual:" << virtualState << " -> to:" << toState;
+            
+            if ( DEBUG_MODE ) ofLog() << "isToggle / isSelection";
             
             update = virtualState != toState ? true : false;
             if ( toState == VUI_STATE_DOWN ) update = true;
@@ -484,6 +496,8 @@ namespace VUI {
          ofLog() << lastTimeMouseDown;
          ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  toState: " << toState << "   update:" << update << "  - " << ofRandomf();
          }*/
+        
+        ofLog() << "update:" << update;
         
         if ( !update ) return;
         
@@ -719,7 +733,7 @@ namespace VUI {
                 break;
             case VUI_EVENT_MOUSE_CLICK:
             case VUI_EVENT_TOUCH_TAP:
-                //ofLog() << "TriggerEvent >> VUI_EVENT_MOUSE_CLICK";
+                if ( GetName() == ".h2" ) ofLog() << "TriggerEvent >> VUI_EVENT_MOUSE_CLICK";
                 
                 t = ofGetElapsedTimeMillis();
                 
