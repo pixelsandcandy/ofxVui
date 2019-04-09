@@ -1457,6 +1457,20 @@ namespace VUI {
                     SetPaddingRight( ofToInt(tempSplit[1]) );
                 } else if ( tempSplit[0] == "padding-bottom" ){
                     SetPaddingBottom( ofToInt(tempSplit[1]) );
+                } else if (tempSplit[0] == "color"){
+                    float floatColor;
+                    
+                    if ( tempSplit[1].find("#") != string::npos ){
+                        string str(tempSplit[1]);
+                        
+                        ofStringReplace(str, "#", "");
+                        floatColor = stoul(str, nullptr, 16);
+                    } else {
+                        floatColor = ofToFloat( tempSplit[1] );
+                    }
+                    
+                    this->style[state][tempSplit[0]] = tempSplit[1];
+                    this->styleFloat[state]["color"] = floatColor;
                 } else {
                     if ( tempSplit[0] == "bg" || tempSplit[0] == "bgColor" || tempSplit[0] == "backgroundColor" ) tempSplit[0] = "background-color";
                     

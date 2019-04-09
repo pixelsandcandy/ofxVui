@@ -161,7 +161,7 @@ namespace VUI {
         ofVec2f textOffset;
         ofVec3f shadowPos = ofVec3f(0,0,210);
         ofColor textColor = ofColor::gray;
-        
+        ofColor tempTextColor = ofColor::gray;
         
         
         int spaceOffsetX = 0;
@@ -245,6 +245,10 @@ namespace VUI {
                 }
                 
                 ofSetColor(textColor, op);
+                if ( styleFloat[renderState]["color"] ){
+                    tempTextColor.setHex(styleFloat[renderState]["color"], 255);
+                    ofSetColor(tempTextColor, op);
+                }
                 font->drawString( text, parentRect.x + x, parentRect.y + y + textOffset.y );
                 
                 ofSetColor(0,0,0,255);

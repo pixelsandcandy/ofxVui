@@ -106,7 +106,8 @@ namespace VUI {
         
         PercentCalcValues percentCalcValues;
         
-	protected:
+        
+	
         
         struct Image {
             ofRectangle bounds;
@@ -142,7 +143,13 @@ namespace VUI {
         };
         
         map< int, Image> bgImage;
+        
+        Image& GetBackgroundImage(VUI::State state){
+            return bgImage[(int)state];
+        }
+        
 
+protected:
         
         string name = "VUIElement";
 
