@@ -497,7 +497,7 @@ namespace VUI {
          ofLog() << "[" << vuiUID << "]  - " << "vstate: " << virtualState << "  state:" << state << "  toState: " << toState << "   update:" << update << "  - " << ofRandomf();
          }*/
         
-        ofLog() << "update:" << update;
+        //ofLog() << "update:" << update;
         
         if ( !update ) return;
         
