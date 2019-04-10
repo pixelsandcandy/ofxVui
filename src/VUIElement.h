@@ -621,7 +621,8 @@ protected:
         }
         
         float GetOpacity(){
-            return opacity;
+            return ofToFloat(style[renderState]["opacity"]);
+            //return opacity;
         }
         
         bool IsMouseInside(){
