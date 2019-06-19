@@ -21,10 +21,13 @@
     1. add Preprocessor Macro **USING_ofxWinTouchHook**
     2. call **VUI::EnableTouch()** in ofApp::setup()
 ***
-###### *[WORKS / TESTED ON](#tested-on)*
+###### *[TESTED ON](#tested-on)*
 * ***openFrameworks 0.9.8***
-  * macOS High Sierra (10.13) » Xcode 9
-  * Windows 10 » Visual Studio 2017 
+  * macOS High Sierra (10.13) » Xcode 9 (✔️ Debug/Release)
+  * Windows 10 » Visual Studio 2017 (✔️)
+* ***openFrameworks 0.10.1***
+  * macOS High Sierra (10.13) » Xcode 9 (❌)
+  * macOS High Sierra (10.13) » Xcode 10 (⚠️ Release Build Only)
 ***
 ###### *[HIGH RESOLUTION / DPI](#high-res)*
   * ***Xcode*** » openFrameworks-Info.plist » right-click » Add Row » High Resolution Capable » YES
@@ -53,8 +56,8 @@ Scale
 Rotation
   ∟ VUI_ROTATE_90_CCW
 ```
-  
-  
+
+
 ### GUI System
 * *Mouse/Touch events respect Element render order*
   * *Event sends local and global Mouse/Touch positions*
@@ -72,9 +75,9 @@ Elements
   ∟ TextField
   ∟ Slider
   ∟ Container
-  
+
   (x/y position » px, %, calc)
-    
+
 Animation Tween
   ∟ x
   ∟ y
@@ -84,14 +87,14 @@ Animation Tween
   ∟ opacity
   ∟ rotation
   ∟ ease/easing
-  
+
   (x/y/width/height/scale/opacity/rotation » px, +=, -=, *=)
-  
+
 Animation Events
   ∟ ANIMATE_START
   ∟ ANIMATE_STEP
   ∟ ANIMATE_COMPLETE
-    
+
 Mouse Events
   ∟ MOUSE_OVER
   ∟ MOUSE_OUT
@@ -101,13 +104,13 @@ Mouse Events
   ∟ MOUSE_RELEASED
   ∟ MOUSE_CLICK
   ∟ MOUSE_DOUBLE_CLICK
-    
+
 Touch Events (only single touch usage tested so far)
   ∟ TOUCH_DOWN
   ∟ TOUCH_UP
   ∟ TOUCH_TAP
   ∟ TOUCH_DOUBLE_TAP
-    
+
 Other Events
   ∟ STATE_CHANGE
   ∟ TEXT_CHANGE <Text/TextField>
@@ -116,12 +119,12 @@ Other Events
   ∟ SUBMIT <TextField>
   ∟ FOCUS <TextField>
   ∟ UNFOCUS <TextField>
-    
+
 GUI States
   ∟ STATE_UP
   ∟ STATE_OVER
   ∟ STATE_DOWN
-  
+
 GUI StyleSheet: Styles
   ∟ width » px/%/calc
   ∟ height » px/%/calc
@@ -136,7 +139,7 @@ GUI StyleSheet: Styles
   ∟ padding <Text/TextField>
   ∟ textAlign <Text/TextField>
   ∟ font <Text/TextField>
-  
+
 GUI Alignments for anchorPoint/textAlign
   ∟ LEFT_TOP
   ∟ LEFT_CENTER
@@ -216,9 +219,9 @@ void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   Quad.easeIn
   Quad.easeOut
   Quad.easeInOut
-  
+
 */
-  
+
 ```
 
 # [GUI Events](#ui-events)
@@ -252,7 +255,7 @@ void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
 
 
 /* -------------------------------------------- vuiEventArgs
-  
+
   Element* element;
   int eventType;
   int renderState;
@@ -300,7 +303,7 @@ void ListenerClass::vuiEventHandler(vuiEventArgs& evt){
   VUI_EVENT_ANIMATE_COMPLETE
   VUI_EVENT_ANIMATE_STEP
   VUI_EVENT_ANIMATE_START
-  
+
 */
 
 ```
@@ -326,26 +329,26 @@ void setup(){
       btn-over: path/to/image-over.jpg;
       btn-down: path/to/image-down.jpg;
     ]
-    
+
     [.button>
       width: calc(40%-20);
       height: 10%;
       bgImage: btn-up, FILL;
-      
+
       &:over{
         bgImage: btn-over, FILL;
       }
-      
+
       &:down{
         bgImage: btn-down, FILL;
       }
     ]
-    
+
     [#buttonB>
       scale: 1.25;
       opacity: .9;
     ]
-    
+
     [.text>
       width: 160;
       height: 32;
@@ -361,27 +364,27 @@ void setup(){
   //
 
   ss = new StyleSheet( styles );
-  
+
   /*
-  
+
     name stylesheet if you want to load/use it elsewhere
-    
+
     ss = new StyleSheet( styles, "dope-stylesheet" );
     StyleSheet *elsewhere = VUI::GetStyleSheet( "dope-stylesheet" );
-    
+
   */
 
 
   label = new Text( "50%", "50%", ss, ".text" );
-  
+
   // true = automatically set width/height to text
   label->SetText( "Stuff", true );
-  
-  
+
+
   // Element(x, y, StyleSheet*, primarySelector, secondarySelector );
   buttonA = new Element( 20, "calc(50%+30)", ss, ".button" );
   buttonB = new Element( "10%", 300, ss, ".button", "#buttonB" );
-  
+
 }
 
 
@@ -425,13 +428,13 @@ class MyView : public View {
     virtual void BeforeExitView() {
       ExitView();
     };
-    
+
     virtual void OnEnterView() {};
-    
+
     // basic stuff
     int mouseX;
     int mouseY;
-    
+
     void setup(){};
     void update(){};
     void draw(){};
@@ -447,7 +450,7 @@ class MyView : public View {
     void windowResized(int w, int h){};
     void dragEvent(ofDragInfo dragInfo){};
     void gotMessage(ofMessage msg){};
-    
+
 }
 
 
@@ -459,11 +462,11 @@ class MyView : public View {
 void setup(){
   //Windows only, please see Dependencies section above for more info
   //VUI::EnableTouch();
-  
+
   VUI::AddView( "view-name", new MyView() );
   VUI::AddView( "my-other-view", new MyOtherView() );
-  
-  
+
+
   // can call from anywhere
   VUI::SetView( "view-name" );
 }
@@ -473,10 +476,10 @@ void draw(){
       VUI::Render() is VUI::RenderBegin() + VUI::RenderEnd()
   */
   VUI::Render();
-  
-  
+
+
   /*
-   
+
       If you still want to scale/rotate your view without using the
       View Manager (via AddView()/SetView() you can like this:
 
@@ -487,43 +490,41 @@ void draw(){
 
       But you MUST set the 4th arg in VUI::SetResolution() to false (main.cpp):
       (ofxVui Element's Mouse/Touch events will adapt to scaled/rotated coordinates)
-      
+
           VUI::SetResolution(w, h, scale, enableViewManager );
           eg: VUI::SetResolution(1920, 1080, .6, false);
-   
+
    */
 }
 
 ```
 ***
-###### *[FEATURE REQUESTS / IN PROGRESS](#todo)* 
+###### *[FEATURE REQUESTS / IN PROGRESS](#todo)*
 
 ```    
   ⭐️ Touch
       + Test multiple touch events / scenarios
       + Add - VUI_EVENT_TOUCH_DRAG
-      
+
   ⭐️ UI Elements
       ✔️ Add - Container - scrollable
       ✔️ Add - Slider
       + Add - Slider2D
-      
+
   ⭐️ StyleSheet
       ✔️ width/height - percentage based values
       ✔️ width/height - calc() based values
-  
+
   ⭐️ Animate
       ✔️ += value (x/y/width/height/scale/opacity/rotation)
       ✔️ -= value (x/y/width/height/scale/opacity/rotation)
       ✔️ *= value (x/y/width/height/scale/opacity/rotation)
-      
+
   ⭐️ VUI::SetRotation()
       + Add option - VUI_ROTATE_90_CW
       + Add option - VUI_ROTATE_180
-      
+
   ⭐️ Cleanup / add comments to ofxVui code
   ⭐️ Add more emojis to this README 👓
 ```
 If you think of a feature that would be super useful in this addon or have a request to prioritize a feature, please feel free to email me  » ***hi.christophermiles@gmail.com*** -or- submit a pull request :)
-
-
